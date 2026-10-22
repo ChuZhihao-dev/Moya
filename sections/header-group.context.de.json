@@ -1,0 +1,38 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "parent": "header-group.json",
+  "context": {
+    "market": "de"
+  },
+  "sections": {
+    "custom_html_a7TTm": {
+      "type": "custom-html",
+      "disabled": false,
+      "settings": {
+        "full_width": true,
+        "remove_vertical_spacing": false,
+        "remove_horizontal_spacing": false,
+        "html": "<p style=\"text-align: center\">Write or copy/paste HTML code</p>",
+        "header-1b2a1fcb00dea810ab491d5a0a66ac45": null,
+        "background": "",
+        "background_gradient": "",
+        "text_color": ""
+      },
+      "blocks": {},
+      "block_order": []
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header",
+    "custom_html_a7TTm"
+  ]
+}

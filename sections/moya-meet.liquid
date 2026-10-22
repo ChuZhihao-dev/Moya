@@ -1,0 +1,578 @@
+{% render 'moya-fonts' %}
+
+{% comment %}
+  Section contract.
+  Scroll-driven product story. Pins a full-viewport panel and crossfades each scene
+  over the previous one as the page scrolls, between a centered cover (section
+  settings) and merchant scene blocks. A vertical progress track on the inline-end
+  edge moves from 0% to 100%.
+  Renders as a plain stacked list of panels until the module enhances it.
+  @example
+  <!-- Add the "Moya Meet" section from the theme editor. -->
+{% endcomment %}
+
+{%- liquid
+  assign moya_meet_scene_count = 1
+  if section.blocks.size > 0
+    assign moya_meet_scene_count = section.blocks.size | plus: 1
+  endif
+  assign moya_meet_eyebrow_alpha = section.settings.eyebrow_background_opacity | divided_by: 100.0
+-%}
+
+<moya-meet-component
+  id="Moya-Meet-{{ section.id }}"
+  class="moya-meet"
+  role="region"
+  aria-label="{{ section.settings.cover_heading | strip_html | escape }}"
+  style="
+    --moya-meet-scenes: {{ moya_meet_scene_count }};
+    --moya-meet-scroll: {{ section.settings.scene_scroll }};
+    --moya-meet-heading: {{ section.settings.heading_color }};
+    --moya-meet-body: {{ section.settings.body_color | color_modify: 'alpha', 0.8 }};
+    --moya-meet-eyebrow-bg: {{ section.settings.eyebrow_background | color_modify: 'alpha', moya_meet_eyebrow_alpha }};
+    --moya-meet-eyebrow-color: {{ section.settings.eyebrow_text_color }};
+    --moya-meet-progress-track: {{ section.settings.progress_color | color_modify: 'alpha', 0.2 }};
+    --moya-meet-progress-fill: {{ section.settings.progress_color }};
+    --moya-meet-progress-icon: {{ section.settings.progress_icon_color }};
+  "
+>
+  <span id="moya-features" aria-hidden="true"></span>
+  <div class="moya-meet__sticky" data-moya-ref="sticky">
+    <div class="moya-meet__scenes">
+      <article class="moya-meet__scene moya-meet__scene--cover is-active" data-moya-ref="scenes[]" aria-label="1 / {{ moya_meet_scene_count }}">
+        {%- if section.settings.cover_image != blank -%}
+          <div class="moya-meet__media" aria-hidden="true">
+            {{
+              section.settings.cover_image
+              | image_url: width: 3840
+              | image_tag:
+                loading: 'lazy',
+                widths: '750,1100,1500,1780,2000,2500,3000,3840',
+                sizes: '100vw',
+                alt: ''
+            }}
+          </div>
+        {%- endif -%}
+
+        <div class="moya-meet__content moya-meet__content--center">
+          <div class="moya-meet__inner">
+            {%- if section.settings.cover_heading != blank -%}
+              <h2 class="moya-meet__heading moya-meet__reveal">{{ section.settings.cover_heading }}</h2>
+            {%- endif -%}
+          </div>
+        </div>
+      </article>
+
+      {%- for block in section.blocks -%}
+        {%- assign moya_meet_has_eyebrow = false -%}
+        {%- if block.settings.eyebrow != blank -%}
+          {%- assign moya_meet_has_eyebrow = true -%}
+        {%- endif -%}
+        <article
+          class="moya-meet__scene"
+          data-moya-ref="scenes[]"
+          aria-label="{{ forloop.index | plus: 1 }} / {{ moya_meet_scene_count }}"
+          {{ block.shopify_attributes }}
+        >
+          {%- if block.settings.image != blank -%}
+            <div class="moya-meet__media" aria-hidden="true">
+              {{
+                block.settings.image
+                | image_url: width: 3840
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '750,1100,1500,1780,2000,2500,3000,3840',
+                  sizes: '100vw',
+                  alt: ''
+              }}
+            </div>
+          {%- endif -%}
+
+          <div class="moya-meet__content">
+            <div class="moya-meet__inner">
+              {%- if moya_meet_has_eyebrow -%}
+                <p class="moya-meet__eyebrow moya-meet__reveal">{{ block.settings.eyebrow | escape }}</p>
+              {%- endif -%}
+              {%- if block.settings.heading != blank -%}
+                <h3 class="moya-meet__heading moya-meet__reveal">{{ block.settings.heading }}</h3>
+              {%- endif -%}
+              {%- if block.settings.body != blank -%}
+                <p class="moya-meet__body moya-meet__reveal">{{ block.settings.body }}</p>
+              {%- endif -%}
+            </div>
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.show_progress -%}
+      <div class="moya-meet__progress" data-moya-ref="progress" aria-hidden="true">
+        <span class="moya-meet__progress-track"></span>
+        <span class="moya-meet__progress-fill" data-moya-ref="fill"></span>
+        <span class="moya-meet__progress-icon" data-moya-ref="icon">
+          {%- if section.settings.progress_icon != blank -%}
+            {{
+              section.settings.progress_icon
+              | image_url: width: 80
+              | image_tag: loading: 'lazy', widths: '20,40,60,80', sizes: '20px', alt: '', class: 'moya-meet__progress-face'
+            }}
+          {%- else -%}
+            <svg class="moya-meet__progress-face" viewBox="0 0 20 20" width="20" height="20" fill="none" aria-hidden="true" focusable="false">
+              <circle cx="10" cy="10" r="9.25" fill="currentColor"/>
+              <circle cx="7.1" cy="8.7" r="1.35" fill="#1c1c1c"/>
+              <circle cx="12.9" cy="8.7" r="1.35" fill="#1c1c1c"/>
+              <path d="M6.6 12.1c1.02 1.3 2.16 1.95 3.4 1.95s2.38-.65 3.4-1.95" stroke="#1c1c1c" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+          {%- endif -%}
+        </span>
+      </div>
+    {%- endif -%}
+  </div>
+</moya-meet-component>
+
+<script type="module">
+  import '{{ 'moya-meet.js' | asset_url }}';
+</script>
+
+{% stylesheet %}
+  .moya-meet {
+    display: block;
+    position: relative;
+    background-color: #111111;
+    font-family: 'Outfit', var(--heading-font-family, sans-serif);
+  }
+
+  .moya-meet__sticky {
+    position: relative;
+  }
+
+  .moya-meet__scenes {
+    display: block;
+  }
+
+  .moya-meet__scene {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100svh;
+    overflow: hidden;
+    background-color: #111111;
+  }
+
+  .moya-meet__media {
+    position: absolute;
+    inset: 0;
+  }
+
+  .moya-meet__media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+
+  .moya-meet__content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    padding-block: clamp(48px, 7vh, 96px);
+    padding-inline: clamp(20px, 7.22vw, 104px);
+  }
+
+  .moya-meet__content--center {
+    justify-content: center;
+  }
+
+  .moya-meet__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    max-width: 520px;
+  }
+
+  .moya-meet__content--center .moya-meet__inner {
+    align-items: center;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .moya-meet__eyebrow {
+    margin: 0;
+    padding: 2px 6px;
+    border-radius: 6px;
+    background-color: var(--moya-meet-eyebrow-bg, rgba(255, 255, 255, 0.2));
+    color: var(--moya-meet-eyebrow-color, #ffffff);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    white-space: nowrap;
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+  }
+
+  .moya-meet__heading {
+    margin: 0;
+    color: var(--moya-meet-heading, #ffffff);
+    font-family: inherit;
+    font-size: clamp(36px, 4.44vw, 64px);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    text-transform: none;
+  }
+
+  .moya-meet__heading > * {
+    margin: 0;
+  }
+
+  .moya-meet__eyebrow + .moya-meet__heading {
+    margin-top: 6px;
+  }
+
+  .moya-meet__body {
+    margin: 0;
+    max-width: 460px;
+    color: var(--moya-meet-body, rgba(255, 255, 255, 0.8));
+    font-family: inherit;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+  }
+
+  .moya-meet__heading + .moya-meet__body {
+    margin-top: 20px;
+  }
+
+  .moya-meet__progress {
+    display: none;
+  }
+
+  /* Enhanced (JS) pinned narrative */
+  .moya-meet.is-enhanced {
+    height: calc(var(--moya-meet-scenes, 1) * var(--moya-meet-scroll, 100) * 1vh);
+  }
+
+  .moya-meet.is-enhanced .moya-meet__sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  .moya-meet.is-enhanced .moya-meet__scene {
+    position: absolute;
+    inset: 0;
+    min-height: 0;
+    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* The cover sits underneath; every later scene fades in on top of it. */
+  .moya-meet.is-enhanced .moya-meet__scene:first-child {
+    opacity: 1;
+  }
+
+  .moya-meet.is-enhanced .moya-meet__scene.is-active {
+    pointer-events: auto;
+  }
+
+  /* Only the active scene's copy is shown, so crossfaded frames don't ghost. */
+  .moya-meet.is-enhanced .moya-meet__content {
+    transition: opacity 250ms ease;
+  }
+
+  .moya-meet.is-enhanced .moya-meet__scene:not(.is-active) .moya-meet__content {
+    opacity: 0;
+  }
+
+  .moya-meet.is-enhanced .moya-meet__reveal {
+    transform: translateY(24px);
+    transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .moya-meet.is-enhanced.is-inview .moya-meet__scene.is-active .moya-meet__reveal {
+    transform: translateY(0);
+  }
+
+  .moya-meet.is-enhanced.is-inview .moya-meet__scene.is-active .moya-meet__inner > :nth-child(2) {
+    transition-delay: 90ms;
+  }
+
+  .moya-meet.is-enhanced.is-inview .moya-meet__scene.is-active .moya-meet__inner > :nth-child(3) {
+    transition-delay: 180ms;
+  }
+
+  .moya-meet.is-enhanced .moya-meet__progress {
+    display: block;
+    position: absolute;
+    inset-inline-end: clamp(20px, 8.75vw, 126px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 208px;
+    z-index: 2;
+  }
+
+  .moya-meet__progress-track,
+  .moya-meet__progress-fill {
+    position: absolute;
+    inset-inline: 0;
+    border-radius: 10px;
+    pointer-events: none;
+  }
+
+  .moya-meet__progress-track {
+    inset-block: 0;
+    background-color: var(--moya-meet-progress-track, rgba(255, 255, 255, 0.2));
+  }
+
+  .moya-meet__progress-fill {
+    top: 0;
+    height: 0;
+    background-color: var(--moya-meet-progress-fill, #ffffff);
+  }
+
+  .moya-meet__progress-icon {
+    position: absolute;
+    top: 0;
+    inset-inline-start: 50%;
+    margin-inline-start: -10px;
+    display: block;
+    width: 20px;
+    height: 20px;
+    color: var(--moya-meet-progress-icon, #ffffff);
+    will-change: transform;
+  }
+
+  .moya-meet__progress-face {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  @media (max-width: 749px) {
+    .moya-meet__content {
+      padding-inline: 24px;
+    }
+
+    .moya-meet.is-enhanced .moya-meet__content:not(.moya-meet__content--center) {
+      padding-inline-end: 48px;
+    }
+
+    .moya-meet__heading {
+      font-size: 36px;
+    }
+
+    .moya-meet__body {
+      font-size: 16px;
+    }
+
+    .moya-meet.is-enhanced .moya-meet__reveal {
+      transform: translateY(16px);
+    }
+
+    .moya-meet.is-enhanced .moya-meet__progress {
+      inset-inline-end: 20px;
+      height: 140px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .moya-meet.is-enhanced .moya-meet__content,
+    .moya-meet.is-enhanced .moya-meet__reveal {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Moya Meet",
+  "tag": "section",
+  "class": "moya-meet-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Cover"
+    },
+    {
+      "type": "image_picker",
+      "id": "cover_image",
+      "label": "Cover image"
+    },
+    {
+      "type": "richtext",
+      "id": "cover_heading",
+      "label": "Cover heading",
+      "default": "<p>Let's Meet MoYa</p>"
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Body color",
+      "info": "Rendered at 80% opacity.",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_background",
+      "label": "Eyebrow background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "eyebrow_background_opacity",
+      "label": "Eyebrow background opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "eyebrow_text_color",
+      "label": "Eyebrow text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Progress indicator"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_progress",
+      "label": "Show progress indicator",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "progress_color",
+      "label": "Progress bar color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "progress_icon_color",
+      "label": "Icon color",
+      "info": "Applies to the built-in icon only.",
+      "default": "#ffffff"
+    },
+    {
+      "type": "image_picker",
+      "id": "progress_icon",
+      "label": "Icon image",
+      "info": "Optional. Falls back to the built-in icon when empty."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "scene_scroll",
+      "label": "Scroll distance per scene",
+      "min": 60,
+      "max": 200,
+      "step": 10,
+      "unit": "vh",
+      "default": 100
+    }
+  ],
+  "blocks": [
+    {
+      "type": "scene",
+      "name": "Scene",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Background image"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow",
+          "default": "AT HOME"
+        },
+        {
+          "type": "richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "<p>A quiet presence always within reach</p>"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Body",
+          "default": "Moya stays close through slow morning, busy afternoon, and everything in between."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Moya Meet",
+      "blocks": [
+        {
+          "type": "scene",
+          "settings": {
+            "eyebrow": "AT HOME",
+            "heading": "<p>A quiet presence always within reach</p>",
+            "body": "Moya stays close through slow morning, busy afternoon, and everything in between."
+          }
+        },
+        {
+          "type": "scene",
+          "settings": {
+            "eyebrow": "BY YOUR SIDE",
+            "heading": "<p>A listener for everyday moment</p>",
+            "body": "Share what is on your mind while you work, pause, or simply need someone there."
+          }
+        },
+        {
+          "type": "scene",
+          "settings": {
+            "eyebrow": "CLOSE COMFORT",
+            "heading": "<p>Comfort you can hold</p>",
+            "body": "Soft, reassuring, and ready to meet you where the words are not enough."
+          }
+        },
+        {
+          "type": "scene",
+          "settings": {
+            "eyebrow": "AT NIGHT",
+            "heading": "<p>Here when the world get quiet</p>",
+            "body": "Settle with a familiar voice and gentle present beside you."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

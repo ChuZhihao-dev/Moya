@@ -1,0 +1,182 @@
+{% comment %}
+  Science chapter introduction. The original Figma particle texture remains the
+  default artwork; merchants can replace it independently on desktop and mobile.
+{% endcomment %}
+
+{% render 'moya-fonts' %}
+{{ 'moya-science-experience.css' | asset_url | stylesheet_tag }}
+
+<moya-science-intro
+  id="Moya-Science-Intro-{{ section.id }}"
+  class="moya-science"
+  role="region"
+  aria-labelledby="Moya-Science-Heading-{{ section.id }}"
+  data-animation="{{ section.settings.enable_animation }}"
+  data-background-image="{% if section.settings.background_image != blank %}true{% else %}false{% endif %}"
+  data-mobile-background-image="{% if section.settings.mobile_image != blank %}true{% else %}false{% endif %}"
+  style="
+    --moya-science-height: 100vh;
+    --moya-science-mobile-height: 100vh;
+    --moya-science-background: {{ section.settings.background_color }};
+    --moya-science-heading: {{ section.settings.heading_color }};
+    --moya-science-body: {{ section.settings.body_color | color_modify: 'alpha', 0.8 }};
+    --moya-science-opacity: {{ section.settings.background_opacity | divided_by: 100.0 }};
+  "
+>
+  <div class="moya-science__stage">
+  <div class="moya-science__backdrop" aria-hidden="true">
+    <div class="moya-science__field{% if section.settings.mobile_image != blank %} moya-science__field--mobile-image{% endif %}">
+      <picture>
+        {%- if section.settings.mobile_image != blank -%}
+          <source
+            media="(max-width: 749px)"
+            srcset="{{ section.settings.mobile_image | image_url: width: 375 }} 375w, {{ section.settings.mobile_image | image_url: width: 750 }} 750w, {{ section.settings.mobile_image | image_url: width: 1100 }} 1100w"
+            sizes="100vw"
+            width="{{ section.settings.mobile_image.width }}"
+            height="{{ section.settings.mobile_image.height }}"
+          >
+        {%- endif -%}
+        {%- if section.settings.background_image != blank -%}
+          {{ section.settings.background_image | image_url: width: 3000 | image_tag: class: 'moya-science__image moya-science__image--custom', loading: 'lazy', widths: '750,1100,1470,2000,2400,3000', sizes: '100vw', alt: '' }}
+        {%- else -%}
+          <img
+            class="moya-science__image"
+            src="{{ 'moya-science-particles.png' | asset_url }}"
+            width="2183"
+            height="1130"
+            loading="lazy"
+            alt=""
+          >
+        {%- endif -%}
+      </picture>
+    </div>
+    <canvas class="moya-science__particles"></canvas>
+    <div class="moya-science__shade"></div>
+  </div>
+
+  <div class="moya-science__content">
+    <div class="moya-science__titles">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="moya-science__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h2 id="Moya-Science-Heading-{{ section.id }}" class="moya-science__heading">
+        {{- section.settings.heading | replace: '</p><p>', '<br>' | remove: '<p>' | remove: '</p>' -}}
+      </h2>
+    </div>
+    {%- if section.settings.body != blank -%}
+      <p class="moya-science__body">{{ section.settings.body | escape }}</p>
+    {%- endif -%}
+  </div>
+  <div class="moya-science__deck">
+    {% for block in section.blocks %}
+      <article class="moya-science__study" data-study="{{ block.settings.interaction }}" {{ block.shopify_attributes }}>
+        {%- liquid
+          case block.settings.interaction
+            when 'touch'
+              assign study_eyebrow = '01 / TOUCH'
+              assign study_note = 'A gentle touch. A response that unfolds around you.'
+            when 'safety'
+              assign study_eyebrow = '02 / A SENSE OF SAFETY'
+              assign study_note = 'Your gesture begins the conversation. MoYa answers softly.'
+            else
+              assign study_eyebrow = '03 / SLEEP & WELLBEING'
+              assign study_note = 'Less rush. More room to breathe. A quiet moment with MoYa.'
+          endcase
+        -%}
+        <div class="moya-science__study-copy">
+          <p class="moya-science__study-eyebrow">{{ block.settings.eyebrow | default: study_eyebrow | escape }}</p>
+          <h3>{{ block.settings.title | escape | replace: '. ', '. <br class="moya-science__mobile-break">' }}</h3>
+          <p>{{ block.settings.description | escape }}</p>
+        </div>
+        <div class="moya-science__experience">
+        <div class="moya-science__visual">
+          {% if block.settings.interaction == 'touch' %}
+            <img src="{{ 'moya-science-touch.png' | asset_url }}" width="1022" height="283" loading="lazy" alt="" class="moya-science__wave-fallback">
+          {% endif %}
+          <canvas aria-hidden="true"></canvas>
+          {% case block.settings.interaction %}
+            {% when 'sleep' %}
+              <div class="moya-science__rest-word" aria-hidden="true"><span>YOUR EVENING, SOFTER</span><strong data-rest-word>Let go.</strong></div>
+            {% when 'safety' %}
+              <span class="moya-science__wave-label moya-science__wave-label--you">● &nbsp; YOU</span>
+              <span class="moya-science__wave-label moya-science__wave-label--moya">● &nbsp; MOYA</span>
+            {% else %}
+              <p class="moya-science__caption">{{ block.settings.caption | escape }}</p>
+          {% endcase %}
+          {% unless block.settings.interaction == 'sleep' %}
+            <button type="button" class="moya-science__interact" data-pulse>
+              <span><i aria-hidden="true">+</i>{% if block.settings.interaction == 'touch' %}Touch the surface{% else %}Send a little hello{% endif %}</span>
+            </button>
+          {% endunless %}
+        </div>
+        {% if block.settings.interaction == 'sleep' %}
+          <div class="moya-science__phases" aria-label="Sleep rhythm">
+            <button type="button" data-phase="0" aria-pressed="true">Let go</button>
+            <button type="button" data-phase="6" aria-pressed="false">Slow down</button>
+            <button type="button" data-phase="12" aria-pressed="false">Rest</button>
+          </div>
+        {% endif %}
+        <div class="moya-science__metrics" aria-label="Illustrative interaction values">
+          {% for metric in (1..3) %}
+            <div class="moya-science__metric"><span data-label></span><div><strong data-value>—</strong> <span data-unit></span></div></div>
+          {% endfor %}
+        </div>
+        <p class="moya-science__study-note">{{ block.settings.note | default: study_note | escape }}</p>
+        </div>
+      </article>
+    {% endfor %}
+    <nav class="moya-science__navigation" aria-label="Science slides">
+      <button type="button" data-previous aria-label="Previous science slide"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m14 6-6 6 6 6M8 12h12" stroke="currentColor" stroke-width="1.5"/></svg></button>
+      <div class="moya-science__tabs">
+        {% for block in section.blocks %}<button type="button" data-slide="{{ forloop.index0 }}" aria-current="false" aria-label="{{ block.settings.tab_label | escape }}"><span>{{ block.settings.tab_label | escape }}</span></button>{% endfor %}
+      </div>
+      <button type="button" data-next aria-label="Next science slide"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m10 6 6 6-6 6M16 12H4" stroke="currentColor" stroke-width="1.5"/></svg></button>
+    </nav>
+  </div>
+  </div>
+</moya-science-intro>
+
+<script type="module" src="{{ 'moya-science-intro.js' | asset_url }}"></script>
+
+
+{% schema %}
+{
+  "name": "Moya Science Experience",
+  "tag": "section",
+  "class": "moya-science-intro-section",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Science behind MoYa" },
+    { "type": "richtext", "id": "heading", "label": "Heading", "default": "<p>The science of<br/>feeling held</p>" },
+    { "type": "textarea", "id": "body", "label": "Description", "default": "From touch to context, MoYa bring signals together\nto create calmer, more meaningful moments." },
+    { "type": "header", "content": "Background" },
+    { "type": "image_picker", "id": "background_image", "label": "Desktop background image", "info": "Leave blank to use the original Figma particle artwork." },
+    { "type": "image_picker", "id": "mobile_image", "label": "Mobile background image", "info": "Leave blank to use the desktop artwork with the mobile design crop." },
+    { "type": "checkbox", "id": "enable_animation", "label": "Enable gentle background motion", "default": true },
+    { "type": "range", "id": "background_opacity", "label": "Background image opacity", "min": 0, "max": 100, "step": 1, "unit": "%", "default": 62 },
+    { "type": "header", "content": "Layout and colors" },
+    { "type": "paragraph", "content": "展示区域在桌面和移动端均为 100vh，背景铺满全屏。" },
+    { "type": "color", "id": "background_color", "label": "Background color", "default": "#050907" },
+    { "type": "color", "id": "heading_color", "label": "Heading color", "default": "#ffffff" },
+    { "type": "color", "id": "body_color", "label": "Description color", "default": "#ffffff" }
+  ],
+  "max_blocks": 3,
+  "blocks": [{
+    "type": "study", "name": "Interactive study",
+    "settings": [
+      {"type":"select","id":"interaction","label":"Interaction","options":[{"value":"touch","label":"Touch"},{"value":"safety","label":"Safety"},{"value":"sleep","label":"Sleep"}],"default":"touch"},
+      {"type":"text","id":"tab_label","label":"Navigation label","default":"Touch"},
+      {"type":"text","id":"eyebrow","label":"Scene label"},
+      {"type":"textarea","id":"note","label":"Closing caption"},
+      {"type":"text","id":"title","label":"Title","default":"A little touch. A softer moment."},
+      {"type":"textarea","id":"description","label":"Description","default":"A soft embrace and a gentle rhythm, for the moments when you need to unwind."},
+      {"type":"text","id":"caption","label":"Visualization caption","default":"A soft point of contact"}
+    ]
+  }],
+  "presets": [{ "name": "Moya Science Experience", "blocks": [
+    {"type":"study","settings":{"interaction":"touch","tab_label":"Touch"}},
+    {"type":"study","settings":{"interaction":"safety","tab_label":"Safety","title":"A little hello. A feeling of safety.","description":"A gentle signal, a quiet response. A small reminder that you are not alone.","caption":"A rhythm shared"}},
+    {"type":"study","settings":{"interaction":"sleep","tab_label":"Sleep","title":"A slower rhythm. A softer landing.","description":"Let the day settle. Follow a softer rhythm toward a quieter moment.","caption":"Find your resting rhythm"}}
+  ] }]
+}
+{% endschema %}

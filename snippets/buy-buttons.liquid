@@ -1,0 +1,212 @@
+{%- comment -%}
+  ----------------------------------------------------------------------------------------------------------------------
+  BUY BUTTONS
+  ----------------------------------------------------------------------------------------------------------------------
+
+  This component is used to show the buy buttons
+
+  ********************************************
+  Supported variables
+  ********************************************
+
+  * product: the product from which to show the buttons
+  * show_payment_button: if we show or not the dynamic checkout button
+  * show_gift_card_recipient: for gift card products, an optional message/email to be sent to the recipient
+  * button_size: the size of the button (default to xl if none is passed)
+  * atc_button_background: the background of the ATC button
+  * atc_button_text_color: the text color of the ATC button
+  * payment_button_background: the custom dynamic checkout button background
+  * payment_button_text_color: the custom dynamic checkout button text color
+  * form_id: if specified, define the form ID linked to this input
+{%- endcomment -%}
+
+{%- assign variant_picker_block = section.blocks | where: 'type', 'variant_picker' | first -%}
+
+{%- assign recipient_feature_active = false -%}
+
+{%- if product.gift_card? and show_gift_card_recipient -%}
+  {%- assign recipient_feature_active = true -%}
+  {%- assign show_payment_button = false -%}
+{%- endif -%}
+
+{%- form 'product', product, is: 'product-form', id: form_id -%}
+  <input
+    type="hidden"
+    {% if variant_picker_block != blank %}
+      disabled
+    {% endif %}
+    name="id"
+    value="{{ product.selected_or_first_available_variant.id }}"
+  >
+
+  {%- assign button_disabled = false -%}
+  {%- assign button_size = button_size | default: 'xl' -%}
+
+  {%- if product.selected_or_first_available_variant == null -%}
+    {%- capture button_content -%}{{ 'product.general.unavailable_button' | t }}{%- endcapture -%}
+    {%- assign button_disabled = true -%}
+  {%- elsif product.selected_or_first_available_variant.available -%}
+    {%- if product.template_suffix contains 'pre-order' -%}
+      {%- capture button_content -%}{{ 'product.general.pre_order_button' | t }}{%- endcapture -%}
+    {%- else -%}
+      {%- capture button_content -%}{{ 'product.general.add_to_cart_button' | t }}{%- endcapture -%}
+    {%- endif -%}
+  {%- else -%}
+    {%- capture button_content -%}{{ 'product.general.sold_out_button' | t }}{%- endcapture -%}
+    {%- assign button_disabled = true -%}
+  {%- endif -%}
+  {% if product.metafields.custom.additional_products.value != blank %}
+    <div class="additional-products__container">
+      <div class="additional-products__outer">
+        <div class="additional-products__outer-title">
+          <label class="block-label text-subdued">Additional products outer:</label>
+        </div>
+        <input type="hidden" class="additional-products__input" name="properties[additional_products_outer]" value="">
+        <div class="additional-products__outer-list">
+          {% for product in product.metafields.custom.additional_products.value.outer_products.value %}
+            <div class="additional-products__item">
+              <div>
+                <img src="{{ product.featured_media  | img_url: '100x' }}" alt="{{ product.title }}">
+              </div>
+              <div class="additional-products__item-content">
+                <div class="additional-products__item-title">
+                  {{ product.title }}
+                </div>
+                <div class="additional-products__item-price">+{{ product.price | money }}</div>
+              </div>
+              <div class="additional-products__item-icon">
+                <svg
+                  t="1733381601753"
+                  class="icon"
+                  viewBox="0 0 1024 1024"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  p-id="1617"
+                  id="mx_n_1733381601753"
+                  width="32"
+                  height="32"
+                >
+                  <path d="M395.106182 628.896568 174.683743 408.474128 64.451232 518.706639 395.012767 849.268175 408.474128 835.806814 408.567543 835.900229 959.503436 284.964336 849.270925 174.731825 395.106182 628.896568Z" fill="#f0c417" p-id="1618"></path>
+                </svg>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="additional-products__inner">
+        <div class="additional-products__inner-title">
+          <label class="block-label text-subdued">Additional products inner:</label>
+        </div>
+        <input type="hidden" class="additional-products__input" name="properties[additional_products_inner]" value="">
+        <div class="additional-products__inner-list">
+          {% for product in product.metafields.custom.additional_products.value.inner_products.value %}
+            <div class="additional-products__item">
+              <div>
+                <img
+                  src="{{ product.featured_media  | img_url: '100x' }}"
+                  alt="{{ product.title }}"
+                  width="100"
+                  height="100"
+                >
+              </div>
+              <div class="additional-products__item-content">
+                <div class="additional-products__item-title">
+                  {{ product.title }}
+                </div>
+                <div class="additional-products__item-price">+{{ product.price | money }}</div>
+              </div>
+              <div class="additional-products__item-icon">
+                <svg
+                  t="1733381601753"
+                  class="icon"
+                  viewBox="0 0 1024 1024"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  p-id="1617"
+                  id="mx_n_1733381601753"
+                  width="32"
+                  height="32"
+                >
+                  <path d="M395.106182 628.896568 174.683743 408.474128 64.451232 518.706639 395.012767 849.268175 408.474128 835.806814 408.567543 835.900229 959.503436 284.964336 849.270925 174.731825 395.106182 628.896568Z" fill="#f0c417" p-id="1618"></path>
+                </svg>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="v-stack gap-4">
+    {%- if recipient_feature_active -%}
+      <gift-card-recipient class="gift-card-recipient v-stack gap-3">
+        {%- assign checkbox_label = 'gift_card.recipient.checkbox' | t -%}
+        {%- render 'checkbox', label: checkbox_label, name: 'properties[__shopify_send_gift_card_to_recipient]' -%}
+
+        <div class="gift-card-recipient__fields js:hidden">
+          <div class="fieldset">
+            {%- liquid
+              assign recipient_email_label = 'gift_card.recipient.email_label' | t
+              render 'input', type: 'email', label: recipient_email_label, name: 'properties[Recipient email]', value: form.email, required: true
+
+              assign recipient_name_label = 'gift_card.recipient.name_label' | t
+              render 'input', label: recipient_name_label, name: 'properties[Recipient name]', value: form.name
+
+              assign send_on_label = 'gift_card.recipient.send_on_label' | t
+              render 'input', type: 'date', label: send_on_label, name: 'properties[Send on]', value: form.send_on, pattern: '\d{4}-\d{2}-\d{2}'
+              render 'input', type: 'hidden', name: 'properties[__shopify_offset]'
+
+              assign message_label = 'gift_card.recipient.message_label' | t
+              render 'input', label: message_label, name: 'properties[Message]', value: form.message, multiline: 3, maxlength: 200, show_max_characters_count: true
+            -%}
+          </div>
+        </div>
+      </gift-card-recipient>
+    {%- endif -%}
+
+    <buy-buttons
+      class="buy-buttons {% if show_payment_button %}buy-buttons--multiple{% endif %}"
+      template="{{ product.template_suffix | escape }}"
+      form="{{ form_id }}"
+    >
+      {% comment %} {% unless product.metafields.custom.additional_products.value != blank %} {% endcomment %}
+      {%- render 'button',
+        content: button_content,
+        type: 'submit',
+        size: button_size,
+        disabled: button_disabled,
+        secondary: show_payment_button,
+        subdued: button_disabled,
+        background: atc_button_background,
+        text_color: atc_button_text_color
+      -%}
+      {% comment %}
+        {% else %}
+          <div class="additional-products__submit">
+            <div class="button button--xl button--secondary additional-products__buttons">Add to cart</div>
+          </div>
+        {% endunless %}
+      {% endcomment %}
+
+      {%- if show_payment_button -%}
+        {{- form | payment_button -}}
+
+        <style>
+          #{{ form_id }} .shopify-payment-button {
+            {%- unless product.selected_or_first_available_variant.available -%}
+              display: none;
+            {%- endunless -%}
+
+            {%- if payment_button_background != blank and payment_button_background != 'rgba(0,0,0,0)' -%}
+              --button-background: {{ payment_button_background.rgb }};
+            {%- endif -%}
+
+            {%- if payment_button_text_color != blank and payment_button_text_color != 'rgba(0,0,0,0)' -%}
+              --button-text-color: {{ payment_button_text_color.rgb }};
+            {%- endif -%}
+          }
+        </style>
+      {%- endif -%}
+    </buy-buttons>
+  </div>
+{%- endform -%}

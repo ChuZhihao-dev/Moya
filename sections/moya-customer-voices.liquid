@@ -1,0 +1,414 @@
+{% comment %}
+  Moya Customer Voices
+  “Customer Voices” 客户评价区:标题 + 旋转照片拼贴(带可选 @名称气泡标签) + 底部引文。
+  悬停 / 聚焦卡片会切换底部引文;拼贴区整体等比缩放以适配不同屏幕宽度。
+  装饰标签形状来自 assets/cv-tag.svg;照片默认使用 assets/cv-photo-N.png 占位,可在后台替换。
+{% endcomment %}
+
+{% render 'moya-fonts' %}
+
+<style>
+  #Moya-Customer-Voices-{{ section.id }} {
+    --cv-bg: {{ section.settings.background_color }};
+    --cv-heading-color: {{ section.settings.heading_color }};
+    --cv-body-color: {{ section.settings.body_color }};
+    --cv-quote-color: {{ section.settings.quote_color }};
+    --cv-tag-color: {{ section.settings.tag_color }};
+  }
+  .moya-cv-{{ section.id }} {
+    position: relative;
+    background-color: var(--cv-bg, #f0f2f2);
+    padding: clamp(64px, 8.33vw, 120px) clamp(20px, 7.22vw, 104px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+    overflow: hidden;
+    font-family: 'Outfit', var(--text-font-family, sans-serif);
+  }
+  .moya-cv-{{ section.id }}__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+    max-width: 720px;
+    text-align: center;
+  }
+  .moya-cv-{{ section.id }}__title {
+    margin: 0;
+    color: var(--cv-heading-color, #003521);
+    font-size: clamp(38px, 4.44vw, 64px);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-family: inherit;
+    text-transform: none;
+  }
+  .moya-cv-{{ section.id }}__subtitle {
+    margin: 0;
+    color: var(--cv-body-color, #4a5565);
+    color: color-mix(in srgb, var(--cv-body-color, #4a5565) 80%, transparent);
+    font-size: clamp(16px, 1.25vw, 18px);
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: -0.02em;
+  }
+
+  .moya-cv-{{ section.id }}__collage {
+    position: relative;
+    width: 100%;
+    max-width: 1232px;
+    height: 445px;
+  }
+  .moya-cv-{{ section.id }}__collage-inner {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 1232px;
+    height: 445px;
+    margin-left: -616px;
+    transform: scale(1);
+    transform-origin: top center;
+    will-change: transform;
+  }
+
+  .moya-cv-{{ section.id }}__card {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    z-index: 1;
+    transform-origin: center;
+    transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .moya-cv-{{ section.id }}__card.is-active {
+    z-index: 3;
+  }
+  .moya-cv-{{ section.id }}__card:hover,
+  .moya-cv-{{ section.id }}__card:focus-visible {
+    z-index: 5;
+    transform: translateY(-12px) scale(1.045);
+  }
+  .moya-cv-{{ section.id }}__card:focus-visible {
+    outline: 2px solid var(--cv-heading-color, #003521);
+    outline-offset: 4px;
+    border-radius: 24px;
+  }
+  .moya-cv-{{ section.id }}__card-inner {
+    display: block;
+    flex: none;
+  }
+  .moya-cv-{{ section.id }}__media {
+    position: relative;
+    display: block;
+    width: 217.523px;
+    height: 331.154px;
+    border-radius: 24px;
+    overflow: hidden;
+    background-color: #d9d9d9;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.24);
+  }
+  .moya-cv-{{ section.id }}__media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+  }
+  .moya-cv-{{ section.id }}__media--zoom img {
+    left: -30.15%;
+    top: 0;
+    width: 199.66%;
+    height: 100%;
+    object-fit: fill;
+  }
+
+  .moya-cv-{{ section.id }}__tag {
+    position: absolute;
+    width: 139px;
+    height: 45.418px;
+    transform: rotate(var(--cv-rot, 0deg));
+    z-index: 2;
+    pointer-events: none;
+  }
+  .moya-cv-{{ section.id }}__tag-bg {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(255, 255, 255, 0.6);
+    -webkit-backdrop-filter: blur(6.4px);
+    backdrop-filter: blur(6.4px);
+    -webkit-mask: url({{ 'cv-tag.svg' | asset_url }}) center / 100% 100% no-repeat;
+    mask: url({{ 'cv-tag.svg' | asset_url }}) center / 100% 100% no-repeat;
+  }
+  .moya-cv-{{ section.id }}__tag--flip .moya-cv-{{ section.id }}__tag-bg {
+    transform: scaleY(-1);
+  }
+  .moya-cv-{{ section.id }}__tag-label {
+    position: absolute;
+    left: 14px;
+    top: 6px;
+    color: var(--cv-tag-color, #003521);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: -0.02em;
+    font-family: inherit;
+    text-transform: none;
+    white-space: nowrap;
+  }
+  .moya-cv-{{ section.id }}__tag--flip .moya-cv-{{ section.id }}__tag-label {
+    top: 16px;
+  }
+
+  /* Intro animation: cards start stacked at the collage centre, then scatter. */
+  .moya-cv-{{ section.id }}__card-inner {
+    transition: transform var(--cv-enter-dur, 850ms) var(--cv-enter-ease, cubic-bezier(0.22, 1, 0.36, 1)) var(--cv-delay, 0ms);
+  }
+  .moya-cv-{{ section.id }}.is-animating .moya-cv-{{ section.id }}__card {
+    transition: transform var(--cv-enter-dur, 850ms) var(--cv-enter-ease, cubic-bezier(0.22, 1, 0.36, 1)) var(--cv-delay, 0ms);
+  }
+  .moya-cv-{{ section.id }}.is-stacked .moya-cv-{{ section.id }}__card,
+  .moya-cv-{{ section.id }}.is-stacked .moya-cv-{{ section.id }}__card-inner,
+  .moya-cv-{{ section.id }}.is-stacked .moya-cv-{{ section.id }}__tag {
+    transition: none;
+  }
+  .moya-cv-{{ section.id }}.is-stacked .moya-cv-{{ section.id }}__card {
+    transform: translate(var(--cv-stack-x, 0px), var(--cv-stack-y, 0px)) rotate(var(--cv-fan-rot, 0deg)) scale(0.86);
+  }
+  .moya-cv-{{ section.id }}.is-stacked .moya-cv-{{ section.id }}__card-inner {
+    transform: rotate(0deg) !important;
+  }
+  .moya-cv-{{ section.id }}.is-stacked .moya-cv-{{ section.id }}__card,
+  .moya-cv-{{ section.id }}.is-animating .moya-cv-{{ section.id }}__card {
+    pointer-events: none;
+  }
+  .moya-cv-{{ section.id }}__tag {
+    transition: opacity 400ms ease var(--cv-tag-delay, 400ms);
+  }
+  .moya-cv-{{ section.id }}.is-stacked .moya-cv-{{ section.id }}__tag {
+    opacity: 0;
+  }
+
+  .moya-cv-{{ section.id }}__quote {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 386px;
+    max-width: 100%;
+    text-align: center;
+  }
+  .moya-cv-{{ section.id }}__quote-text {
+    margin: 0;
+    color: var(--cv-quote-color, #37584d);
+    font-size: clamp(20px, 1.67vw, 24px);
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: -0.02em;
+  }
+  .moya-cv-{{ section.id }}__quote-name {
+    margin: 0;
+    color: var(--cv-body-color, #4a5565);
+    color: color-mix(in srgb, var(--cv-body-color, #4a5565) 80%, transparent);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: -0.02em;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .moya-cv-{{ section.id }}__card,
+    .moya-cv-{{ section.id }}__card-inner,
+    .moya-cv-{{ section.id }}__tag { transition: none; }
+  }
+</style>
+
+{%- assign cv_x = '19,220.73,422.2,621.51,773.94,960.78' | split: ',' -%}
+{%- assign cv_y = '64.68,19.22,51.57,9.48,68.92,43.57' | split: ',' -%}
+{%- assign cv_bw = '274.499,243.128,248.896,248.896,262.203,248.896' | split: ',' -%}
+{%- assign cv_bh = '365.394,347.379,350.858,350.858,358.608,350.858' | split: ',' -%}
+{%- assign cv_rot = '-10.55,-4.55,5.62,5.62,-8.14,5.62' | split: ',' -%}
+{%- assign cv_default_quote = '' -%}
+{%- assign cv_default_name = '' -%}
+{%- if section.blocks.size > 0 -%}
+  {%- assign cv_default_quote = section.blocks.first.settings.quote -%}
+  {%- assign cv_default_name = section.blocks.first.settings.blogger_name -%}
+{%- endif -%}
+
+<moya-customer-voices-component id="Moya-Customer-Voices-{{ section.id }}" class="moya-cv-{{ section.id }}" data-cv-intro="{{ section.settings.intro_animation }}">
+  <div class="moya-cv-{{ section.id }}__header">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="moya-cv-{{ section.id }}__title">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+    {%- if section.settings.subheading != blank -%}
+      <p class="moya-cv-{{ section.id }}__subtitle">{{ section.settings.subheading | escape }}</p>
+    {%- endif -%}
+  </div>
+
+  <div class="moya-cv-{{ section.id }}__collage" data-cv-collage>
+    <div class="moya-cv-{{ section.id }}__collage-inner" data-cv-collage-inner>
+      {%- for block in section.blocks -%}
+        {%- if forloop.index0 >= 6 -%}{%- break -%}{%- endif -%}
+        {%- assign cv_i = forloop.index0 -%}
+        <button
+          type="button"
+          class="moya-cv-{{ section.id }}__card"
+          style="left:{{ cv_x[cv_i] }}px; top:{{ cv_y[cv_i] }}px; width:{{ cv_bw[cv_i] }}px; height:{{ cv_bh[cv_i] }}px;"
+          data-cv-card
+          data-cv-quote="{{ block.settings.quote | strip_html | escape }}"
+          data-cv-name="{{ block.settings.blogger_name | escape }}"
+          aria-label="{{ block.settings.blogger_name | escape }}"
+          {{ block.shopify_attributes }}
+        >
+          <span class="moya-cv-{{ section.id }}__card-inner" style="transform: rotate({{ cv_rot[cv_i] }}deg);">
+            <span class="moya-cv-{{ section.id }}__media{% if cv_i == 3 %} moya-cv-{{ section.id }}__media--zoom{% endif %}">
+              {%- if block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '240,360,480,720,800', sizes: '218px', alt: block.settings.blogger_name, class: 'moya-cv-media-img' }}
+              {%- endif -%}
+            </span>
+          </span>
+
+          {%- if block.settings.show_tag -%}
+            {%- assign cv_tag_ok = false -%}
+            {%- case cv_i -%}
+              {%- when 0 -%}
+                {%- assign cv_tag_ok = true -%}{%- assign cv_tag_dx = -121.31 -%}{%- assign cv_tag_dy = -219.366 -%}{%- assign cv_tag_rot = -10 -%}{%- assign cv_tag_flip = false -%}
+              {%- when 2 -%}
+                {%- assign cv_tag_ok = true -%}{%- assign cv_tag_dx = -93.908 -%}{%- assign cv_tag_dy = 166.262 -%}{%- assign cv_tag_rot = 5 -%}{%- assign cv_tag_flip = true -%}
+              {%- when 5 -%}
+                {%- assign cv_tag_ok = true -%}{%- assign cv_tag_dx = -47.488 -%}{%- assign cv_tag_dy = -212.738 -%}{%- assign cv_tag_rot = 5 -%}{%- assign cv_tag_flip = false -%}
+            {%- endcase -%}
+            {%- if cv_tag_ok -%}
+              <span
+                class="moya-cv-{{ section.id }}__tag{% if cv_tag_flip %} moya-cv-{{ section.id }}__tag--flip{% endif %}"
+                style="left: calc(50% + {{ cv_tag_dx }}px); top: calc(50% + {{ cv_tag_dy }}px); --cv-rot: {{ cv_tag_rot }}deg;"
+              >
+                <span class="moya-cv-{{ section.id }}__tag-bg" aria-hidden="true"></span>
+                <span class="moya-cv-{{ section.id }}__tag-label">{{ block.settings.blogger_name | escape }}</span>
+              </span>
+            {%- endif -%}
+          {%- endif -%}
+        </button>
+
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <div class="moya-cv-{{ section.id }}__quote">
+    <p class="moya-cv-{{ section.id }}__quote-text" data-cv-quote-text aria-live="polite">“{{ cv_default_quote }}”</p>
+    <p class="moya-cv-{{ section.id }}__quote-name" data-cv-quote-name>- {{ cv_default_name }}</p>
+  </div>
+</moya-customer-voices-component>
+
+<script type="module" src="{{ 'moya-customer-voices.js' | asset_url }}"></script>
+
+{% schema %}
+{
+  "name": "Customer Voices",
+  "tag": "section",
+  "class": "moya-customer-voices",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Customer Voices"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Real stories from people who found more comfort, calm, and connection with MoYa."
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f0f2f2"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#003521"
+    },
+    {
+      "type": "color",
+      "id": "body_color",
+      "label": "Body text color",
+      "default": "#4a5565"
+    },
+    {
+      "type": "color",
+      "id": "quote_color",
+      "label": "Quote color",
+      "default": "#37584d"
+    },
+    {
+      "type": "color",
+      "id": "tag_color",
+      "label": "Name tag text color",
+      "default": "#003521"
+    },
+    {
+      "type": "checkbox",
+      "id": "intro_animation",
+      "label": "Play intro animation",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "blogger_name",
+          "label": "Blogger name",
+          "default": "@Blogger Name"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "quote",
+          "label": "Quote",
+          "default": "A calm presence when I need it most"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_tag",
+          "label": "Show name tag",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Customer Voices",
+      "blocks": [
+        { "type": "testimonial", "settings": { "show_tag": true } },
+        { "type": "testimonial" },
+        { "type": "testimonial", "settings": { "show_tag": true } },
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial", "settings": { "show_tag": true } }
+      ]
+    }
+  ]
+}
+{% endschema %}

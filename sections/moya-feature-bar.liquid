@@ -1,0 +1,306 @@
+{% comment %}
+  Moya Feature Bar
+  信任/权益横条:一行 4 个条目(图标 + 标题 + 描述),条目间以 134px 细竖线分隔。
+  图标可在后台上传图片,未上传时回退到内置线性 SVG;尺寸后台可配置。
+  颜色/背景/分隔线均暴露为后台 settings。非交互区块,无需 JS。
+{% endcomment %}
+
+{% render 'moya-fonts' %}
+
+{%- assign divider_alpha = section.settings.divider_opacity | divided_by: 100.0 -%}
+
+<style>
+  #Moya-Feature-Bar-{{ section.id }} {
+    --moya-fb-bg: {{ section.settings.background_color }};
+    --moya-fb-title: {{ section.settings.title_color }};
+    --moya-fb-text: {{ section.settings.text_color }};
+    --moya-fb-icon: {{ section.settings.icon_color }};
+    --moya-fb-icon-size: {{ section.settings.icon_size }}px;
+    --moya-fb-divider: {{ section.settings.divider_color | color_modify: 'alpha', divider_alpha }};
+  }
+    .moya-fb {
+    background-color: var(--moya-fb-bg, #f4f6f4);
+    padding: 60px 0 120px;
+    font-family: 'Lexend Deca', var(--text-font-family, sans-serif);
+  }
+  .moya-fb__grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .moya-fb__item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    padding: 0 42px;
+    text-align: center;
+  }
+  .moya-fb__item:not(:first-child)::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 1px;
+    height: 134px;
+    transform: translateY(-50%);
+    background-color: var(--moya-fb-divider, rgba(0, 53, 33, 0.1));
+  }
+  .moya-fb__icon-wrap {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--moya-fb-icon-size, 56px);
+    height: var(--moya-fb-icon-size, 56px);
+    color: var(--moya-fb-icon, #003521);
+  }
+  .moya-fb__icon-wrap svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .moya-fb__icon-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+  .moya-fb__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+  }
+  .moya-fb__title {
+    margin: 0;
+    color: var(--moya-fb-title, #003521);
+    font-family: 'Lexend Deca', var(--text-font-family, sans-serif);
+    font-size: 24px;
+    font-weight: 500;
+    font-style: normal;
+    line-height: 100%;
+    letter-spacing: 0;
+  }
+  .moya-fb__text {
+    margin: 0;
+    color: var(--moya-fb-text, #003521);
+    font-family: 'Lexend Deca', var(--text-font-family, sans-serif);
+    font-size: 16px;
+    font-weight: 400;
+    font-style: normal;
+    line-height: 150%;
+    letter-spacing: -0.04em;
+  }
+  .moya-fb__title p,
+  .moya-fb__text p {
+    margin: 0;
+  }
+
+  @media (max-width: 749px) {
+  .moya-fb {
+      padding: 40px 0 56px;
+    }
+    .moya-fb__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .moya-fb__item {
+      padding: 0 16px;
+    }
+    .moya-fb__item:nth-child(odd)::before {
+      display: none;
+    }
+    .moya-fb__item:nth-child(-n + 2) {
+      padding-bottom: 32px;
+    }
+    .moya-fb__item:nth-child(n + 3) {
+      padding-top: 32px;
+      border-top: 1px solid var(--moya-fb-divider, rgba(0, 53, 33, 0.1));
+    }
+    .moya-fb__title {
+      font-size: 20px;
+    }
+  }
+</style>
+
+<div id="Moya-Feature-Bar-{{ section.id }}" class="moya-fb">
+  <div class="moya-fb__grid" role="list">
+    {%- for block in section.blocks -%}
+      <div class="moya-fb__item" role="listitem" {{ block.shopify_attributes }}>
+        <span class="moya-fb__icon-wrap">
+          {%- if block.settings.icon_image != blank -%}
+            {%- assign icon_alt = block.settings.title | strip_html | default: 'Feature icon' | escape -%}
+            {{ block.settings.icon_image
+               | image_url: width: 224
+               | image_tag: loading: 'lazy', widths: '56,84,112,168,224', sizes: '96px', alt: icon_alt, class: 'moya-fb__icon-img' }}
+          {%- else -%}
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+              focusable="false"
+            >
+              {%- case block.settings.icon -%}
+                {%- when 'secure' -%}
+                  <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
+                  <path d="M9 12h6"/>
+                  <path d="M12 9v6"/>
+                {%- when 'returns' -%}
+                  <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                  <path d="M21 3v5h-5"/>
+                  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                  <path d="M8 16H3v5"/>
+                {%- when 'care' -%}
+                  <circle cx="11" cy="7.5" r="3.5"/>
+                  <path d="M4.5 20a6.5 6.5 0 0 1 6.5-6.5h1"/>
+                  <rect x="13.5" y="14.5" width="7.5" height="6.5" rx="1.5"/>
+                {%- when 'shipping' -%}
+                  <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/>
+                  <path d="M15 18H9"/>
+                  <path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/>
+                  <circle cx="17" cy="18" r="2"/>
+                  <circle cx="7" cy="18" r="2"/>
+                {%- when 'gift' -%}
+                  <rect x="3" y="8" width="18" height="4" rx="1"/>
+                  <path d="M12 8v13"/>
+                  <path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/>
+                  <path d="M7.5 8a2.5 2.5 0 0 1 0-5C9.5 3 11 5 12 8a4.8 4.8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/>
+                {%- else -%}
+                  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+              {%- endcase -%}
+            </svg>
+          {%- endif -%}
+        </span>
+        <div class="moya-fb__content">
+          {%- if block.settings.title != blank -%}
+            <div class="moya-fb__title">{{ block.settings.title }}</div>
+          {%- endif -%}
+          {%- if block.settings.description != blank -%}
+            <div class="moya-fb__text">{{ block.settings.description }}</div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Moya Feature Bar",
+  "tag": "section",
+  "class": "moya-feature-bar",
+  "settings": [
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon size",
+      "min": 24,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f4f6f4"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#003521"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Description color",
+      "default": "#003521"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "info": "Applies to the built-in icons only.",
+      "default": "#003521"
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider color",
+      "default": "#003521"
+    },
+    {
+      "type": "range",
+      "id": "divider_opacity",
+      "label": "Divider opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 10
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Icon image",
+          "info": "Optional. Falls back to the built-in icon below when empty."
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Built-in icon",
+          "options": [
+            { "value": "warranty", "label": "Warranty (wrench)" },
+            { "value": "secure", "label": "Secure checkout (shield)" },
+            { "value": "returns", "label": "Easy returns (arrows)" },
+            { "value": "care", "label": "Customer care (person)" },
+            { "value": "shipping", "label": "Shipping (truck)" },
+            { "value": "gift", "label": "Gift" }
+          ],
+          "default": "warranty"
+        },
+        {
+          "type": "richtext",
+          "id": "title",
+          "label": "Title",
+          "default": "<p>Warranty</p>"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>Coverage you can count on.</p>"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Moya Feature Bar",
+      "blocks": [
+        { "type": "feature", "settings": { "icon": "warranty", "title": "<p>Warranty</p>", "description": "<p>Coverage you can count on.</p>" } },
+        { "type": "feature", "settings": { "icon": "secure", "title": "<p>Secure Checkout</p>", "description": "<p>Safe and secure payments.</p>" } },
+        { "type": "feature", "settings": { "icon": "returns", "title": "<p>Easy Returns</p>", "description": "<p>Simple, worry-free returns.</p>" } },
+        { "type": "feature", "settings": { "icon": "care", "title": "<p>Customer Care</p>", "description": "<p>We're here when you need us.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,399 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "moya_hero_slideshow_JHHLaR": {
+      "type": "moya-hero-slideshow",
+      "blocks": {
+        "slide_8EX7WJ": {
+          "type": "slide",
+          "settings": {
+            "label": "",
+            "heading": "<p>Never feel alone again</p>",
+            "subheading": "MoYa is your always-on companion — here to listen, comfort,\nand hold you through every moment, big and small.",
+            "content_position": "left",
+            "vertical_position": "bottom",
+            "use_design_image": true,
+            "button_label": "Explore Features",
+            "button_link": "#moya-features"
+          }
+        },
+        "slide_xRhjJG": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/pic1_1.webp",
+            "label": "02 / SLEEP COMPANIONSHIP",
+            "heading": "<p>Here when the&nbsp;<br/>world gets quiet.</p>",
+            "subheading": "Share the small thoughts, long days,\nand ordinary moments that matter.",
+            "content_position": "right",
+            "vertical_position": "center",
+            "heading_color": "#ffffff",
+            "subheading_color": "#ffffff",
+            "navigation_tone": "light"
+          }
+        },
+        "slide_WfA9f3": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/pic1_2.webp",
+            "label": "03 / HUG & COMFORT",
+            "heading": "<p>Comfort you&nbsp;<br/>can feel.</p>",
+            "subheading": "A warm embrace and a gentle pat \nwhen words are not enough.",
+            "content_position": "left",
+            "vertical_position": "center",
+            "heading_color": "#ffffff",
+            "subheading_color": "#ffffff"
+          }
+        }
+      },
+      "block_order": [
+        "slide_8EX7WJ",
+        "slide_xRhjJG",
+        "slide_WfA9f3"
+      ],
+      "name": "Moya Hero Slideshow",
+      "settings": {
+        "heading_color": "#385950",
+        "subheading_color": "#4a5565",
+        "label_background": "#ffffff",
+        "label_background_opacity": 20,
+        "label_text_color": "#ffffff",
+        "overlay_color": "#000000",
+        "overlay_opacity": 0,
+        "show_dots": true,
+        "dot_color": "#ffffff",
+        "autoplay": false,
+        "autoplay_interval": 5,
+        "transition_duration": 900,
+        "padding_inline": 104,
+        "slideshow_label": "Highlights",
+        "desktop_height_vh": 100,
+        "mobile_height_vh": 100,
+        "allow_transparent_header": true,
+        "background_color": "#f0f2f2",
+        "show_bottom_fade": true,
+        "show_arrows": true,
+        "button_background": "#addbce",
+        "button_text_color": "#003521"
+      }
+    },
+    "moya_meet_fenGT4": {
+      "type": "moya-meet",
+      "blocks": {
+        "scene_ghg8M6": {
+          "type": "scene",
+          "settings": {
+            "eyebrow": "AT HOME",
+            "heading": "<p>A quiet presence always within reach</p>",
+            "body": "Moya stays close through slow morning, busy afternoon, and everything in between."
+          }
+        },
+        "scene_FiWijp": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/pic1_1_01396bfa-a733-438b-81a0-9ff430e8c791.webp",
+            "eyebrow": "BY YOUR SIDE",
+            "heading": "<p>A listener for everyday moment</p>",
+            "body": "Share what is on your mind while you work, pause, or simply need someone there."
+          }
+        },
+        "scene_WXxdhN": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/pic1_2_515b11d8-4391-4563-aa4f-cc329cb4c827.webp",
+            "eyebrow": "CLOSE COMFORT",
+            "heading": "<p>Comfort you can hold</p>",
+            "body": "Soft, reassuring, and ready to meet you where the words are not enough."
+          }
+        },
+        "scene_hafWyR": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/pic1_3.webp",
+            "eyebrow": "AT NIGHT",
+            "heading": "<p>Here when the world get quiet</p>",
+            "body": "Settle with a familiar voice and gentle present beside you."
+          }
+        }
+      },
+      "block_order": [
+        "scene_ghg8M6",
+        "scene_FiWijp",
+        "scene_WXxdhN",
+        "scene_hafWyR"
+      ],
+      "name": "Moya Meet",
+      "settings": {
+        "cover_image": "shopify://shop_images/pic1_5ef50940-d149-4146-8499-e33c4a5e0325.webp",
+        "cover_heading": "<p>Let's Meet MoYa</p>",
+        "heading_color": "#ffffff",
+        "body_color": "#ffffff",
+        "eyebrow_background": "#ffffff",
+        "eyebrow_background_opacity": 20,
+        "eyebrow_text_color": "#ffffff",
+        "show_progress": true,
+        "progress_color": "#ffffff",
+        "progress_icon_color": "#ffffff",
+        "progress_icon": "shopify://shop_images/Vector.svg",
+        "scene_scroll": 100
+      }
+    },
+    "moya_innovation_research_mDzrmc": {
+      "type": "moya-innovation-research",
+      "blocks": {
+        "logo_V3wXiw": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/Frame_1948755490_4.png",
+            "title": "Red Dot Award",
+            "link": ""
+          }
+        },
+        "logo_ezCqNi": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/Frame_1948755490_3.png",
+            "title": "Design Intelligence Award",
+            "link": ""
+          }
+        },
+        "logo_BNzp3b": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/Frame_1948755490_2.png",
+            "title": "Beyond Expo",
+            "link": ""
+          }
+        },
+        "logo_bhebnc": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/Frame_1948755490_1.png",
+            "title": "Milano Design Week",
+            "link": ""
+          }
+        },
+        "logo_jHAFCB": {
+          "type": "logo",
+          "settings": {
+            "logo": "shopify://shop_images/Frame_1948755490.png",
+            "title": "iF Design Award",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "logo_V3wXiw",
+        "logo_ezCqNi",
+        "logo_BNzp3b",
+        "logo_bhebnc",
+        "logo_jHAFCB"
+      ],
+      "name": "Moya Innovation Research",
+      "settings": {
+        "eyebrow": "Recognition",
+        "heading": "Innovation & Research",
+        "subheading": "<p>Years of research and innovation go into every embrace.&nbsp;<br/>MoYa is protected by a global portfolio of patents.<br/></p>",
+        "background_color": "#f0f2f2",
+        "eyebrow_color": "#37584d",
+        "heading_color": "#003521",
+        "body_color": "#4a5565",
+        "card_background": "#ffffff"
+      }
+    },
+    "moya_customer_voices_4NnbFN": {
+      "type": "moya-customer-voices",
+      "blocks": {
+        "testimonial_4hMM4k": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/blogger_2.webp",
+            "blogger_name": "@Blogger Name",
+            "quote": "A calm presence when I need it most",
+            "show_tag": true
+          }
+        },
+        "testimonial_FkbQir": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/blogger_5.webp",
+            "blogger_name": "@Blogger Name",
+            "quote": "A calm presence when I need it most",
+            "show_tag": false
+          }
+        },
+        "testimonial_TjCdt6": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/blogger_3.webp",
+            "blogger_name": "@Blogger Name",
+            "quote": "A calm presence when I need it most",
+            "show_tag": true
+          }
+        },
+        "testimonial_FmLEcG": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/blogger_1.webp",
+            "blogger_name": "@Blogger Name",
+            "quote": "A calm presence when I need it most",
+            "show_tag": false
+          }
+        },
+        "testimonial_T6N97n": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/blogger_6.webp",
+            "blogger_name": "@Blogger Name",
+            "quote": "A calm presence when I need it most",
+            "show_tag": false
+          }
+        },
+        "testimonial_WgGGkh": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/blogger_4.webp",
+            "blogger_name": "@Blogger Name",
+            "quote": "A calm presence when I need it most",
+            "show_tag": true
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_4hMM4k",
+        "testimonial_FkbQir",
+        "testimonial_TjCdt6",
+        "testimonial_FmLEcG",
+        "testimonial_T6N97n",
+        "testimonial_WgGGkh"
+      ],
+      "name": "Customer Voices",
+      "settings": {
+        "heading": "Customer Voices",
+        "subheading": "Real stories from people who found more comfort, calm, and connection with MoYa.",
+        "background_color": "#f0f2f2",
+        "heading_color": "#003521",
+        "body_color": "#4a5565",
+        "quote_color": "#37584d",
+        "tag_color": "#003521",
+        "intro_animation": true
+      }
+    },
+    "moya_feature_bar_jXCdiz": {
+      "type": "moya-feature-bar",
+      "blocks": {
+        "feature_cCjyT3": {
+          "type": "feature",
+          "settings": {
+            "icon": "warranty",
+            "title": "<p>Warranty</p>",
+            "description": "<p>Coverage you can count on.</p>"
+          }
+        },
+        "feature_KVawb8": {
+          "type": "feature",
+          "settings": {
+            "icon": "secure",
+            "title": "<p>Secure Checkout</p>",
+            "description": "<p>Safe and secure payments.</p>"
+          }
+        },
+        "feature_VfPNax": {
+          "type": "feature",
+          "settings": {
+            "icon": "returns",
+            "title": "<p>Easy Returns</p>",
+            "description": "<p>Simple, worry-free returns.</p>"
+          }
+        },
+        "feature_NrUWDi": {
+          "type": "feature",
+          "settings": {
+            "icon": "care",
+            "title": "<p>Customer Care</p>",
+            "description": "<p>We're here when you need us.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "feature_cCjyT3",
+        "feature_KVawb8",
+        "feature_VfPNax",
+        "feature_NrUWDi"
+      ],
+      "name": "Moya Feature Bar",
+      "settings": {
+        "icon_size": 56,
+        "background_color": "#f4f6f4",
+        "title_color": "#003521",
+        "text_color": "#003521",
+        "icon_color": "#003521",
+        "divider_color": "#003521",
+        "divider_opacity": 10
+      }
+    },
+    "moya_science_intro": {
+      "type": "moya-science-intro",
+      "name": "Moya Science Experience",
+      "settings": {
+        "eyebrow": "Science behind MoYa",
+        "heading": "<p>The science of feeling held.</p>",
+        "body": "From touch to context, MoYa bring signals together\nto create calmer, more meaningful moments.",
+        "enable_animation": true,
+        "background_opacity": 62,
+        "background_color": "#050907",
+        "heading_color": "#ffffff",
+        "body_color": "#ffffff"
+      },
+      "blocks": {
+        "study_touch": {
+          "type": "study",
+          "settings": {
+            "interaction": "touch",
+            "tab_label": "Touch"
+          }
+        },
+        "study_safety": {
+          "type": "study",
+          "settings": {
+            "interaction": "safety",
+            "tab_label": "Safety",
+            "title": "A little hello. A feeling of safety.",
+            "description": "A gentle signal, a quiet response. A small reminder that you are not alone.",
+            "caption": "A rhythm shared"
+          }
+        },
+        "study_sleep": {
+          "type": "study",
+          "settings": {
+            "interaction": "sleep",
+            "tab_label": "Sleep",
+            "title": "A slower rhythm. A softer landing.",
+            "description": "Let the day settle. Follow a softer rhythm toward a quieter moment.",
+            "caption": "Find your resting rhythm"
+          }
+        }
+      },
+      "block_order": [
+        "study_touch",
+        "study_safety",
+        "study_sleep"
+      ]
+    }
+  },
+  "order": [
+    "moya_hero_slideshow_JHHLaR",
+    "moya_meet_fenGT4",
+    "moya_science_intro",
+    "moya_innovation_research_mDzrmc",
+    "moya_customer_voices_4NnbFN",
+    "moya_feature_bar_jXCdiz"
+  ]
+}

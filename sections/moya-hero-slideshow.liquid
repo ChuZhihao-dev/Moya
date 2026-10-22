@@ -1,0 +1,937 @@
+{% comment %}
+  Moya Hero Slideshow
+  Figma KV: viewport-relative desktop hero, bottom-aligned copy and action, original design imagery.
+  Merchant images, text, placement and controls remain editable; supports swipe and keyboard navigation.
+{% endcomment %}
+
+{% render 'moya-fonts' %}
+
+{%- assign moya_hero_label_alpha = section.settings.label_background_opacity | divided_by: 100.0 -%}
+{%- assign moya_hero_overlay_alpha = section.settings.overlay_opacity | divided_by: 100.0 -%}
+
+<style>
+  #shopify-section-{{ section.id }} {
+    --moya-hero-header-offset: 0px;
+    {%- if section.settings.allow_transparent_header -%}
+      --moya-hero-header-offset: calc(var(--header-height, 0px) * var(--section-is-first, 0));
+      margin-block-start: calc(-1 * var(--moya-hero-header-offset));
+    {%- endif -%}
+  }
+  #Moya-Hero-Slideshow-{{ section.id }} {
+    --moya-hero-heading: {{ section.settings.heading_color }};
+    --moya-hero-subheading: {{ section.settings.subheading_color | color_modify: 'alpha', 0.8 }};
+    --moya-hero-label-bg: {{ section.settings.label_background | color_modify: 'alpha', moya_hero_label_alpha }};
+    --moya-hero-label-color: {{ section.settings.label_text_color }};
+    --moya-hero-overlay: {{ section.settings.overlay_color | color_modify: 'alpha', moya_hero_overlay_alpha }};
+    --moya-hero-dot: {{ section.settings.dot_color }};
+    --moya-hero-dur: {{ section.settings.transition_duration }}ms;
+    --moya-hero-pad: {{ section.settings.padding_inline }}px;
+    --moya-hero-background: {{ section.settings.background_color }};
+    --moya-hero-height: {{ section.settings.desktop_height_vh }}vh;
+    --moya-hero-mobile-height: {{ section.settings.mobile_height_vh }}vh;
+  }
+  .moya-hero {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: var(--moya-hero-height, 100vh);
+    overflow: hidden;
+    background-color: var(--moya-hero-background, #f0f2f2);
+    font-family: 'Outfit', var(--heading-font-family, sans-serif);
+    touch-action: pan-y;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .moya-hero.is-dragging {
+    cursor: grabbing;
+  }
+  .moya-hero.is-dragging img {
+    pointer-events: none;
+  }
+  .moya-hero:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: -4px;
+  }
+  .moya-hero__viewport {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .moya-hero__track {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    transition: transform var(--moya-hero-dur, 900ms) cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+  .moya-hero__slide {
+    position: relative;
+    flex: 0 0 100%;
+    min-width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--moya-hero-background, #f0f2f2);
+  }
+  .moya-hero__media {
+    position: absolute;
+    inset: 0;
+  }
+  .moya-hero__media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+  .moya-hero__media--mobile-only,
+  .moya-hero__mobile-video { display: none; }
+  .moya-hero__mobile-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+  .moya-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background-color: var(--moya-hero-overlay);
+    pointer-events: none;
+  }
+  .moya-hero__fade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 67.07%, var(--moya-hero-background, #f0f2f2) 100%);
+    pointer-events: none;
+  }
+
+  .moya-hero__content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    gap: 32px;
+    padding: calc(64px + var(--moya-hero-header-offset, 0px)) min(var(--moya-hero-pad), 8vw) 120px;
+  }
+  .moya-hero__content--left {
+    justify-content: flex-start;
+  }
+  .moya-hero__content--right {
+    justify-content: flex-end;
+    flex-direction: row-reverse;
+  }
+  .moya-hero__content--top {
+    align-items: flex-start;
+  }
+  .moya-hero__content--center {
+    align-items: center;
+  }
+  .moya-hero__content--bottom {
+    align-items: flex-end;
+  }
+
+  .moya-hero__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    text-align: left;
+  }
+  .moya-hero__content--right .moya-hero__inner {
+    align-items: flex-end;
+    text-align: right;
+  }
+  .moya-hero__label {
+    margin:0 0 8px 0;
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 6px;
+    background-color: var(--moya-hero-label-bg);
+    color: var(--moya-hero-label-color);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.2;
+    text-transform: uppercase;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    -webkit-backdrop-filter: blur(6.4px);
+    backdrop-filter: blur(6.4px);
+  }
+  .moya-hero__heading {
+    margin: 0;
+    color: var(--moya-hero-heading);
+    font-size: clamp(40px, 4.445vw, 64px);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-family: inherit;
+    text-transform: none;
+  }
+  .moya-hero__heading > * {
+    margin: 0;
+  }
+  .moya-hero__subheading {
+    margin: 18px 0 0;
+    max-width: 466px;
+    color: var(--moya-hero-subheading);
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: -0.02em;
+    white-space: pre-line;
+  }
+  .moya-hero__action {
+    flex-shrink: 0;
+    margin-inline-start: auto;
+  }
+  .moya-hero__content--right .moya-hero__action {
+    margin-inline-start: 0;
+    margin-inline-end: auto;
+  }
+  .moya-hero__action .button {
+    --button-border-radius: 59px;
+    min-width: 210px;
+    min-height: 54px;
+    padding: 15px 46px;
+    border: 0;
+    border-radius: 59px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    letter-spacing: -0.02em;
+    text-transform: none;
+  }
+  .moya-hero__arrows {
+    position: absolute;
+    inset: 50% 40px auto;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .moya-hero__arrow {
+    display: grid;
+    place-items: center;
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    pointer-events: auto;
+  }
+  .moya-hero__arrow:focus-visible {
+    outline: 2px solid var(--moya-hero-heading);
+    outline-offset: 4px;
+  }
+  .moya-hero__arrow picture {
+    display: block;
+    grid-area: 1 / 1;
+    pointer-events: none;
+    transition: opacity 200ms ease;
+  }
+  .moya-hero__arrow img { display: block; pointer-events: none; }
+  .moya-hero__arrow-hover { opacity: 0; }
+  .moya-hero[data-navigation-tone="light"] .moya-hero__arrow-default {
+    filter: brightness(0) invert(1);
+  }
+  @media (hover: hover) {
+    .moya-hero__arrow:hover .moya-hero__arrow-default { opacity: 0; }
+    .moya-hero__arrow:hover .moya-hero__arrow-hover { opacity: 1; }
+  }
+  .moya-hero__arrow--next img { transform: scaleX(-1); }
+
+  /* Content reveal: only the active slide animates its copy in. */
+  .moya-hero__inner > * {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 600ms ease, transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .moya-hero__inner > *:nth-child(2) {
+    transition-delay: 80ms;
+  }
+  .moya-hero__inner > *:nth-child(3) {
+    transition-delay: 160ms;
+  }
+  .moya-hero__slide.is-active .moya-hero__inner > * {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .moya-hero__dots {
+    position: absolute;
+    left: 50%;
+    bottom: 33px;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 2;
+  }
+  .moya-hero__dot {
+    appearance: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    width: 8px;
+    height: 24px;
+    border-radius: 999px;
+    background-color: transparent;
+    opacity: 0.5;
+    cursor: pointer;
+    transition: width 400ms cubic-bezier(0.22, 1, 0.36, 1), opacity 400ms ease;
+  }
+  .moya-hero__dot::before {
+    content: '';
+    display: block;
+    width: 8px;
+    height: 8px;
+    margin: auto;
+    border-radius: 999px;
+    background-color: var(--moya-hero-dot);
+  }
+  .moya-hero__dot.is-active {
+    width: 32px;
+    opacity: 1;
+  }
+  .moya-hero__dot.is-active::before { width: 32px; }
+  .moya-hero__dot:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 749px) {
+    .moya-hero {
+      height: var(--moya-hero-mobile-height, 100vh);
+    }
+    .moya-hero__slide--design { background-color: #f7f7f7; }
+    .moya-hero__media--mobile-only,
+    .moya-hero__mobile-video { display: block; }
+    .moya-hero__content {
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: stretch;
+      gap: 24px;
+      padding: calc(40px + var(--moya-hero-header-offset, 0px)) 24px 80px;
+    }
+    .moya-hero__content--top { justify-content: flex-start; }
+    .moya-hero__content--center { justify-content: center; }
+    .moya-hero__inner {
+      max-width: 100%;
+    }
+    .moya-hero__heading {
+      font-size: clamp(36px, 9.6vw, 48px);
+    }
+    .moya-hero__subheading {
+      font-size: 16px;
+    }
+    .moya-hero__dots {
+      bottom: 10px;
+    }
+    .moya-hero__dot { width: 4px; }
+    .moya-hero__dot::before { width: 4px; height: 4px; }
+    .moya-hero__dot.is-active,
+    .moya-hero__dot.is-active::before { width: 11px; }
+    .moya-hero__action,
+    .moya-hero__content--right .moya-hero__action { margin: 0; }
+    .moya-hero__arrows { inset: 260px 16px auto; transform: none; }
+    .moya-hero__arrow,
+    .moya-hero__arrow img { width: 24px; height: 24px; }
+    .moya-hero__slide--design .moya-hero__content {
+      justify-content: flex-start;
+      align-items: center;
+      gap: 13.4375px;
+      padding: calc(32px + var(--moya-hero-header-offset, 0px)) 16px 0;
+    }
+    .moya-hero__slide--design .moya-hero__inner {
+      align-items: center;
+      text-align: center;
+    }
+    .moya-hero__slide--design .moya-hero__heading {
+      width: 229px;
+      max-width: 100%;
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: normal;
+      text-transform: capitalize;
+    }
+    .moya-hero__slide--design .moya-hero__subheading {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      width: 235px;
+      max-width: 100%;
+      height: 29px;
+      margin-top: 9px;
+      font-size: 10px;
+      line-height: 1.3;
+      letter-spacing: normal;
+      white-space: normal;
+      text-overflow: ellipsis;
+    }
+    .moya-hero__slide--design .moya-hero__action .button {
+      min-width: 138px;
+      min-height: 32px;
+      padding: 8px 16px;
+      font-family: 'Montserrat', 'Outfit', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 16px;
+      letter-spacing: normal;
+      color: #000000;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .moya-hero__track,
+    .moya-hero__inner > *,
+    .moya-hero__dot {
+      transition: none;
+    }
+  }
+</style>
+
+<moya-hero-component
+  id="Moya-Hero-Slideshow-{{ section.id }}"
+  class="moya-hero"
+  role="region"
+  aria-roledescription="carousel"
+  aria-label="{{ section.settings.slideshow_label | escape }}"
+  tabindex="0"
+  data-moya-hero
+  {% if section.settings.allow_transparent_header %}allow-transparent-header{% endif %}
+  data-navigation-tone="{{ section.blocks.first.settings.navigation_tone | default: 'dark' }}"
+  data-autoplay="{{ section.settings.autoplay }}"
+  data-autoplay-interval="{{ section.settings.autoplay_interval | times: 1000 }}"
+>
+  <div class="moya-hero__viewport">
+    <div class="moya-hero__track" dir="ltr" data-moya-hero-track>
+      {%- for block in section.blocks -%}
+        {%- assign moya_hero_mobile_poster = block.settings.mobile_image | default: block.settings.mobile_video.preview_image -%}
+        <div
+          class="moya-hero__slide{% if forloop.first %} is-active{% endif %}{% if block.settings.image == blank and block.settings.use_design_image %} moya-hero__slide--design{% endif %}{% if block.settings.mobile_image != blank or block.settings.mobile_video != blank %} moya-hero__slide--mobile-media{% endif %}"
+          id="MoyaHeroSlide-{{ section.id }}-{{ block.id }}"
+          dir="{% render 'direction' %}"
+          data-moya-hero-slide
+          data-navigation-tone="{{ block.settings.navigation_tone | default: 'dark' }}"
+          style="{% if block.settings.heading_color != blank %}--moya-hero-heading: {{ block.settings.heading_color }};{% endif %}{% if block.settings.subheading_color != blank %}--moya-hero-subheading: {{ block.settings.subheading_color }};{% endif %}"
+          role="group"
+          aria-roledescription="slide"
+          aria-label="{{ forloop.index }} / {{ forloop.length }}"
+          aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
+          {% unless forloop.first %}inert{% endunless %}
+          {{ block.shopify_attributes }}
+        >
+          {%- if block.settings.image != blank or block.settings.use_design_image or moya_hero_mobile_poster != blank or block.settings.mobile_video != blank -%}
+            {%- if forloop.first -%}
+              {%- assign moya_hero_loading = 'eager' -%}
+              {%- assign moya_hero_priority = 'high' -%}
+            {%- else -%}
+              {%- assign moya_hero_loading = 'lazy' -%}
+              {%- assign moya_hero_priority = 'auto' -%}
+            {%- endif -%}
+            {%- assign moya_hero_alt = block.settings.heading | strip_html -%}
+            <div class="moya-hero__media{% if block.settings.image == blank and block.settings.use_design_image %} moya-hero__media--design{% elsif block.settings.image == blank %} moya-hero__media--mobile-only{% endif %}">
+              <picture>
+                {%- if moya_hero_mobile_poster != blank -%}
+                  <source
+                    media="(max-width: 749px)"
+                    srcset="{{ moya_hero_mobile_poster | image_url: width: 375 }} 375w, {{ moya_hero_mobile_poster | image_url: width: 550 }} 550w, {{ moya_hero_mobile_poster | image_url: width: 750 }} 750w, {{ moya_hero_mobile_poster | image_url: width: 1100 }} 1100w, {{ moya_hero_mobile_poster | image_url: width: 1500 }} 1500w"
+                    sizes="100vw"
+                    width="{{ moya_hero_mobile_poster.width }}"
+                    height="{{ moya_hero_mobile_poster.height }}"
+                  >
+                {%- endif -%}
+              {%- if block.settings.image != blank -%}
+                {{
+                block.settings.image
+                | image_url: width: 3840
+                | image_tag:
+                  loading: moya_hero_loading,
+                  widths: '750,1100,1500,1780,2000,2500,3000,3840',
+                  sizes: '100vw',
+                  fetchpriority: moya_hero_priority,
+                  alt: moya_hero_alt
+                }}
+              {%- elsif block.settings.use_design_image -%}
+                <img
+                  src="{{ 'moya-hero-companion.png' | asset_url }}"
+                  width="3200"
+                  height="1838"
+                  loading="{{ moya_hero_loading }}"
+                  fetchpriority="{{ moya_hero_priority }}"
+                  alt="{{ moya_hero_alt | escape }}"
+                >
+              {%- elsif moya_hero_mobile_poster != blank -%}
+                {{ moya_hero_mobile_poster | image_url: width: 1500 | image_tag: loading: moya_hero_loading, sizes: '100vw', widths: '375,550,750,1100,1500', alt: moya_hero_alt }}
+              {%- endif -%}
+              </picture>
+              {%- if block.settings.mobile_video != blank -%}
+                {%- assign moya_hero_mobile_poster_url = moya_hero_mobile_poster | image_url: width: 1100 -%}
+                {{ block.settings.mobile_video | video_tag: class: 'moya-hero__mobile-video', autoplay: false, controls: false, playsinline: true, muted: true, loop: true, preload: 'none', poster: moya_hero_mobile_poster_url }}
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+          <div class="moya-hero__overlay" aria-hidden="true"></div>
+          {%- if section.settings.show_bottom_fade -%}
+            <div class="moya-hero__fade" aria-hidden="true"></div>
+          {%- endif -%}
+
+          <div
+            class="
+              moya-hero__content
+              moya-hero__content--{{ block.settings.content_position }}
+              moya-hero__content--{{ block.settings.vertical_position }}
+            "
+          >
+            <div class="moya-hero__inner">
+              {%- if block.settings.label != blank -%}
+                <span class="moya-hero__label">{{ block.settings.label | escape }}</span>
+              {%- endif -%}
+              {%- if block.settings.heading != blank -%}
+                <h2 class="moya-hero__heading">{{ block.settings.heading }}</h2>
+              {%- endif -%}
+              {%- if block.settings.subheading != blank -%}
+                <p class="moya-hero__subheading">{{ block.settings.subheading | escape }}</p>
+              {%- endif -%}
+            </div>
+            {%- if block.settings.button_label != blank and block.settings.button_link != blank -%}
+              <div class="moya-hero__action">
+                {%- assign moya_hero_button_label = block.settings.button_label | escape -%}
+                {%- render 'button', content: moya_hero_button_label, href: block.settings.button_link, background: section.settings.button_background, text_color: section.settings.button_text_color, style: 'fill' -%}
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+
+  {%- if section.settings.show_arrows and section.blocks.size > 1 -%}
+    <div class="moya-hero__arrows">
+      <button class="moya-hero__arrow" type="button" data-moya-hero-previous aria-label="{{ 'general.accessibility.previous' | t | escape }}">
+        <picture class="moya-hero__arrow-default">
+          <source media="(max-width: 749px)" srcset="{{ 'moya-hero-mobile-previous.svg' | asset_url }}">
+          <img src="{{ 'moya-hero-previous.svg' | asset_url }}" width="50" height="50" alt="">
+        </picture>
+        <picture class="moya-hero__arrow-hover">
+          <source media="(max-width: 749px)" srcset="{{ 'moya-hero-mobile-next.svg' | asset_url }}">
+          <img src="{{ 'moya-hero-next.svg' | asset_url }}" width="50" height="50" alt="">
+        </picture>
+      </button>
+      <button class="moya-hero__arrow moya-hero__arrow--next" type="button" data-moya-hero-next aria-label="{{ 'general.accessibility.next' | t | escape }}">
+        <picture class="moya-hero__arrow-default">
+          <source media="(max-width: 749px)" srcset="{{ 'moya-hero-mobile-previous.svg' | asset_url }}">
+          <img src="{{ 'moya-hero-previous.svg' | asset_url }}" width="50" height="50" alt="">
+        </picture>
+        <picture class="moya-hero__arrow-hover">
+          <source media="(max-width: 749px)" srcset="{{ 'moya-hero-mobile-next.svg' | asset_url }}">
+          <img src="{{ 'moya-hero-next.svg' | asset_url }}" width="50" height="50" alt="">
+        </picture>
+      </button>
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.show_dots and section.blocks.size > 1 -%}
+    <div class="moya-hero__dots" aria-label="{{ section.settings.slideshow_label | escape }}">
+      {%- for block in section.blocks -%}
+        <button
+          type="button"
+          class="moya-hero__dot{% if forloop.first %} is-active{% endif %}"
+          aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
+          aria-controls="MoyaHeroSlide-{{ section.id }}-{{ block.id }}"
+          aria-label="{{ 'general.accessibility.go_to_item' | t: index: forloop.index | escape }}"
+          data-moya-hero-dot
+          data-index="{{ forloop.index0 }}"
+        ></button>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</moya-hero-component>
+
+<script type="module" src="{{ 'moya-hero-slideshow.js' | asset_url }}"></script>
+
+{% schema %}
+{
+  "name": "Moya Hero Slideshow",
+  "tag": "section",
+  "class": "moya-hero-slideshow",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "allow_transparent_header",
+      "label": "启用透明页眉",
+      "info": "仅当此组件位于页面第一位时生效。透明状态的文字颜色和 Logo 请在页眉设置中调整。",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "desktop_height_vh",
+      "label": "Desktop height",
+      "min": 50,
+      "max": 100,
+      "step": 1,
+      "unit": "vh",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "mobile_height_vh",
+      "label": "Mobile height",
+      "min": 50,
+      "max": 100,
+      "step": 1,
+      "unit": "vh",
+      "default": 100
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#f0f2f2"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_fade",
+      "label": "Fade image into background",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#385950"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#4a5565"
+    },
+    {
+      "type": "header",
+      "content": "Label"
+    },
+    {
+      "type": "color",
+      "id": "label_background",
+      "label": "Label background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "label_background_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Label background opacity",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "label_text_color",
+      "label": "Label text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Overlay"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay opacity",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Carousel"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show dot navigation",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "dot_color",
+      "label": "Dot color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable autoplay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_interval",
+      "min": 2,
+      "max": 15,
+      "step": 1,
+      "unit": "s",
+      "label": "Autoplay interval",
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "transition_duration",
+      "min": 300,
+      "max": 1500,
+      "step": 50,
+      "unit": "ms",
+      "label": "Transition duration",
+      "default": 900
+    },
+    {
+      "type": "range",
+      "id": "padding_inline",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Horizontal padding",
+      "default": 104
+    },
+    {
+      "type": "text",
+      "id": "slideshow_label",
+      "label": "Accessibility label",
+      "default": "Highlights"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show previous and next arrows",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#addbce"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#003521"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Background image"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Mobile background image",
+          "info": "Used on screens below 750px. Leave blank to use the desktop image. Also used as the mobile video cover when a video is selected."
+        },
+        {
+          "type": "video",
+          "id": "mobile_video",
+          "label": "Mobile background video",
+          "info": "Upload or select a Shopify-hosted video. Takes priority over the mobile image; plays muted and loops on the active slide."
+        },
+        {
+          "type": "checkbox",
+          "id": "use_design_image",
+          "label": "Use original Moya design image",
+          "info": "Used when no background image is selected.",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "01 - EVERYDAY COMMUNICATION"
+        },
+        {
+          "type": "richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "<p>Someone who is always ready to listen.</p>"
+        },
+        {
+          "type": "textarea",
+          "id": "subheading",
+          "label": "Subheading",
+          "default": "Share the small thoughts, long days, and ordinary moments that matter."
+        },
+        {
+          "type": "select",
+          "id": "content_position",
+          "label": "Content position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "select",
+          "id": "vertical_position",
+          "label": "Vertical position",
+          "options": [
+            {
+              "value": "top",
+              "label": "Top"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "bottom",
+              "label": "Bottom"
+            }
+          ],
+          "default": "bottom"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        },
+        {
+          "type": "color",
+          "id": "heading_color",
+          "label": "Heading color override"
+        },
+        {
+          "type": "color",
+          "id": "subheading_color",
+          "label": "Subheading color override"
+        },
+        {
+          "type": "select",
+          "id": "navigation_tone",
+          "label": "Arrow color",
+          "options": [
+            {
+              "value": "dark",
+              "label": "Dark — for light images"
+            },
+            {
+              "value": "light",
+              "label": "White — for dark images"
+            }
+          ],
+          "default": "dark"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "presets": [
+    {
+      "name": "Moya Hero Slideshow",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "label": "",
+            "heading": "<p>Never feel alone again</p>",
+            "subheading": "MoYa is your always-on companion — here to listen, comfort,\nand hold you through every moment, big and small.",
+            "content_position": "left",
+            "use_design_image": true,
+            "vertical_position": "bottom",
+            "button_label": "Explore Features",
+            "button_link": "#moya-features"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "label": "02 / SLEEP COMPANIONSHIP",
+            "heading": "<p>Here when the world gets quiet.</p>",
+            "subheading": "Share the small thoughts, long days, and ordinary moments that matter.",
+            "content_position": "right",
+            "navigation_tone": "light"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "label": "03 / HUG & COMFORT",
+            "heading": "<p>Comfort you can feel.</p>",
+            "subheading": "A warm embrace and a gentle pat when words are not enough.",
+            "content_position": "left"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "label": "04 / CALM PRESENCE",
+            "heading": "<p>A little calm, always within reach.</p>",
+            "subheading": "A gentle presence that helps the day slow down.",
+            "content_position": "right"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "label": "05 / ALWAYS WITH YOU",
+            "heading": "<p>Someone to come home to.</p>",
+            "subheading": "A soft companion for the quiet moments that matter.",
+            "content_position": "left"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

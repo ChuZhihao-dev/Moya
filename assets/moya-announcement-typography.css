@@ -1,0 +1,25 @@
+/* Text alpha leaves announcement carousel opacity animations independent. */
+@media screen and (min-width: 700px) {
+  .moya-announcement-desktop-type :is(.announcement-bar__static-list, .announcement-bar__scrolling-list) p {
+    font-family: var(--moya-announcement-font);
+    font-style: var(--moya-announcement-style);
+    font-size: var(--moya-announcement-size);
+    font-weight: var(--moya-announcement-weight);
+    line-height: var(--moya-announcement-line-height);
+    letter-spacing: var(--moya-announcement-letter-spacing);
+    color: rgb(var(--text-color) / var(--moya-announcement-opacity));
+  }
+  .moya-announcement-desktop-type .announcement-bar__item { grid-auto-columns: auto var(--moya-announcement-gap); }
+}
+@media screen and (max-width: 699px) {
+  .moya-announcement-mobile-type :is(.announcement-bar__static-list, .announcement-bar__scrolling-list) p {
+    font-family: var(--moya-announcement-font);
+    font-style: var(--moya-announcement-style);
+    font-size: var(--moya-announcement-size);
+    font-weight: var(--moya-announcement-weight);
+    line-height: var(--moya-announcement-line-height);
+    letter-spacing: var(--moya-announcement-letter-spacing);
+    color: rgb(var(--text-color) / var(--moya-announcement-opacity));
+  }
+  .moya-announcement-mobile-type .announcement-bar__item { grid-auto-columns: auto var(--moya-announcement-gap); }
+}

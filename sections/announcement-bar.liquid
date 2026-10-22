@@ -1,0 +1,425 @@
+{%- if section.blocks.size > 0 -%}
+  {{ 'moya-announcement-typography.css' | asset_url | stylesheet_tag }}
+  {%- render 'moya-announcement-typography', bar_settings: section.settings, section_id: section.id -%}
+  {%- comment -%}
+  ------------------------------------------------------------------------------------------------------------------------
+  CSS
+  ------------------------------------------------------------------------------------------------------------------------
+  {%- endcomment -%}
+  <style>
+    :root {
+      --sticky-announcement-bar-enabled: {%- if section.settings.enable_sticky -%}1{% else %}0{% endif %};
+    }
+
+    {%- if section.settings.enable_sticky -%}
+      #shopify-section-{{ section.id }} {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+      }
+
+      .shopify-section--header ~ #shopify-section-{{ section.id }} {
+        top: calc(var(--sticky-header-enabled, 0) * var(--header-height, 0px));
+      }
+    {%- endif -%}
+  </style>
+
+  {%- comment -%}
+  ------------------------------------------------------------------------------------------------------------------------
+  LIQUID
+  ------------------------------------------------------------------------------------------------------------------------
+  {%- endcomment -%}
+
+  {%- capture announcement_classes -%}announcement-bar{% if section.settings.desktop_type_enabled %} moya-announcement-desktop-type{% endif %}{% if section.settings.mobile_type_enabled %} moya-announcement-mobile-type{% endif %}{%- endcapture -%}
+  <height-observer variable="announcement-bar">
+    <div {% render 'surface', class: announcement_classes, background_gradient: section.settings.background_gradient, background: section.settings.background, text_color: section.settings.text_color %}>
+      {%- if section.settings.navigation_mode == 'scrolling' -%}
+        <marquee-text scrolling-speed="{{ section.settings.scrolling_speed }}" class="announcement-bar__scrolling-list">
+          {%- capture content -%}
+            {%- for block in section.blocks -%}
+              <p class="bold {{ section.settings.text_size }}" {{ block.shopify_attributes }}>
+                {%- if block.settings.url != blank -%}
+                  <a href="{{ block.settings.url }}">{{ block.settings.text | escape }}</a>
+                {%- else -%}
+                  {{ block.settings.text | escape }}
+                {%- endif -%}
+              </p>
+
+              <span class="shape-circle shape--sm"></span>
+            {%- endfor -%}
+          {%- endcapture -%}
+
+          {%- for i in (1..10) -%}
+            <span class="announcement-bar__item" {% unless forloop.first %}aria-hidden="true"{% endunless %}>
+              {{- content -}}
+            </span>
+          {%- endfor -%}
+        </marquee-text>
+      {%- else -%}
+        <div class="container">
+          <div class="announcement-bar__wrapper {% if section.blocks.size == 1 %}justify-center{% else %}justify-between{% endif %}">
+            {%- if section.blocks.size > 1 -%}
+              <button class="tap-area" is="prev-button" aria-controls="announcement-bar" aria-label="{{ 'general.accessibility.previous' | t }}">
+                {%- render 'icon' with 'chevron-left', direction_aware: true -%}
+              </button>
+            {%- endif -%}
+
+            <announcement-bar swipeable {% if section.settings.autoplay %}autoplay="{{ section.settings.cycle_speed }}"{% endif %} id="announcement-bar" class="announcement-bar__static-list">
+              {%- for block in section.blocks -%}
+                <p class="bold {{ section.settings.text_size }} {% unless forloop.first %}reveal-invisible{% endunless %}" {{ block.shopify_attributes }}>
+                  {%- if block.settings.url != blank -%}
+                    <a href="{{ block.settings.url }}">{{ block.settings.text | escape }}</a>
+                  {%- else -%}
+                    {{ block.settings.text | escape }}
+                  {%- endif -%}
+                </p>
+              {%- endfor -%}
+            </announcement-bar>
+
+            {%- if section.blocks.size > 1 -%}
+              <button class="tap-area" is="next-button" aria-controls="announcement-bar" aria-label="{{ 'general.accessibility.next' | t }}">
+                {%- render 'icon' with 'chevron-right', direction_aware: true -%}
+              </button>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </height-observer>
+
+  <script>
+    document.documentElement.style.setProperty('--announcement-bar-height', Math.round(document.getElementById('shopify-section-{{ section.id }}').clientHeight) + 'px');
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "class": "shopify-section--announcement-bar",
+  "tag": "aside",
+  "max_blocks": 5,
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Message",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Announce something here"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_sticky",
+      "label": "Enable sticky bar",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Auto rotate between messages",
+      "info": "Ignored when using auto-scrolling.",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "cycle_speed",
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "unit": "sec",
+      "label": "Change messages every",
+      "default": 6
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "label": "Text size",
+      "options": [
+        {
+          "value": "text-xxs",
+          "label": "X-Small"
+        },
+        {
+          "value": "text-xs",
+          "label": "Small"
+        },
+        {
+          "value": "text-base",
+          "label": "Medium"
+        },
+        {
+          "value": "text-lg",
+          "label": "Large"
+        }
+      ],
+      "default": "text-xs"
+    },
+    {
+      "type": "select",
+      "id": "navigation_mode",
+      "label": "Multiple message navigation",
+      "options": [
+        {
+          "value": "arrows",
+          "label": "Arrows"
+        },
+        {
+          "value": "scrolling",
+          "label": "Auto-scrolling"
+        }
+      ],
+      "default": "arrows"
+    },
+    {
+      "type": "range",
+      "id": "scrolling_speed",
+      "label": "Scrolling speed",
+      "min": 10,
+      "max": 30,
+      "unit": "s",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "桌面公告排版"
+    },
+    {
+      "type": "checkbox",
+      "id": "desktop_type_enabled",
+      "label": "自定义排版",
+      "info": "关闭时沿用原有文字大小设置。适用于 700px 及以上屏幕。",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "desktop_type_theme_font",
+      "label": "沿用主题字体",
+      "default": true,
+      "visible_if": "{{ section.settings.desktop_type_enabled }}"
+    },
+    {
+      "type": "font_picker",
+      "id": "desktop_type_font",
+      "label": "独立字体",
+      "default": "outfit_n4",
+      "visible_if": "{{ section.settings.desktop_type_enabled and section.settings.desktop_type_theme_font == false }}"
+    },
+    {
+      "type": "range",
+      "id": "desktop_type_size",
+      "label": "字号",
+      "min": 10,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 12,
+      "visible_if": "{{ section.settings.desktop_type_enabled }}"
+    },
+    {
+      "type": "select",
+      "id": "desktop_type_weight",
+      "label": "字重",
+      "options": [
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "600",
+          "label": "600"
+        },
+        {
+          "value": "700",
+          "label": "700"
+        }
+      ],
+      "default": "700",
+      "visible_if": "{{ section.settings.desktop_type_enabled }}"
+    },
+    {
+      "type": "range",
+      "id": "desktop_type_line_height",
+      "label": "行高倍数",
+      "min": 1,
+      "max": 2,
+      "step": 0.1,
+      "default": 1.5,
+      "visible_if": "{{ section.settings.desktop_type_enabled }}"
+    },
+    {
+      "type": "range",
+      "id": "desktop_type_letter_spacing",
+      "label": "字间距",
+      "min": -1,
+      "max": 3,
+      "step": 0.1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ section.settings.desktop_type_enabled }}"
+    },
+    {
+      "type": "range",
+      "id": "desktop_type_opacity",
+      "label": "文字不透明度（Opacity）",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ section.settings.desktop_type_enabled }}"
+    },
+    {
+      "type": "range",
+      "id": "desktop_type_gap",
+      "label": "滚动消息间距",
+      "info": "仅在 Auto-scrolling 模式中生效，控制文字两侧到分隔圆点的距离。",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 80,
+      "visible_if": "{{ section.settings.desktop_type_enabled }}"
+    },
+    {
+      "type": "header",
+      "content": "移动端公告排版"
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_type_enabled",
+      "label": "自定义排版",
+      "info": "关闭时沿用原有文字大小设置。适用于小于 700px 的屏幕。",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_type_theme_font",
+      "label": "沿用主题字体",
+      "default": true,
+      "visible_if": "{{ section.settings.mobile_type_enabled }}"
+    },
+    {
+      "type": "font_picker",
+      "id": "mobile_type_font",
+      "label": "独立字体",
+      "default": "outfit_n4",
+      "visible_if": "{{ section.settings.mobile_type_enabled and section.settings.mobile_type_theme_font == false }}"
+    },
+    {
+      "type": "range",
+      "id": "mobile_type_size",
+      "label": "字号",
+      "min": 10,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 12,
+      "visible_if": "{{ section.settings.mobile_type_enabled }}"
+    },
+    {
+      "type": "select",
+      "id": "mobile_type_weight",
+      "label": "字重",
+      "options": [
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "600",
+          "label": "600"
+        },
+        {
+          "value": "700",
+          "label": "700"
+        }
+      ],
+      "default": "700",
+      "visible_if": "{{ section.settings.mobile_type_enabled }}"
+    },
+    {
+      "type": "range",
+      "id": "mobile_type_line_height",
+      "label": "行高倍数",
+      "min": 1,
+      "max": 2,
+      "step": 0.1,
+      "default": 1.5,
+      "visible_if": "{{ section.settings.mobile_type_enabled }}"
+    },
+    {
+      "type": "range",
+      "id": "mobile_type_letter_spacing",
+      "label": "字间距",
+      "min": -1,
+      "max": 3,
+      "step": 0.1,
+      "unit": "px",
+      "default": 0,
+      "visible_if": "{{ section.settings.mobile_type_enabled }}"
+    },
+    {
+      "type": "range",
+      "id": "mobile_type_opacity",
+      "label": "文字不透明度（Opacity）",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "visible_if": "{{ section.settings.mobile_type_enabled }}"
+    },
+    {
+      "type": "range",
+      "id": "mobile_type_gap",
+      "label": "滚动消息间距",
+      "info": "仅在 Auto-scrolling 模式中生效，控制文字两侧到分隔圆点的距离。",
+      "min": 0,
+      "max": 160,
+      "step": 2,
+      "unit": "px",
+      "default": 40,
+      "visible_if": "{{ section.settings.mobile_type_enabled }}"
+    },
+    {
+      "type": "header",
+      "content": "Colors",
+      "info": "Gradient replaces solid colors when set."
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background"
+    },
+    {
+      "type": "color_background",
+      "id": "background_gradient",
+      "label": "Background gradient"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text"
+    }
+  ]
+}
+{% endschema %}

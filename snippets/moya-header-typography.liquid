@@ -1,0 +1,46 @@
+{% comment %}Component-owned typography tokens and selected font faces.{% endcomment %}
+{%- assign modes = 'desktop,mobile' | split: ',' -%}
+{%- for mode in modes -%}
+  {%- liquid
+    assign prefix = mode | append: '_type_'
+    assign enabled_key = prefix | append: 'enabled'
+    assign theme_font_key = prefix | append: 'theme_font'
+    assign font_key = prefix | append: 'font'
+    assign weight_key = prefix | append: 'weight'
+    assign size_key = prefix | append: 'size'
+    assign line_height_key = prefix | append: 'line_height'
+    assign letter_spacing_key = prefix | append: 'letter_spacing'
+    assign gap_key = prefix | append: 'gap'
+    assign opacity_key = prefix | append: 'opacity'
+    assign component_font = header_settings[font_key]
+    if header_settings[theme_font_key]
+      if mode == 'desktop'
+        assign component_font = settings.text_font
+      else
+        assign component_font = settings.heading_font
+      endif
+    endif
+    assign component_weight = header_settings[weight_key]
+    assign weighted_font = component_font | font_modify: 'weight', component_weight
+    assign component_font = weighted_font | default: component_font
+  -%}
+  {%- if header_settings[enabled_key] -%}
+    <style>
+      {{ component_font | font_face: font_display: 'swap' }}
+      {% if mode == 'desktop' %}
+        #shopify-section-{{ section_id }} .moya-header-desktop-type {
+      {% else %}
+        #header-sidebar-menu.moya-header-mobile-type {
+      {% endif %}
+          --moya-nav-font: {{ component_font.family }}, {{ component_font.fallback_families }};
+          --moya-nav-style: {{ component_font.style }};
+          --moya-nav-size: {{ header_settings[size_key] }}px;
+          --moya-nav-weight: {{ component_weight }};
+          --moya-nav-line-height: {{ header_settings[line_height_key] }};
+          --moya-nav-letter-spacing: {{ header_settings[letter_spacing_key] }}px;
+          --moya-nav-gap: {{ header_settings[gap_key] }}px;
+          --moya-nav-opacity: {{ header_settings[opacity_key] | default: 100 | divided_by: 100.0 }};
+        }
+    </style>
+  {%- endif -%}
+{%- endfor -%}

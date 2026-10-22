@@ -1,0 +1,75 @@
+moya-science-intro.moya-science { display:block; padding:0; overflow:visible; }
+.moya-science__stage { width:100%; position:relative; overflow:hidden; isolation:isolate; }
+.moya-science__content { margin:auto; min-height:var(--moya-science-height); justify-content:center; padding:48px 24px; }
+.moya-science__particles { position:absolute; inset:0; width:100%; height:100%; opacity:var(--moya-science-opacity); }
+.moya-science__particles.is-ready + .moya-science__shade { display:block; }
+.moya-science__image { animation:none; }
+.moya-science__study { position:relative; min-height:var(--moya-science-height); color:var(--moya-science-heading); padding:116px 24px 100px; text-align:center; }
+.moya-science__study-copy h3 { margin:0; font:400 32px/1.1 Outfit,sans-serif; letter-spacing:0; }
+.moya-science__study-copy p { max-width:410px; margin:24px auto 0; font-size:18px; line-height:1.5; color:var(--moya-science-body); }
+.moya-science__visual { position:relative; width:min(1022px,90vw); height:283px; margin:30px auto 24px; }
+.moya-science__visual canvas,.moya-science__wave-fallback { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; }
+.moya-science__visual.is-ready .moya-science__wave-fallback { visibility:hidden; }
+.moya-science__caption { position:absolute; top:18px; left:0; right:0; margin:0; font-size:12px; letter-spacing:1.7px; text-transform:uppercase; opacity:.45; pointer-events:none; }
+.moya-science__interact { position:absolute; inset:0; width:100%; padding-top:245px; font:400 11px Outfit,sans-serif; color:#d9eae1; cursor:pointer; }
+.moya-science__interact:focus-visible { outline:1px solid #e2f6ed; outline-offset:4px; border-radius:18px; }
+.moya-science__metrics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; max-width:790px; margin:auto; }
+.moya-science__metric { border:1px solid #ecf9f730; border-radius:18px; background:linear-gradient(115deg,#ffffff1f,#ffffff08,#ffffff12); backdrop-filter:blur(20px); padding:12px 18px; text-align:left; min-height:102px; }
+.moya-science__metric > span { font-size:12px; opacity:.67; }
+.moya-science__metric strong { font-size:46px; line-height:1.1; font-weight:400; font-variant-numeric:tabular-nums; }
+.moya-science__metric [data-unit] { font-size:12px; opacity:.6; }
+.moya-science__phases { position:absolute; top:510px; left:0; right:0; display:flex; justify-content:center; gap:18px; font-size:11px; }
+.moya-science__phases button { opacity:.5; border-bottom:1px solid transparent; }
+.moya-science__phases [aria-pressed=true] { opacity:1; border-color:currentColor; }
+.moya-science__navigation { display:none; }
+.moya-science.is-enhanced { height:calc(var(--science-stage-height) + 240svh); }
+.moya-science.is-enhanced .moya-science__stage { position:sticky; top:var(--sticky-area-height,0px); height:var(--science-stage-height); }
+.moya-science.is-enhanced .moya-science__content { position:absolute; inset:0; min-height:0; will-change:opacity,transform; }
+.moya-science.is-enhanced .moya-science__deck { position:absolute; inset:0; }
+.moya-science.is-enhanced .moya-science__study { position:absolute; inset:0; min-height:0; transform:translateX(calc(var(--slide-offset,0)*94%)) scale(var(--slide-scale,1)); opacity:var(--slide-opacity,1); transition:transform .65s cubic-bezier(.2,.7,.2,1),opacity .5s; }
+.moya-science.is-enhanced .moya-science__navigation { display:flex; align-items:center; justify-content:space-between; position:absolute; left:7.2%; right:7.2%; top:74.8%; color:#fff; }
+.moya-science__navigation > button { display:grid; place-items:center; width:50px; height:50px; border:1px solid #ffffff60; border-radius:50%; transition:background .2s,color .2s; }
+.moya-science__navigation > button:hover { background:#fff; color:#003521; }
+.moya-science__navigation > button:disabled { opacity:.25; cursor:default; }
+.moya-science__navigation svg { width:18px; height:18px; }
+.moya-science__tabs { display:flex; gap:24px; align-self:end; transform:translateY(50px); font-size:11px; letter-spacing:.08em; }
+.moya-science__tabs button { opacity:.45; padding:8px 0; border-bottom:1px solid transparent; }
+.moya-science__tabs [aria-current=true] { opacity:1; border-color:#fff; }
+@media(max-width:749px) {
+ .moya-science__content { min-height:var(--moya-science-mobile-height); }
+ .moya-science__study { min-height:var(--moya-science-mobile-height); padding:70px 24px 58px; }
+ .moya-science__study-copy h3 { width:260px; margin:auto; font-size:24px; font-weight:600; line-height:1.1; }
+ .moya-science__study-copy p { font-size:10px; max-width:257px; margin-top:11px; }
+ .moya-science__visual { width:522px; height:280px; left:50%; transform:translateX(-50%); margin:14px 0 0; }
+ .moya-science__caption { font-size:8.6px; top:20px; }
+ .moya-science__interact { padding-top:242px; font-size:9px; }
+ .moya-science__metrics { width:min(313px,100%); gap:10px; }
+ .moya-science__metric { padding:6px 8px; border-radius:9.4px; min-height:54px; line-height:1; }
+ .moya-science__metric > span { font-size:6.3px; }
+ .moya-science__metric strong { font-size:24px; }
+ .moya-science__metric [data-unit] { font-size:8px; }
+ .moya-science__phases { top:411px; font-size:9px; }
+ .moya-science.is-enhanced .moya-science__navigation { left:16px; right:16px; top:48%; }
+ .moya-science__navigation > button { width:24px; height:24px; }
+ .moya-science__navigation svg { width:12px; height:12px; }
+ .moya-science__tabs { transform:translateY(220px); font-size:9px; gap:20px; }
+}
+@media(prefers-reduced-motion:reduce) { .moya-science__study { transition:none!important; } }
+.moya-science.is-enhanced .moya-science__study { padding:0; }
+.moya-science.is-enhanced .moya-science__study-copy { position:absolute; top:15.3%; left:24px; right:24px; }
+.moya-science.is-enhanced .moya-science__visual { position:absolute; top:32.4%; left:50%; margin:0; transform:translateX(-50%); height:36.1%; }
+.moya-science.is-enhanced .moya-science__interact { padding-top:0; display:flex; align-items:end; justify-content:center; padding-bottom:3px; }
+.moya-science.is-enhanced .moya-science__metrics { position:absolute; top:71.6%; left:50%; width:min(790px,70%); transform:translateX(-50%); }
+.moya-science.is-enhanced .moya-science__phases { top:66%; }
+@media(max-width:749px) {
+ .moya-science.is-enhanced .moya-science__study-copy { top:12.9%; }
+ .moya-science.is-enhanced .moya-science__visual { top:29.2%; height:51.3%; }
+ .moya-science.is-enhanced .moya-science__metrics { top:79.6%; width:min(313px,calc(100% - 48px)); }
+ .moya-science.is-enhanced .moya-science__phases { top:75%; }
+ .moya-science.is-enhanced .moya-science__interact { padding-bottom:12px; }
+}
+
+.moya-science__mobile-break { display:none; }
+@media(max-width:749px) { .moya-science__mobile-break { display:block; } }
+/* Keep the Shopify section wrapper full-bleed even inside a constrained theme group. */
+.shopify-section.moya-science-intro-section { width:100%; max-width:none; margin-inline:0; }

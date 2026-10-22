@@ -1,0 +1,193 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "liquid_MiPL4R": {
+          "type": "liquid",
+          "settings": {
+            "liquid": "{%- for promotion in shop.metaobjects.promotion.values -%}\n{%- for products in promotion.product.value -%}\n{%- if products == product -%}\n{{promotion.text}}\n{%- break -%}\n{%- endif -%}\n{% endfor%}\n{% endfor%}"
+          }
+        },
+        "vendor": {
+          "type": "vendor",
+          "settings": {}
+        },
+        "title": {
+          "type": "title",
+          "settings": {
+            "heading_tag": "h2"
+          }
+        },
+        "badges": {
+          "type": "badges",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "show_taxes_notice": false
+          }
+        },
+        "liquid_NYeanr": {
+          "type": "liquid",
+          "settings": {
+            "liquid": "{{ prodcut.id }}"
+          }
+        },
+        "rating": {
+          "type": "rating",
+          "settings": {
+            "show_empty": false
+          }
+        },
+        "payment_terms": {
+          "type": "payment_terms",
+          "settings": {}
+        },
+        "separator": {
+          "type": "separator",
+          "settings": {}
+        },
+        "description": {
+          "type": "description",
+          "settings": {
+            "collapse_content": false
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "hide_sold_out_variants": false,
+            "stack_blocks": true,
+            "selector_style": "block",
+            "swatch_selector_style": "swatch",
+            "variant_image_options": "",
+            "size_chart_page": ""
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_payment_button": true,
+            "show_gift_card_recipient": true,
+            "atc_button_background": "",
+            "atc_button_text_color": "",
+            "payment_button_background": "",
+            "payment_button_text_color": ""
+          }
+        },
+        "collapsible_text_XkaYry": {
+          "type": "collapsible_text",
+          "settings": {
+            "title": "Title",
+            "content": "<p>Share some content to your customers about your products.</p>",
+            "page": ""
+          }
+        },
+        "liquid_tkttEi": {
+          "type": "liquid",
+          "settings": {
+            "liquid": "<button id=\"quick-checkout\" class=\"quick-checkout-button\">立即结算</button>\n\n<script>\n  // 定义变量以存储当前的变体 ID\n  let currentVariantId = null;\n\n  // 获取页面上变体选择器（通常是 select[name='id'] 或 input[name='id']）\n  const variantSelector = document.querySelector(\"select[name='id']\") \n      ? document.querySelector(\"select[name='id']\") \n      : document.querySelector(\"input[name='id']\");\n\n  // 检查是否找到变体选择器\n  if (variantSelector) {\n    // 初始设置 currentVariantId 为当前选中的变体 ID\n    currentVariantId = variantSelector.value;\n\n    // 添加监听事件，更新 currentVariantId 当用户切换变体时\n    variantSelector.addEventListener(\"change\", function() {\n      currentVariantId = this.value;\n    });\n  }\n\n  document.getElementById(\"quick-checkout\").addEventListener(\"click\", function() {\n    // 获取页面输入的数量\n    const quantityInput = document.querySelector(\"input[name='quantity']\");\n    const quantity = quantityInput ? quantityInput.value : 1; // 如果未输入数量，默认设置为 1\n\n    // 确保当前变体 ID 存在\n    if (!currentVariantId) {\n      alert(\"请选择一个有效的产品变体\");\n      return;\n    }\n\n    // 构造结算链接，使用一次性结账 URL 参数\n    const checkoutUrl = `/checkout?items[0][id]=${currentVariantId}&items[0][quantity]=${quantity}`;\n\n    // 跳转到结算页面\n    window.location.href = checkoutUrl;\n  });\n</script>\n\n<style>\n  .quick-checkout-button {\n    padding: 10px 20px;\n    background-color: #ff6f61;\n    color: #fff;\n    border: none;\n    border-radius: 5px;\n    cursor: pointer;\n    font-size: 16px;\n  }\n  .quick-checkout-button:hover {\n    background-color: #ff3b30;\n  }\n</style>"
+          }
+        },
+        "text_HEfiHt": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Share some content to your customers about your products.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "liquid_MiPL4R",
+        "vendor",
+        "title",
+        "badges",
+        "price",
+        "liquid_NYeanr",
+        "rating",
+        "payment_terms",
+        "separator",
+        "description",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons",
+        "collapsible_text_XkaYry",
+        "liquid_tkttEi",
+        "text_HEfiHt"
+      ],
+      "settings": {
+        "full_width": true,
+        "show_fixed_add_to_cart": true,
+        "desktop_media_width": 55,
+        "desktop_media_layout": "carousel_thumbnails_left",
+        "mobile_media_size": "expanded",
+        "mobile_carousel_control": "floating_dots",
+        "enable_video_autoplay": false,
+        "enable_video_looping": true,
+        "enable_image_zoom": true,
+        "max_image_zoom_level": 3,
+        "background": "",
+        "background_gradient": "",
+        "text_color": "",
+        "input_background": "rgba(0,0,0,0)",
+        "input_text_color": ""
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "settings": {
+        "recommendations_count": 6,
+        "products": [],
+        "full_width": true,
+        "stack_products": true,
+        "show_progress_bar": false,
+        "products_per_row_mobile": "1",
+        "products_per_row_desktop": 3,
+        "subheading": "",
+        "title": "You may also like",
+        "content": "",
+        "background": "",
+        "background_gradient": "",
+        "text_color": "",
+        "heading_color": "",
+        "heading_gradient": "",
+        "product_card_background": "",
+        "product_card_text_color": ""
+      }
+    },
+    "gp_shopify_original_section_537219160984257394": {
+      "type": "gp-section-537219160984257394",
+      "settings": {
+        "section_preload": "true",
+        "checksum": "35a596966c717bca8deb477df1f2ad950a05d70c6dd44878f82e34bb151cf888_1"
+      }
+    },
+    "gp_shopify_original_section_537215604331906196": {
+      "type": "gp-section-537215604331906196",
+      "settings": {
+        "section_preload": "false",
+        "checksum": "7f30c8909833774e88b2b9f408a93f5551101a5a696edfdb8b27b3c51828a182_1"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "related-products",
+    "gp_shopify_original_section_537219160984257394",
+    "gp_shopify_original_section_537215604331906196"
+  ]
+}
