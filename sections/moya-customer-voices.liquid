@@ -18,7 +18,7 @@
   .moya-cv-{{ section.id }} {
     position: relative;
     background-color: var(--cv-bg, #f0f2f2);
-    padding: clamp(64px, 8.33vw, 120px) clamp(20px, 7.22vw, 104px);
+    padding: clamp(64px, 8.33vw, 120px) var(--moya-page-inset);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -58,7 +58,7 @@
   .moya-cv-{{ section.id }}__collage {
     position: relative;
     width: 100%;
-    max-width: 1232px;
+    max-width: var(--container-max-width);
     height: 445px;
   }
   .moya-cv-{{ section.id }}__collage-inner {
@@ -224,6 +224,10 @@
     line-height: 1.5;
     letter-spacing: -0.02em;
   }
+  @media (max-width: 749px) {
+    .moya-cv-{{ section.id }} { padding-inline: 20px; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .moya-cv-{{ section.id }}__card,
     .moya-cv-{{ section.id }}__card-inner,

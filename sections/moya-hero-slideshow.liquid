@@ -25,7 +25,6 @@
     --moya-hero-overlay: {{ section.settings.overlay_color | color_modify: 'alpha', moya_hero_overlay_alpha }};
     --moya-hero-dot: {{ section.settings.dot_color }};
     --moya-hero-dur: {{ section.settings.transition_duration }}ms;
-    --moya-hero-pad: {{ section.settings.padding_inline }}px;
     --moya-hero-background: {{ section.settings.background_color }};
     --moya-hero-height: {{ section.settings.desktop_height_vh }}vh;
     --moya-hero-mobile-height: {{ section.settings.mobile_height_vh }}vh;
@@ -116,7 +115,7 @@
     inset: 0;
     display: flex;
     gap: 32px;
-    padding: calc(64px + var(--moya-hero-header-offset, 0px)) min(var(--moya-hero-pad), 8vw) 120px;
+    padding: calc(64px + var(--moya-hero-header-offset, 0px)) var(--moya-page-inset) 120px;
   }
   .moya-hero__content--left {
     justify-content: flex-start;
@@ -715,14 +714,8 @@
       "default": 900
     },
     {
-      "type": "range",
-      "id": "padding_inline",
-      "min": 0,
-      "max": 200,
-      "step": 4,
-      "unit": "px",
-      "label": "Horizontal padding",
-      "default": 104
+      "type": "paragraph",
+      "content": "Desktop content width follows Theme settings > Appearance and spacing > Page width."
     },
     {
       "type": "text",

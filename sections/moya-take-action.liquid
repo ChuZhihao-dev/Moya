@@ -1,0 +1,167 @@
+{% comment %}
+  Figma 20:359. Backgrounds are uploaded through the theme editor only.
+  Uses Shopify's customer form for email marketing signup, not account creation.
+{% endcomment %}
+
+{% render 'moya-fonts' %}
+
+{%- liquid
+  assign form_id = 'Moya-Take-Action-Form-' | append: section.id
+  assign email_id = 'Moya-Take-Action-Email-' | append: section.id
+  assign message_id = 'Moya-Take-Action-Message-' | append: section.id
+  assign return_url = request.path | append: '?customer_posted=true#' | append: form_id
+  assign overlay_alpha = section.settings.overlay_opacity | divided_by: 100.0
+-%}
+
+<div
+  id="Moya-Take-Action-{{ section.id }}"
+  class="moya-take-action moya-take-action--{{ section.settings.alignment }}"
+  style="--mta-background: {{ section.settings.background_color }}; --mta-text: {{ section.settings.text_color }}; --mta-overlay: {{ section.settings.overlay_color | color_modify: 'alpha', overlay_alpha }}; --mta-padding: {{ section.settings.padding_vertical }}px; --mta-mobile-padding: {{ section.settings.padding_vertical_mobile }}px; --mta-duration: {{ section.settings.animation_duration }}ms; --mta-delay: {{ section.settings.animation_delay }}ms;"
+>
+  {%- if section.settings.background_image != blank -%}
+    <div class="moya-take-action__media" aria-hidden="true">
+      {{- section.settings.background_image | image_url: width: 2880 | image_tag: class: 'moya-take-action__image', widths: '375, 550, 750, 1100, 1500, 2000, 2400, 2880', sizes: '100vw', loading: 'lazy', alt: '' -}}
+    </div>
+  {%- endif -%}
+  <div class="moya-take-action__overlay" aria-hidden="true"></div>
+
+  <div class="moya-take-action__content{% if section.settings.enable_animation %} moya-take-action__content--animated{% endif %}">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="moya-take-action__heading">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+    {%- if section.settings.description != blank -%}
+      <div class="moya-take-action__description">{{ section.settings.description }}</div>
+    {%- endif -%}
+
+    {%- form 'customer', id: form_id, class: 'moya-take-action__form', return_to: return_url -%}
+      <input type="hidden" name="contact[tags]" value="newsletter,moya-waitlist">
+      {%- if form.posted_successfully? -%}
+        <p id="{{ message_id }}" class="moya-take-action__message" role="status" tabindex="-1">
+          {{ section.settings.success_message | escape }}
+        </p>
+      {%- else -%}
+        <div class="moya-take-action__field">
+          <label class="sr-only" for="{{ email_id }}">{{ 'general.newsletter.email' | t }}</label>
+          <input
+            id="{{ email_id }}"
+            class="moya-take-action__input"
+            type="email"
+            name="contact[email]"
+            value="{{ form.email | escape }}"
+            placeholder="{{ section.settings.placeholder | escape }}"
+            autocomplete="email"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            enterkeyhint="send"
+            dir="ltr"
+            required
+            {% if form.errors %}aria-invalid="true" aria-describedby="{{ message_id }}"{% endif %}
+          >
+          <div class="moya-take-action__submit">
+            {%- assign button_label = section.settings.button_label | escape -%}
+            {%- render 'button', type: 'submit', style: 'fill', content: button_label, background: section.settings.button_background, text_color: section.settings.button_text_color -%}
+          </div>
+        </div>
+        {%- if form.errors -%}
+          <div id="{{ message_id }}" class="moya-take-action__message moya-take-action__message--error" role="alert">
+            {{- form.errors | default_errors -}}
+          </div>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endform -%}
+
+    {%- if section.settings.general_email != blank or section.settings.media_email != blank -%}
+      <div class="moya-take-action__contacts">
+        {%- if section.settings.general_email != blank -%}
+          <p>{{ section.settings.general_label | escape }} <a href="mailto:{{ section.settings.general_email | strip | escape }}">{{ section.settings.general_email | strip | escape }}</a></p>
+        {%- endif -%}
+        {%- if section.settings.media_email != blank -%}
+          <p>{{ section.settings.media_label | escape }} <a href="mailto:{{ section.settings.media_email | strip | escape }}">{{ section.settings.media_email | strip | escape }}</a></p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .moya-take-action { position: relative; isolation: isolate; overflow: hidden; padding: var(--mta-padding, 120px) 24px; background: var(--mta-background, #37584d); color: var(--mta-text, #fff); font-family: 'Outfit', var(--text-font-family, sans-serif); letter-spacing: -.02em; }
+  .moya-take-action__media, .moya-take-action__overlay { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+  .moya-take-action__media .moya-take-action__image { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .moya-take-action__overlay { background: var(--mta-overlay, rgb(0 0 0 / .6)); }
+  .moya-take-action__content { display: flex; flex-direction: column; align-items: center; max-width: 672px; margin-inline: auto; text-align: center; }
+  .moya-take-action__heading { margin: 0; color: inherit; font: 600 clamp(40px, 4.445vw, 64px)/1 'Outfit', var(--heading-font-family, sans-serif); letter-spacing: -.02em; text-transform: none; overflow-wrap: anywhere; }
+  .moya-take-action__description { width: 100%; max-width: 624px; margin-top: 24px; font-size: 18px; line-height: 1.5; }
+  .moya-take-action__description p { margin: 0; }
+  .moya-take-action__form { width: 100%; max-width: 532px; margin-top: 40px; scroll-margin-block: 100px; }
+  .moya-take-action__field { display: flex; align-items: stretch; min-height: 54px; border: 1px solid #fff; border-radius: 999px; background: rgb(255 255 255 / .6); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+  .moya-take-action__input { display: block; flex: 1 1 0; min-width: 0; width: 100%; border: 0; border-radius: 999px; padding: 14px 27px; background: transparent; color: inherit; font: 400 16px/1.5 'Outfit', var(--text-font-family, sans-serif); letter-spacing: -.02em; box-shadow: none; }
+  .moya-take-action__input::placeholder { color: inherit; opacity: 1; }
+  .moya-take-action__input:focus { outline: none; }
+  .moya-take-action__submit { display: flex; flex: 0 0 auto; margin: -1px; }
+  .moya-take-action__submit .button { min-height: 54px; border: 0; border-radius: 999px; padding: 15px 46px; font: 600 16px/1.5 'Outfit', var(--text-font-family, sans-serif); letter-spacing: -.02em; text-transform: none; }
+  .moya-take-action__submit .button:focus-visible, .moya-take-action__contacts a:focus-visible { outline: 2px solid var(--mta-text, #fff); outline-offset: 4px; }
+  .moya-take-action__message { margin: 0; padding: 15px 24px; border: 1px solid currentColor; border-radius: 16px; font-size: 16px; line-height: 1.5; }
+  .moya-take-action__message--error { margin-top: 12px; background: rgb(0 0 0 / .35); }
+  .moya-take-action__message ul { list-style: none; padding: 0; margin: 0; }
+  .moya-take-action__contacts { display: grid; gap: 6px; max-width: 100%; margin-top: 20px; color: color-mix(in srgb, var(--mta-text, #fff) 80%, transparent); font-size: 16px; line-height: 1.5; }
+  .moya-take-action__contacts p { margin: 0; overflow-wrap: anywhere; }
+  .moya-take-action__contacts a { text-decoration: underline; text-underline-offset: 3px; }
+  .moya-take-action--left .moya-take-action__content { align-items: flex-start; text-align: left; }
+  .moya-take-action__content--animated { animation: moya-take-action-enter var(--mta-duration, 600ms) ease-out var(--mta-delay, 0ms) both; }
+  @keyframes moya-take-action-enter { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  @media (max-width: 749px) {
+    .moya-take-action { padding: var(--mta-mobile-padding, 72px) 20px; }
+    .moya-take-action__description { font-size: 16px; }
+    .moya-take-action__form { margin-top: 32px; }
+    .moya-take-action__input { padding-inline: 20px 12px; }
+    .moya-take-action__submit .button { padding-inline: 24px; }
+    .moya-take-action__contacts { font-size: 14px; }
+  }
+  @media (max-width: 359px) {
+    .moya-take-action__input { padding-inline: 14px 8px; }
+    .moya-take-action__submit .button { padding-inline: 18px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .moya-take-action__content--animated { animation: none; } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Moya Take Action",
+  "tag": "section",
+  "class": "shopify-section--moya-take-action",
+  "disabled_on": { "groups": ["header", "custom.overlay"] },
+  "settings": [
+    { "type": "header", "content": "Background" },
+    { "type": "image_picker", "id": "background_image", "label": "Background image", "info": "Upload the background here. Recommended: 2880 × 1100 px. Uses the image focal point; no bundled background image." },
+    { "type": "color", "id": "background_color", "label": "Background color", "default": "#37584d" },
+    { "type": "color", "id": "overlay_color", "label": "Overlay color", "default": "#000000" },
+    { "type": "range", "id": "overlay_opacity", "label": "Overlay opacity", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 60 },
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Take Action" },
+    { "type": "richtext", "id": "description", "label": "Description", "default": "<p>Join the early access waitlist and be first in line when MoYa Launched.</p><p>No payment required to reserve your spot.</p>" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#ffffff" },
+    { "type": "header", "content": "Email signup" },
+    { "type": "paragraph", "content": "Uses Shopify email marketing signup. Subscribers are tagged newsletter and moya-waitlist. This does not create a login account or send a custom welcome email." },
+    { "type": "text", "id": "placeholder", "label": "Email placeholder", "default": "Enter your email" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Join Us" },
+    { "type": "color", "id": "button_background", "label": "Button background", "default": "#ffffff" },
+    { "type": "color", "id": "button_text_color", "label": "Button text", "default": "#37584d" },
+    { "type": "text", "id": "success_message", "label": "Success message", "default": "Thanks for joining! Please check your inbox for any confirmation email." },
+    { "type": "header", "content": "Contact details" },
+    { "type": "text", "id": "general_label", "label": "General inquiries label", "default": "General Inquiries:" },
+    { "type": "text", "id": "general_email", "label": "General inquiries email", "default": "info@Moya.com" },
+    { "type": "text", "id": "media_label", "label": "Media inquiries label", "default": "Media Inquiries:" },
+    { "type": "text", "id": "media_email", "label": "Media inquiries email", "default": "media@Moya.com" },
+    { "type": "header", "content": "Layout" },
+    { "type": "select", "id": "alignment", "label": "Content alignment", "options": [{ "value": "center", "label": "Center (design)" }, { "value": "left", "label": "Left" }], "default": "center" },
+    { "type": "range", "id": "padding_vertical", "label": "Desktop vertical padding", "min": 40, "max": 200, "step": 8, "unit": "px", "default": 120 },
+    { "type": "range", "id": "padding_vertical_mobile", "label": "Mobile vertical padding", "min": 32, "max": 120, "step": 4, "unit": "px", "default": 72 },
+    { "type": "header", "content": "Animation" },
+    { "type": "checkbox", "id": "enable_animation", "label": "Enable entrance animation", "default": false },
+    { "type": "range", "id": "animation_duration", "label": "Duration", "min": 200, "max": 1200, "step": 100, "unit": "ms", "default": 600 },
+    { "type": "range", "id": "animation_delay", "label": "Delay", "min": 0, "max": 1000, "step": 100, "unit": "ms", "default": 0 }
+  ],
+  "presets": [{ "name": "Moya Take Action" }]
+}
+{% endschema %}

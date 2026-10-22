@@ -1,12 +1,3 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "type": "footer",
   "name": "Footer group",
@@ -14,45 +5,45 @@
     "footer": {
       "type": "footer",
       "blocks": {
-        "newsletter": {
-          "type": "newsletter",
-          "settings": {
-            "image_width": 150,
-            "heading_size": "h3",
-            "title": "Sign up for new stories and personal offers",
-            "content": ""
-          }
-        },
-        "links": {
+        "discover": {
           "type": "links",
           "settings": {
-            "menu": "footer",
-            "show_menu_title": true,
-            "menu_title": ""
+            "title": "Discover",
+            "label_1": "Meet MoYa",
+            "label_2": "How It Works",
+            "label_3": "Science Behind MoYa",
+            "label_4": "About SoulX",
+            "label_5": "SoulX World"
           }
         },
-        "text": {
-          "type": "text",
+        "help": {
+          "type": "links",
           "settings": {
-            "title": "About",
-            "content": "<p>Use this text area to tell your customers about your brand and vision. You can change it in the theme editor.</p>",
-            "enable_follow_on_shop": true
+            "title": "Help",
+            "label_1": "FAQ",
+            "label_2": "Order Track",
+            "label_3": "Contact Us",
+            "label_4": "Health Claims Disclaimer"
+          }
+        },
+        "policies": {
+          "type": "links",
+          "settings": {
+            "title": "Policies",
+            "label_1": "Privacy Policy",
+            "label_2": "Terms & Conditions",
+            "label_3": "Cookie Policy",
+            "label_4": "Shipping Policy",
+            "label_5": "Return & Refund Policy"
           }
         }
       },
       "block_order": [
-        "newsletter",
-        "links",
-        "text"
+        "discover",
+        "help",
+        "policies"
       ],
-      "settings": {
-        "show_social_media": true,
-        "show_payment_icons": true,
-        "show_country_selector": true,
-        "show_country_flag": true,
-        "show_country_name": true,
-        "show_locale_selector": true
-      }
+      "settings": {}
     }
   },
   "order": [

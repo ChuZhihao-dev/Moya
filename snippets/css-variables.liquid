@@ -85,6 +85,8 @@ note that this may have impact on different places.
     /* Container */
     --container-max-width: {{ settings.page_width }}px;
     --container-narrow-max-width: {{ settings.page_width | minus: 250 }}px;
+    /* Full-bleed Moya sections share the standard page content edges. */
+    --moya-page-inset: max(var(--container-gutter), calc((100vw - var(--scrollbar-width, 0px) - var(--container-max-width)) / 2));
     --container-gutter: var(--spacing-5);
     --section-outer-spacing-block: {% if settings.section_vertical_spacing == 'xsmall' %}var(--spacing-8){% elsif settings.section_vertical_spacing == 'small' %}var(--spacing-10){% elsif settings.section_vertical_spacing == 'medium' %}var(--spacing-12){% else %}var(--spacing-14){% endif %};
     --section-inner-max-spacing-block: {% if settings.section_vertical_spacing == 'xsmall' %}var(--spacing-8){% elsif settings.section_vertical_spacing == 'small' %}var(--spacing-9){% elsif settings.section_vertical_spacing == 'medium' %}var(--spacing-10){% else %}var(--spacing-12){% endif %};

@@ -182,7 +182,7 @@
     display: flex;
     align-items: center;
     padding-block: clamp(48px, 7vh, 96px);
-    padding-inline: clamp(20px, 7.22vw, 104px);
+    padding-inline: var(--moya-page-inset);
   }
 
   .moya-meet__content--center {
@@ -318,7 +318,7 @@
   .moya-meet.is-enhanced .moya-meet__progress {
     display: block;
     position: absolute;
-    inset-inline-end: clamp(20px, 8.75vw, 126px);
+    inset-inline-end: calc(var(--moya-page-inset) + 22px);
     top: 50%;
     transform: translateY(-50%);
     width: 3px;

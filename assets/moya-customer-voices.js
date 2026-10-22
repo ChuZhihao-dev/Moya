@@ -50,7 +50,7 @@ class MoyaCustomerVoices extends HTMLElement {
 
   #resize = () => {
     if (!this.isConnected) return;
-    const scale = Math.min(1, this.#collage.clientWidth / 1232);
+    const scale = this.#collage.clientWidth / 1232;
     this.#inner.style.transform = `scale(${scale})`;
     this.#collage.style.height = `${445 * scale}px`;
   };

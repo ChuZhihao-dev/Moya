@@ -1,352 +1,311 @@
-{%- assign newsletter_block = section.blocks | where: 'type', 'newsletter' | first -%}
-
-{%- if section.blocks.size > 3 -%}
-<style>
-  @media screen and (min-width: 1000px) {
-    #shopify-section-{{ section.id }} {
-      {%- if newsletter_block != blank -%}
-        --footer-block-list-gap: var(--spacing-10);
-      {%- endif -%}
-
-      --footer-block-list-justify-content: space-between;
-    }
-  }
-</style>
-{%- endif -%}
-
-<div class="footer">
-  <div class="container">
-    <div class="footer__wrapper">
-      {%- comment -%}
-      ------------------------------------------------------------------------------------------------------------------
-      BLOCK AREA
-      ------------------------------------------------------------------------------------------------------------------
-      {%- endcomment -%}
-
-      {%- if section.blocks.size > 0 -%}
-        <div class="footer__block-list empty:hidden">
-          {%- for block in section.blocks -%}
-            {%- case block.type -%}
-              {%- when 'text' -%}
-                {%- if block.settings.title != blank or block.settings.content != blank or shop.features.follow_on_shop? and block.settings.enable_follow_on_shop -%}
-                  <div class="footer__block footer__block--text" {{ block.shopify_attributes }}>
-                    {%- if block.settings.title != blank -%}
-                      <p class="bold">{{ block.settings.title | escape }}</p>
-                    {%- endif -%}
-
-                    {%- if block.settings.content != blank -%}
-                      <div class="prose text-subdued">
-                        {{- block.settings.content -}}
-                      </div>
-                    {%- endif -%}
-
-                    {%- if shop.features.follow_on_shop? and block.settings.enable_follow_on_shop -%}
-                      <div class="follow-on-shop">
-                        {{- shop | login_button: action: 'follow' -}}
-                      </div>
-                    {%- endif -%}
-                  </div>
-                {%- endif -%}
-
-              {%- when 'links' -%}
-                {%- if block.settings.menu != blank -%}
-                  <div class="footer__block footer__block--menu" {{ block.shopify_attributes }}>
-                    {%- if block.settings.show_menu_title -%}
-                      <p class="bold">{{ block.settings.menu_title | default: block.settings.menu.title }}</p>
-                    {%- endif -%}
-
-                    <ul class="v-stack gap-3" role="list">
-                      {%- for link in block.settings.menu.links -%}
-                        <li>
-                          <a href="{{ link.url }}" class="inline-block link-faded break-all">{{ link.title }}</a>
-                        </li>
-                      {%- endfor -%}
-                    </ul>
-                  </div>
-                {%- endif -%}
-
-              {%- when 'newsletter' -%}
-                <div class="footer__block footer__block--newsletter" {{ block.shopify_attributes }}>
-                  {%- if block.settings.image != blank -%}
-                    {%- capture sizes -%}{{ block.settings.image_width }}px{%- endcapture -%}
-                    {%- capture widths -%}{{ block.settings.image_width }}, {{ block.settings.image_width | times: 2 | at_most: block.settings.image.width }}{%- endcapture -%}
-                    {%- capture style -%}max-width: {{ block.settings.image_width }}px{%- endcapture -%}
-                    {{- block.settings.image | image_url: width: block.settings.image.width | image_tag: loading: 'lazy', style: style, sizes: sizes, widths: widths -}}
-                  {%- endif -%}
-
-                  <div class="v-stack gap-6">
-                    {%- if block.settings.title != blank -%}
-                      <p class="{{ block.settings.heading_size }}">{{- block.settings.title | escape -}}</p>
-                    {%- endif -%}
-
-                    {%- if block.settings.content != blank -%}
-                      <div class="prose text-subdued">
-                        {{- block.settings.content -}}
-                      </div>
-                    {%- endif -%}
-
-                    {%- form 'customer', id: 'footer-newsletter', class: 'footer__newsletter-form form' -%}
-                      {%- if form.posted_successfully? -%}
-                        {%- capture success_message -%}{{ 'general.newsletter.subscribed_successfully' | t }}{%- endcapture -%}
-                        {%- render 'banner', content: success_message, status: 'success' -%}
-                      {%- else -%}
-                        {%- if form.errors -%}
-                          {%- capture error_message -%}{{ form.errors.translated_fields['email'] }} {{ form.errors.messages['email'] }}{%- endcapture -%}
-                          {%- render 'banner', content: error_message, status: 'error' -%}
-                        {%- endif -%}
-
-                        <input type="hidden" name="contact[tags]" value="newsletter">
-
-                        {%- capture label -%}{{ 'general.newsletter.email' | t }}{%- endcapture -%}
-                        {%- render 'input', name: 'contact[email]', label: label, type: 'email', required: true, autocomplete: 'email', enterkeyhint: 'send', self_submit: true -%}
-                      {%- endif -%}
-                    {%- endform -%}
-                  </div>
-                </div>
-            {%- endcase -%}
-          {%- endfor -%}
-        </div>
-      {%- endif -%}
-
-      {%- comment -%}
-      ------------------------------------------------------------------------------------------------------------------
-      SECONDARY AREA
-      ------------------------------------------------------------------------------------------------------------------
-      {%- endcomment -%}
-
-      <div class="footer__aside empty:hidden">
-        {%- comment -%}
-        ----------------------------------------------------------------------------------------------------------------
-        SOCIAL MEDIA + LOCALIZATION
-        ----------------------------------------------------------------------------------------------------------------
-        {%- endcomment -%}
-
-        {%- if section.settings.show_social_media -%}
-          {%- capture social_media -%}{%- render 'social-media' -%}{%- endcapture -%}
-        {%- endif -%}
-
-        {%- if section.settings.show_country_selector and localization.available_countries.size > 1 -%}
-          {%- assign country_selector = true -%}
-        {%- endif -%}
-
-        {%- if section.settings.show_locale_selector and localization.available_languages.size > 1 -%}
-          {%- assign locale_selector = true -%}
-        {%- endif -%}
-
-        {%- if social_media != blank or country_selector or locale_selector -%}
-          <div class="footer__aside-top">
-            {{- social_media -}}
-
-            {%- if country_selector or locale_selector -%}
-              <div class="h-stack gap-6">
-                {%- if social_media == blank -%}
-                  {%- assign popover_horizontal_position = 'start' -%}
-                {%- else -%}
-                  {%- assign popover_horizontal_position = 'end' -%}
-                {%- endif -%}
-
-                {%- if country_selector -%}
-                  {%- render 'localization-selector', type: 'country', show_country_name: section.settings.show_country_name, show_country_flag: section.settings.show_country_flag, popover_horizontal_position: popover_horizontal_position -%}
-                {%- endif -%}
-
-                {%- if locale_selector -%}
-                  {%- render 'localization-selector', type: 'locale', popover_horizontal_position: popover_horizontal_position -%}
-                {%- endif -%}
-              </div>
-            {%- endif -%}
+{% comment %}Moya footer, Figma 20:375. Menus and social URLs remain editable; payment methods come from Shopify.{% endcomment %}
+{% render 'moya-fonts' %}
+{{ 'moya-footer.css' | asset_url | stylesheet_tag }}
+<div class="moya-footer moya-footer--{{ section.settings.layout }}" style="--mf-background: {{ section.settings.background }}; --mf-text: {{ section.settings.text_color.rgb }}; --mf-opacity: {{ section.settings.text_opacity | divided_by: 100.0 }}; --mf-padding: {{ section.settings.padding_vertical }}px; --mf-mobile-side: {{ section.settings.mobile_padding }}px; --mf-size: {{ section.settings.font_size }}px; --mf-mobile-size: {{ section.settings.mobile_font_size }}px; --mf-logo-width: {{ section.settings.logo_width }}px;">
+  <div class="moya-footer__outer">
+    <div class="moya-footer__inner">
+      <div class="moya-footer__main">
+        <div class="moya-footer__brand">
+          <div>
+            <a class="moya-footer__logo" href="{{ routes.root_url }}" aria-label="{{ section.settings.logo_alt | escape }}">
+              {% if section.settings.logo != blank %}
+                {{ section.settings.logo | image_url: width: 480 | image_tag: widths: '150, 300, 480', sizes: '240px', loading: 'lazy', alt: section.settings.logo_alt }}
+              {% else %}
+                <img class="moya-footer__default-logo" src="{{ 'moya-footer-logo.svg' | asset_url }}" alt="{{ section.settings.logo_alt | escape }}" width="146" height="32" loading="lazy">
+              {% endif %}
+            </a>
+            {% if section.settings.tagline != blank %}<p class="moya-footer__tagline">{{ section.settings.tagline | escape | newline_to_br }}</p>{% endif %}
           </div>
-        {%- endif -%}
-
-        {%- comment -%}
-        ----------------------------------------------------------------------------------------------------------------
-        COPYRIGHT + PAYMENT METHODS
-        ----------------------------------------------------------------------------------------------------------------
-        {%- endcomment -%}
-
-        <div class="footer__aside-bottom">
-          {%- if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
-            <div class="footer__payment-icons h-stack wrap gap-2">
-              {%- for type in shop.enabled_payment_types -%}
-                {{- type | payment_type_svg_tag -}}
-              {%- endfor -%}
-            </div>
-          {%- endif -%}
-
-          <p class="footer__copyright text-sm text-subdued">© {{ 'now' | date: '%Y' }}, {{ shop.name }}. {{ powered_by_link }}</p>
+          {% if section.settings.show_social_media %}
+            {% render 'moya-footer-social' %}
+          {% endif %}
         </div>
+        {% for block in section.blocks %}
+          <nav class="moya-footer__menu" aria-labelledby="MoyaFooter-{{ section.id }}-{{ block.id }}" {{ block.shopify_attributes }}>
+            <p id="MoyaFooter-{{ section.id }}-{{ block.id }}" class="moya-footer__title">{{ block.settings.title | default: block.settings.menu.title | escape }}</p>
+            <ul class="moya-footer__links" role="list">
+              {% if block.settings.menu != blank %}
+                {% for link in block.settings.menu.links %}<li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>{% endfor %}
+              {% else %}
+                {% for i in (1..5) %}
+                  {% liquid
+                    assign label_key = 'label_' | append: i
+                    assign url_key = 'url_' | append: i
+                    assign label = block.settings[label_key]
+                    assign link_url = block.settings[url_key]
+                  %}
+                  {% if label != blank %}
+                    <li>{% if link_url != blank %}<a href="{{ link_url }}">{{ label | escape }}</a>{% else %}<span>{{ label | escape }}</span>{% endif %}</li>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+            </ul>
+          </nav>
+        {% endfor %}
+      </div>
+      <div class="moya-footer__bottom">
+        <p class="moya-footer__copyright">© Copyright, {{ section.settings.copyright | default: shop.name | escape }}, {{ 'now' | date: '%Y' }}{% if section.settings.show_powered_by %} {{ powered_by_link }}{% endif %}</p>
+        {% if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 %}
+          <ul class="moya-footer__payments" role="list" aria-label="Accepted payment methods">
+            {% for type in shop.enabled_payment_types %}<li>{{ type | payment_type_svg_tag }}</li>{% endfor %}
+          </ul>
+        {% endif %}
       </div>
     </div>
   </div>
 </div>
-
 {% schema %}
 {
-  "name": "Footer",
-  "class": "shopify-section--footer",
+  "name": "Moya footer",
   "tag": "footer",
-  "max_blocks": 5,
+  "class": "shopify-section--moya-footer",
+  "max_blocks": 3,
   "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "logo_alt",
+      "label": "Logo alternative text",
+      "default": "MoYa"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width",
+      "min": 80,
+      "max": 240,
+      "step": 2,
+      "unit": "px",
+      "default": 150
+    },
+    {
+      "type": "textarea",
+      "id": "tagline",
+      "label": "Brand description",
+      "default": "A warmer kind of intelligent companionship."
+    },
+    {
+      "type": "text",
+      "id": "copyright",
+      "label": "Copyright owner",
+      "default": "SoulX"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_powered_by",
+      "label": "Show Powered by Shopify",
+      "default": true
+    },
     {
       "type": "checkbox",
       "id": "show_social_media",
       "label": "Show social media",
-      "info": "To configure social media, go to your social media settings.",
       "default": true
+    },
+    {
+      "type": "paragraph",
+      "content": "Social links use the theme social media settings. Unconfigured links are hidden."
     },
     {
       "type": "checkbox",
       "id": "show_payment_icons",
-      "label": "Show payment icons",
+      "label": "Show accepted payment methods",
       "default": true
     },
     {
-      "type": "header",
-      "content": "Country/region selector",
-      "info": "To add a country/region, go to your [markets settings.](/admin/settings/markets)"
+      "type": "paragraph",
+      "content": "Payment icons reflect the payment methods enabled in your store."
     },
     {
-      "type": "checkbox",
-      "id": "show_country_selector",
-      "label": "Show country/region selector",
-      "default": true
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#ffffff"
     },
     {
-      "type": "checkbox",
-      "id": "show_country_flag",
-      "label": "Show country flag",
-      "default": true
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#003521"
     },
     {
-      "type": "checkbox",
-      "id": "show_country_name",
-      "label": "Show country name",
-      "default": true
+      "type": "range",
+      "id": "text_opacity",
+      "label": "Link and description opacity",
+      "min": 40,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 60
     },
     {
-      "type": "header",
-      "content": "Language selector",
-      "info": "To add a language, go to your [language settings.](/admin/settings/languages)"
+      "type": "paragraph",
+      "content": "Desktop content width follows Theme settings > Appearance and spacing > Page width."
     },
     {
-      "type": "checkbox",
-      "id": "show_locale_selector",
-      "label": "Show language selector",
-      "default": true
+      "type": "range",
+      "id": "padding_vertical",
+      "label": "Desktop vertical padding",
+      "min": 16,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_padding",
+      "label": "Mobile side padding",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Desktop text size",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "mobile_font_size",
+      "label": "Mobile text size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Desktop layout",
+      "options": [
+        {
+          "value": "columns",
+          "label": "Four columns"
+        },
+        {
+          "value": "brand_top",
+          "label": "Brand above menus"
+        }
+      ],
+      "default": "columns"
     }
   ],
   "blocks": [
     {
-      "type": "text",
-      "name": "Text",
+      "type": "links",
+      "name": "Menu column",
       "settings": [
         {
           "type": "text",
           "id": "title",
           "label": "Heading",
-          "default": "About our store"
+          "default": "Discover"
         },
-        {
-          "type": "richtext",
-          "id": "content",
-          "label": "Content",
-          "default": "<p>Use this text area to tell your customers about your brand and vision. You can change it in the theme editor.</p>"
-        },
-        {
-          "type": "checkbox",
-          "id": "enable_follow_on_shop",
-          "label": "Show Follow on Shop",
-          "info": "To allow customers to follow your store on the Shop app from your storefront, Shop Pay must be enabled. [Learn more](https://help.shopify.com/manual/online-store/themes/customizing-themes/follow-on-shop)",
-          "default": true
-        }
-      ]
-    },
-    {
-      "type": "links",
-      "name": "Links",
-      "settings": [
         {
           "type": "link_list",
           "id": "menu",
           "label": "Menu",
-          "info": "This menu won't show dropdown items.",
-          "default": "footer"
+          "info": "Choose a navigation menu, or use the individual links below."
         },
-        {
-          "type": "checkbox",
-          "id": "show_menu_title",
-          "label": "Show menu title",
-          "default": true
-        },
-        {
-          "type": "inline_richtext",
-          "id": "menu_title",
-          "label": "Menu title",
-          "info": "Replaces the default menu title"
-        }
-      ]
-    },
-    {
-      "type": "newsletter",
-      "name": "Newsletter",
-      "limit": 1,
-      "settings": [
         {
           "type": "paragraph",
-          "content": "Customers who subscribe will have their email address added to the \"accepts marketing\" [customer list](/admin/customers?query=&accepts_marketing=1)."
-        },
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image",
-          "info": "600 x 600px .png recommended"
-        },
-        {
-          "type": "range",
-          "id": "image_width",
-          "min": 50,
-          "max": 300,
-          "step": 10,
-          "unit": "px",
-          "label": "Image width",
-          "default": 150
-        },
-        {
-          "type": "select",
-          "id": "heading_size",
-          "label": "Title size",
-          "options": [
-            {
-              "value": "h3",
-              "label": "H3"
-            },
-            {
-              "value": "h4",
-              "label": "H4"
-            },
-            {
-              "value": "h5",
-              "label": "H5"
-            },
-            {
-              "value": "h6",
-              "label": "H6"
-            }
-          ],
-          "default": "h3"
+          "content": "Individual labels without a URL display as text. Add a URL to make each item a link."
         },
         {
           "type": "text",
-          "id": "title",
-          "label": "Title",
-          "default": "Sign up to our newsletter"
+          "id": "label_1",
+          "label": "Link 1 label"
         },
         {
-          "type": "richtext",
-          "id": "content",
-          "label": "Content"
+          "type": "url",
+          "id": "url_1",
+          "label": "Link 1 URL"
+        },
+        {
+          "type": "text",
+          "id": "label_2",
+          "label": "Link 2 label"
+        },
+        {
+          "type": "url",
+          "id": "url_2",
+          "label": "Link 2 URL"
+        },
+        {
+          "type": "text",
+          "id": "label_3",
+          "label": "Link 3 label"
+        },
+        {
+          "type": "url",
+          "id": "url_3",
+          "label": "Link 3 URL"
+        },
+        {
+          "type": "text",
+          "id": "label_4",
+          "label": "Link 4 label"
+        },
+        {
+          "type": "url",
+          "id": "url_4",
+          "label": "Link 4 URL"
+        },
+        {
+          "type": "text",
+          "id": "label_5",
+          "label": "Link 5 label"
+        },
+        {
+          "type": "url",
+          "id": "url_5",
+          "label": "Link 5 URL"
         }
       ]
     }
-  ]
+  ],
+  "presets": [
+    {
+      "name": "Moya footer",
+      "blocks": [
+        {
+          "type": "links",
+          "settings": {
+            "title": "Discover"
+          }
+        },
+        {
+          "type": "links",
+          "settings": {
+            "title": "Help"
+          }
+        },
+        {
+          "type": "links",
+          "settings": {
+            "title": "Policies"
+          }
+        }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "groups": [
+      "footer"
+    ]
+  }
 }
 {% endschema %}

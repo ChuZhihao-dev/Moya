@@ -10,6 +10,7 @@
 {
   "current": {
     "cusicon": "shopify://shop_images/1280X1280.png",
+    "page_width": 1232,
     "section_vertical_spacing": "medium",
     "button_border_radius": 60,
     "input_border_radius": 8,
@@ -38,6 +39,8 @@
     "cart_icon": "shopping_cart",
     "cart_show_free_shipping_threshold": true,
     "cart_free_shipping_threshold": "5000",
+    "social_facebook": "https://www.facebook.com/people/SoulX-Moya/61585266765599/",
+    "social_instagram": "https://www.instagram.com/soulx_moya/",
     "checkout_accent_color": "#f0c417",
     "checkout_button_color": "#1a1a1a",
     "content_for_index": []

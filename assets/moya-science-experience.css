@@ -10,12 +10,12 @@ moya-science-intro.moya-science { --science-stage-height:100vh; display:block; p
 .moya-science__backdrop.is-live .moya-science__field { opacity:0; }
 .moya-science__backdrop.is-live .moya-science__particles { opacity:var(--moya-science-opacity,.62); }
 .moya-science__shade { position:absolute; inset:0; background:linear-gradient(180deg,#05070673,#05070614 45%,#0507062e 75%,#05070699); }
-.moya-science__content { min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:25px; padding:80px 24px; text-align:center; }
+.moya-science__content { min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:25px; padding:80px var(--moya-page-inset); text-align:center; }
 .moya-science__titles { width:min(940px,100%); }
 .moya-science__eyebrow { margin:0 0 28px; color:inherit; font-size:12px; font-weight:700; line-height:1.4; letter-spacing:.19em; text-transform:uppercase; }
 .moya-science__heading { max-width:940px; margin:0 auto; font:600 clamp(48px,6.6vw,98px)/1.01 'Outfit',sans-serif; letter-spacing:-.06em; color:inherit; text-transform:none; text-wrap:balance; }
 .moya-science__body { max-width:660px; margin:0; font-size:clamp(17px,1.5vw,21px); line-height:1.5; color:var(--moya-science-body); opacity:.8; white-space:pre-line; text-wrap:balance; }
-.moya-science__study { --study-rgb:186,213,190; position:relative; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:15px; padding:80px 9vw 85px; text-align:center; }
+.moya-science__study { --study-rgb:186,213,190; position:relative; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:15px; padding:80px var(--moya-page-inset) 85px; text-align:center; }
 .moya-science__study[data-study="safety"] { --study-rgb:160,211,194; }
 .moya-science__study[data-study="sleep"] { --study-rgb:171,187,223; }
 .moya-science__study-copy { width:100%; max-width:1100px; }
@@ -88,7 +88,7 @@ moya-science-intro.moya-science { --science-stage-height:100vh; display:block; p
  .moya-science__rest-word strong { font-size:26px; }
 }
 @media(max-height:650px) and (min-width:750px) {
- .moya-science__study { padding:76px 9vw 55px; gap:8px; }
+ .moya-science__study { padding:76px var(--moya-page-inset) 55px; gap:8px; }
  .moya-science__visual { height:27vh; min-height:120px; }
  .moya-science__study-copy h3 { font-size:28px; }
  .moya-science__study-copy .moya-science__study-eyebrow { margin-bottom:8px; }

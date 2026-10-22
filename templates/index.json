@@ -410,6 +410,10 @@
         "intro_animation": true
       }
     },
+    "moya_take_action": {
+      "type": "moya-take-action",
+      "settings": {}
+    },
     "moya_feature_bar_jXCdiz": {
       "type": "moya-feature-bar",
       "blocks": {
@@ -471,6 +475,7 @@
     "moya_science_intro",
     "moya_innovation_research_mDzrmc",
     "moya_customer_voices_4NnbFN",
+    "moya_take_action",
     "moya_feature_bar_jXCdiz"
   ]
 }

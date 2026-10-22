@@ -1,0 +1,23 @@
+{%- capture social_items -%}
+  {%- assign social_url = settings.social_facebook | default: shop.brand.metafields.social_links.facebook -%}
+  {%- if social_url != blank -%}
+    <li><a href="{{ social_url | escape }}" target="_blank" rel="noopener" aria-label="Facebook"><img src="{{ 'moya-footer-facebook.svg' | asset_url }}" alt="" width="20" height="20" loading="lazy"></a></li>
+  {%- endif -%}
+  {%- assign social_url = settings.social_twitter | default: shop.brand.metafields.social_links.twitter -%}
+  {%- if social_url != blank -%}
+    <li><a href="{{ social_url | escape }}" target="_blank" rel="noopener" aria-label="X"><img src="{{ 'moya-footer-twitter.svg' | asset_url }}" alt="" width="20" height="18" loading="lazy"></a></li>
+  {%- endif -%}
+  {%- assign social_url = settings.social_youtube | default: shop.brand.metafields.social_links.youtube -%}
+  {%- if social_url != blank -%}
+    <li><a href="{{ social_url | escape }}" target="_blank" rel="noopener" aria-label="YouTube"><img src="{{ 'moya-footer-youtube.svg' | asset_url }}" alt="" width="22" height="17" loading="lazy"></a></li>
+  {%- endif -%}
+  {%- assign social_url = settings.social_instagram | default: shop.brand.metafields.social_links.instagram -%}
+  {%- if social_url != blank -%}
+    <li><a href="{{ social_url | escape }}" target="_blank" rel="noopener" aria-label="Instagram"><img src="{{ 'moya-footer-instagram.svg' | asset_url }}" alt="" width="21" height="21" loading="lazy"></a></li>
+  {%- endif -%}
+  {%- assign social_url = settings.social_tiktok | default: shop.brand.metafields.social_links.tiktok -%}
+  {%- if social_url != blank -%}
+    <li><a href="{{ social_url | escape }}" target="_blank" rel="noopener" aria-label="TikTok"><img src="{{ 'moya-footer-tiktok.svg' | asset_url }}" alt="" width="18" height="21" loading="lazy"></a></li>
+  {%- endif -%}
+{%- endcapture -%}
+{%- if social_items != blank -%}<ul class="moya-footer__social" role="list">{{ social_items }}</ul>{%- endif -%}

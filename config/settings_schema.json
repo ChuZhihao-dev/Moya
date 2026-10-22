@@ -27,12 +27,12 @@
       {
         "type": "range",
         "id": "page_width",
-        "min": 1300,
-        "max": 1800,
-        "step": 20,
+        "min": 1200,
+        "max": 1600,
+        "step": 4,
         "unit": "px",
         "label": "Page width",
-        "default": 1600
+        "default": 1232
       },
       {
         "type": "header",
