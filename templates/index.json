@@ -124,7 +124,11 @@
             "image": "shopify://shop_images/pic1_3.webp",
             "eyebrow": "AT NIGHT",
             "heading": "<p>Here when the world get quiet</p>",
-            "body": "Settle with a familiar voice and gentle present beside you."
+            "body": "Settle with a familiar voice and gentle present beside you.",
+            "mobile_image_position": 36,
+            "mobile_eyebrow": "SLEEP COMPANIONSHIP",
+            "mobile_heading": "Here when the world gets quiet.",
+            "mobile_body": "Share the small thoughts, long days, and ordinary moments that matter."
           }
         }
       },
@@ -135,8 +139,6 @@
       ],
       "name": "Moya Meet",
       "settings": {
-        "cover_image": "shopify://shop_images/pic1_5ef50940-d149-4146-8499-e33c4a5e0325.webp",
-        "cover_heading": "",
         "heading_color": "#ffffff",
         "body_color": "#ffffff",
         "eyebrow_background": "#ffffff",
@@ -157,7 +159,8 @@
           "settings": {
             "eyebrow": "AT HOME",
             "heading": "<p>A quiet presence always within reach</p>",
-            "body": "Moya stays close through slow morning, busy afternoon, and everything in between."
+            "body": "Moya stays close through slow morning, busy afternoon, and everything in between.",
+            "image": "shopify://shop_images/pic1_5ef50940-d149-4146-8499-e33c4a5e0325.webp"
           }
         },
         "scene_x9XFd6": {
@@ -184,7 +187,11 @@
             "image": "shopify://shop_images/pic1_3.webp",
             "eyebrow": "AT NIGHT",
             "heading": "<p>Here when the world get quiet</p>",
-            "body": "Settle with a familiar voice and gentle present beside you."
+            "body": "Settle with a familiar voice and gentle present beside you.",
+            "mobile_image_position": 36,
+            "mobile_eyebrow": "SLEEP COMPANIONSHIP",
+            "mobile_heading": "Here when the world gets quiet.",
+            "mobile_body": "Share the small thoughts, long days, and ordinary moments that matter."
           }
         }
       },
@@ -196,8 +203,6 @@
       ],
       "name": "Moya Meet",
       "settings": {
-        "cover_image": "shopify://shop_images/pic1_5ef50940-d149-4146-8499-e33c4a5e0325.webp",
-        "cover_heading": "<p>Let's Meet MoYa</p>",
         "heading_color": "#ffffff",
         "body_color": "#ffffff",
         "eyebrow_background": "#ffffff",

@@ -2,29 +2,29 @@
 
 {% comment %}
   Section contract.
-  Scroll-driven product story. Pins a full-viewport panel and crossfades each scene
-  over the previous one as the page scrolls, between a centered cover (section
-  settings) and merchant scene blocks. A vertical progress track on the inline-end
-  edge moves from 0% to 100%.
+  Scroll-driven product story. Pins a full-viewport panel and switches each complete scene
+  with a short timed transition at evenly spaced scroll milestones between merchant scene blocks. Progress moves from 0% to 100% along the
+  inline-end edge on desktop and across the bottom on mobile.
   Renders as a plain stacked list of panels until the module enhances it.
   @example
   <!-- Add the "Moya Meet" section from the theme editor. -->
 {% endcomment %}
 
 {%- liquid
-  assign moya_meet_scene_count = 1
-  if section.blocks.size > 0
-    assign moya_meet_scene_count = section.blocks.size | plus: 1
-  endif
+  assign moya_meet_scene_count = section.blocks.size
   assign moya_meet_eyebrow_alpha = section.settings.eyebrow_background_opacity | divided_by: 100.0
 -%}
 
+{%- if moya_meet_scene_count > 0 -%}
 <moya-meet-component
   id="Moya-Meet-{{ section.id }}"
   class="moya-meet"
+  data-cover-next-science="{% if section.settings.cover_next_science == false %}false{% else %}true{% endif %}"
+  data-transition-duration="{% if section.settings.enable_transition %}{{ section.settings.transition_duration }}{% else %}0{% endif %}"
   role="region"
-  aria-label="{{ section.settings.cover_heading | strip_html | escape }}"
+  aria-label="{{ section.blocks.first.settings.heading | strip_html | default: 'Meet MoYa' | escape }}"
   style="
+    --moya-meet-transition: {{ section.settings.transition_duration | default: 400 }}ms;
     --moya-meet-scenes: {{ moya_meet_scene_count }};
     --moya-meet-scroll: {{ section.settings.scene_scroll }};
     --moya-meet-heading: {{ section.settings.heading_color }};
@@ -34,70 +34,52 @@
     --moya-meet-progress-track: {{ section.settings.progress_color | color_modify: 'alpha', 0.2 }};
     --moya-meet-progress-fill: {{ section.settings.progress_color }};
     --moya-meet-progress-icon: {{ section.settings.progress_icon_color }};
+    --moya-meet-mobile-overlay: url('{{ 'moya-meet-mobile-overlay.svg' | asset_url }}');
   "
 >
   <span id="moya-features" aria-hidden="true"></span>
   <div class="moya-meet__sticky" data-moya-ref="sticky">
     <div class="moya-meet__scenes">
-      <article class="moya-meet__scene moya-meet__scene--cover is-active" data-moya-ref="scenes[]" aria-label="1 / {{ moya_meet_scene_count }}">
-        {%- if section.settings.cover_image != blank -%}
-          <div class="moya-meet__media" aria-hidden="true">
-            {{
-              section.settings.cover_image
-              | image_url: width: 3840
-              | image_tag:
-                loading: 'lazy',
-                widths: '750,1100,1500,1780,2000,2500,3000,3840',
-                sizes: '100vw',
-                alt: ''
-            }}
-          </div>
-        {%- endif -%}
-
-        <div class="moya-meet__content moya-meet__content--center">
-          <div class="moya-meet__inner">
-            {%- if section.settings.cover_heading != blank -%}
-              <h2 class="moya-meet__heading moya-meet__reveal">{{ section.settings.cover_heading }}</h2>
-            {%- endif -%}
-          </div>
-        </div>
-      </article>
-
       {%- for block in section.blocks -%}
         {%- assign moya_meet_has_eyebrow = false -%}
-        {%- if block.settings.eyebrow != blank -%}
+        {%- if block.settings.eyebrow != blank or block.settings.mobile_eyebrow != blank -%}
           {%- assign moya_meet_has_eyebrow = true -%}
         {%- endif -%}
         <article
-          class="moya-meet__scene"
+          class="moya-meet__scene{% if forloop.first %} is-active{% endif %}"
           data-moya-ref="scenes[]"
-          aria-label="{{ forloop.index | plus: 1 }} / {{ moya_meet_scene_count }}"
+          aria-label="{{ forloop.index }} / {{ moya_meet_scene_count }}"
+          style="--moya-meet-desktop-position: {{ block.settings.desktop_image_position | default: 50 }}%; --moya-meet-mobile-position: {{ block.settings.mobile_image_position | default: 50 }}%;"
           {{ block.shopify_attributes }}
         >
-          {%- if block.settings.image != blank -%}
-            <div class="moya-meet__media" aria-hidden="true">
-              {{
-                block.settings.image
-                | image_url: width: 3840
-                | image_tag:
-                  loading: 'lazy',
-                  widths: '750,1100,1500,1780,2000,2500,3000,3840',
-                  sizes: '100vw',
-                  alt: ''
-              }}
-            </div>
-          {%- endif -%}
+          {% render 'moya-meet-media',
+            desktop_type: block.settings.media_type,
+            mobile_type: block.settings.mobile_media_type,
+            desktop_image: block.settings.image,
+            mobile_image: block.settings.mobile_image,
+            desktop_video: block.settings.video,
+            mobile_video: block.settings.mobile_video
+          %}
 
           <div class="moya-meet__content">
             <div class="moya-meet__inner">
               {%- if moya_meet_has_eyebrow -%}
-                <p class="moya-meet__eyebrow moya-meet__reveal">{{ block.settings.eyebrow | escape }}</p>
+                <p class="moya-meet__eyebrow moya-meet__reveal">
+                  <span{% if block.settings.mobile_eyebrow != blank %} class="moya-meet__desktop-copy"{% endif %}>{{ block.settings.eyebrow | escape }}</span>
+                  {%- if block.settings.mobile_eyebrow != blank -%}<span class="moya-meet__mobile-copy">{{ block.settings.mobile_eyebrow | escape }}</span>{%- endif -%}
+                </p>
               {%- endif -%}
-              {%- if block.settings.heading != blank -%}
-                <h3 class="moya-meet__heading moya-meet__reveal">{{ block.settings.heading }}</h3>
+              {%- if block.settings.heading != blank or block.settings.mobile_heading != blank -%}
+                <h2 class="moya-meet__heading moya-meet__reveal">
+                  <span{% if block.settings.mobile_heading != blank %} class="moya-meet__desktop-copy"{% endif %}>{{ block.settings.heading | replace: '<p>', '' | replace: '</p>', '<br>' | remove_last: '<br>' }}</span>
+                  {%- if block.settings.mobile_heading != blank -%}<span class="moya-meet__mobile-copy">{{ block.settings.mobile_heading }}</span>{%- endif -%}
+                </h2>
               {%- endif -%}
-              {%- if block.settings.body != blank -%}
-                <p class="moya-meet__body moya-meet__reveal">{{ block.settings.body }}</p>
+              {%- if block.settings.body != blank or block.settings.mobile_body != blank -%}
+                <p class="moya-meet__body moya-meet__reveal">
+                  <span{% if block.settings.mobile_body != blank %} class="moya-meet__desktop-copy"{% endif %}>{{ block.settings.body | escape }}</span>
+                  {%- if block.settings.mobile_body != blank -%}<span class="moya-meet__mobile-copy">{{ block.settings.mobile_body | escape }}</span>{%- endif -%}
+                </p>
               {%- endif -%}
             </div>
           </div>
@@ -105,10 +87,16 @@
       {%- endfor -%}
     </div>
 
-    {%- if section.settings.show_progress -%}
+    {%- if moya_meet_scene_count > 1 and section.settings.mobile_scroll_hint != blank -%}
+      <p class="moya-meet__scroll-hint" aria-hidden="true">{{ section.settings.mobile_scroll_hint | escape }} <span>&gt;</span></p>
+    {%- endif -%}
+
+    {%- if section.settings.show_progress and moya_meet_scene_count > 1 -%}
       <div class="moya-meet__progress" data-moya-ref="progress" aria-hidden="true">
-        <span class="moya-meet__progress-track"></span>
-        <span class="moya-meet__progress-fill" data-moya-ref="fill"></span>
+        <span class="moya-meet__progress-line">
+          <span class="moya-meet__progress-track"></span>
+          <span class="moya-meet__progress-fill" data-moya-ref="fill"></span>
+        </span>
         <span class="moya-meet__progress-icon" data-moya-ref="icon">
           {%- if section.settings.progress_icon != blank -%}
             {{
@@ -129,6 +117,7 @@
     {%- endif -%}
   </div>
 </moya-meet-component>
+{%- endif -%}
 
 <script type="module">
   import '{{ 'moya-meet.js' | asset_url }}';
@@ -163,7 +152,8 @@
     inset: 0;
   }
 
-  .moya-meet__media img {
+  .moya-meet__media img,
+  .moya-meet__media video {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -171,9 +161,21 @@
     max-width: none;
     display: block;
     object-fit: cover;
-    object-position: center;
+    object-position: var(--moya-meet-desktop-position, 50%) center;
     -webkit-user-drag: none;
     user-select: none;
+  }
+
+  .moya-meet__mobile-media {
+    display: none;
+  }
+
+  .moya-meet__video {
+    visibility: hidden;
+  }
+
+  .moya-meet__video.is-playing {
+    visibility: visible;
   }
 
   .moya-meet__content {
@@ -185,9 +187,6 @@
     padding-inline: var(--moya-page-inset);
   }
 
-  .moya-meet__content--center {
-    justify-content: center;
-  }
 
   .moya-meet__inner {
     display: flex;
@@ -197,11 +196,6 @@
     max-width: 520px;
   }
 
-  .moya-meet__content--center .moya-meet__inner {
-    align-items: center;
-    max-width: 100%;
-    text-align: center;
-  }
 
   .moya-meet__eyebrow {
     margin: 0;
@@ -254,11 +248,25 @@
     margin-top: 20px;
   }
 
-  .moya-meet__progress {
+  .moya-meet__progress,
+  .moya-meet__mobile-copy,
+  .moya-meet__scroll-hint {
     display: none;
   }
 
   /* Enhanced (JS) pinned narrative */
+  /* Keep the final viewport in place while the next science section covers it. */
+  [role='main'] > .shopify-section.moya-meet-section--page-underlay {
+    position: sticky;
+    top: var(--moya-meet-pin-top, 0px);
+    z-index: 0;
+  }
+
+  [role='main'] > .shopify-section.moya-science-intro-section--page-overlay {
+    z-index: 1;
+    box-shadow: 0 -16px 40px rgb(0 0 0 / 18%);
+  }
+
   .moya-meet.is-enhanced {
     height: calc(var(--moya-meet-scenes, 1) * var(--moya-meet-scroll, 100) * 1vh);
   }
@@ -277,42 +285,44 @@
     min-height: 0;
     height: 100%;
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
   }
 
-  /* The cover sits underneath; every later scene fades in on top of it. */
-  .moya-meet.is-enhanced .moya-meet__scene:first-child {
-    opacity: 1;
-  }
-
+  /* A milestone triggers a short transition that completes independently of scrolling. */
   .moya-meet.is-enhanced .moya-meet__scene.is-active {
+    opacity: 1;
+    visibility: visible;
     pointer-events: auto;
   }
 
-  /* Only the active scene's copy is shown, so crossfaded frames don't ghost. */
-  .moya-meet.is-enhanced .moya-meet__content {
-    transition: opacity 250ms ease;
+  .moya-meet.is-enhanced .moya-meet__scene.is-leaving {
+    opacity: 1;
+    visibility: visible;
+    z-index: 1;
   }
 
-  .moya-meet.is-enhanced .moya-meet__scene:not(.is-active) .moya-meet__content {
-    opacity: 0;
+  .moya-meet.is-enhanced .moya-meet__scene.is-entering {
+    z-index: 2;
+    animation: moya-meet-scene-in var(--moya-meet-transition) ease both;
   }
 
-  .moya-meet.is-enhanced .moya-meet__reveal {
-    transform: translateY(24px);
-    transition: transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+  .moya-meet.is-enhanced .moya-meet__scene.is-leaving .moya-meet__content {
+    visibility: hidden;
   }
 
-  .moya-meet.is-enhanced.is-inview .moya-meet__scene.is-active .moya-meet__reveal {
-    transform: translateY(0);
+  .moya-meet.is-enhanced .moya-meet__scene.is-entering .moya-meet__content {
+    animation: moya-meet-copy-in var(--moya-meet-transition) ease both;
   }
 
-  .moya-meet.is-enhanced.is-inview .moya-meet__scene.is-active .moya-meet__inner > :nth-child(2) {
-    transition-delay: 90ms;
+  @keyframes moya-meet-scene-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 
-  .moya-meet.is-enhanced.is-inview .moya-meet__scene.is-active .moya-meet__inner > :nth-child(3) {
-    transition-delay: 180ms;
+  @keyframes moya-meet-copy-in {
+    0%, 35% { opacity: 0; }
+    100% { opacity: 1; }
   }
 
   .moya-meet.is-enhanced .moya-meet__progress {
@@ -323,7 +333,20 @@
     transform: translateY(-50%);
     width: 3px;
     height: 208px;
-    z-index: 2;
+    z-index: 3;
+  }
+
+  /* The line is cut out around the marker, including the logo's transparent eyes. */
+  .moya-meet__progress-line {
+    position: absolute;
+    inset: 0;
+    --moya-meet-line-mask: linear-gradient(to bottom,
+      #000 calc(var(--moya-meet-marker-offset, 0px) - 3px),
+      transparent calc(var(--moya-meet-marker-offset, 0px) - 3px),
+      transparent calc(var(--moya-meet-marker-offset, 0px) + var(--moya-meet-marker-size, 20px) + 3px),
+      #000 calc(var(--moya-meet-marker-offset, 0px) + var(--moya-meet-marker-size, 20px) + 3px));
+    -webkit-mask-image: var(--moya-meet-line-mask);
+    mask-image: var(--moya-meet-line-mask);
   }
 
   .moya-meet__progress-track,
@@ -354,6 +377,7 @@
     width: 20px;
     height: 20px;
     color: var(--moya-meet-progress-icon, #ffffff);
+    transform: translate3d(0, var(--moya-meet-marker-offset, 0px), 0);
     will-change: transform;
   }
 
@@ -365,38 +389,119 @@
   }
 
   @media (max-width: 749px) {
-    .moya-meet__content {
-      padding-inline: 24px;
+    .moya-meet__media::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: var(--moya-meet-mobile-overlay);
+      background-size: 100% 100%;
+      pointer-events: none;
     }
 
-    .moya-meet.is-enhanced .moya-meet__content:not(.moya-meet__content--center) {
-      padding-inline-end: 48px;
+    .moya-meet__desktop-media {
+      display: none;
+    }
+
+    .moya-meet__mobile-media {
+      display: block;
+    }
+
+    .moya-meet__media img,
+    .moya-meet__media video {
+      object-position: var(--moya-meet-mobile-position, 50%) center;
+    }
+
+    .moya-meet__content {
+      justify-content: center;
+      padding: 64px 24px;
+    }
+
+    .moya-meet__inner {
+      width: 289px;
+      max-width: 100%;
+      align-items: center;
+      text-align: center;
+    }
+
+    .moya-meet__desktop-copy {
+      display: none;
+    }
+
+    .moya-meet__mobile-copy {
+      display: inline;
+    }
+
+    .moya-meet__eyebrow {
+      padding: 2px 4px;
+      border-radius: 3.42px;
+      font-size: 8px;
+      -webkit-backdrop-filter: blur(5.7px);
+      backdrop-filter: blur(5.7px);
+    }
+
+    .moya-meet__eyebrow + .moya-meet__heading {
+      margin-top: 3.42px;
     }
 
     .moya-meet__heading {
       font-size: 36px;
+      line-height: 1.1;
     }
 
     .moya-meet__body {
-      font-size: 16px;
+      max-width: 172.146px;
+      font-size: 10px;
     }
 
-    .moya-meet.is-enhanced .moya-meet__reveal {
-      transform: translateY(16px);
+    .moya-meet__heading + .moya-meet__body {
+      margin-top: 11.4px;
+    }
+
+    .moya-meet.is-enhanced .moya-meet__scroll-hint {
+      position: absolute;
+      inset-inline: 24px;
+      bottom: max(49px, calc(env(safe-area-inset-bottom, 0px) + 29px));
+      z-index: 3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      margin: 0;
+      color: var(--moya-meet-heading, #ffffff);
+      font-size: 8px;
+      font-weight: 600;
+      line-height: 1.5;
+      letter-spacing: -0.02em;
+      pointer-events: none;
     }
 
     .moya-meet.is-enhanced .moya-meet__progress {
-      inset-inline-end: 20px;
-      height: 140px;
+      inset-inline: auto;
+      left: 50%;
+      top: auto;
+      bottom: max(27px, calc(env(safe-area-inset-bottom, 0px) + 7px));
+      width: 158.5px;
+      height: 3px;
+      transform: translateX(-50%);
+    }
+
+    .moya-meet__progress-line {
+      --moya-meet-line-mask: linear-gradient(to right,
+        #000 calc(var(--moya-meet-marker-offset, 0px) - 3px),
+        transparent calc(var(--moya-meet-marker-offset, 0px) - 3px),
+        transparent calc(var(--moya-meet-marker-offset, 0px) + var(--moya-meet-marker-size, 20px) + 3px),
+        #000 calc(var(--moya-meet-marker-offset, 0px) + var(--moya-meet-marker-size, 20px) + 3px));
+    }
+
+    .moya-meet__progress-icon {
+      top: 50%;
+      left: 0;
+      inset-inline-start: 0;
+      margin: -10px 0 0;
+      transform: translate3d(var(--moya-meet-marker-offset, 0px), 0, 0);
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .moya-meet.is-enhanced .moya-meet__content,
-    .moya-meet.is-enhanced .moya-meet__reveal {
-      transition: none;
-    }
-  }
 {% endstylesheet %}
 
 {% schema %}
@@ -405,21 +510,6 @@
   "tag": "section",
   "class": "moya-meet-section",
   "settings": [
-    {
-      "type": "header",
-      "content": "Cover"
-    },
-    {
-      "type": "image_picker",
-      "id": "cover_image",
-      "label": "Cover image"
-    },
-    {
-      "type": "richtext",
-      "id": "cover_heading",
-      "label": "Cover heading",
-      "default": "<p>Let's Meet MoYa</p>"
-    },
     {
       "type": "header",
       "content": "Text"
@@ -493,14 +583,49 @@
       "content": "Layout"
     },
     {
+      "type": "checkbox",
+      "id": "cover_next_science",
+      "label": "Science covers the final scene",
+      "info": "Keeps the final scene pinned while the immediately following Moya Science Experience scrolls up over it.",
+      "default": true
+    },
+    {
       "type": "range",
       "id": "scene_scroll",
       "label": "Scroll distance per scene",
+      "info": "Scenes change at evenly spaced milestones. Transition timing is independent of scrolling.",
       "min": 60,
       "max": 200,
       "step": 10,
       "unit": "vh",
       "default": 100
+    },
+    {
+      "type": "text",
+      "id": "mobile_scroll_hint",
+      "label": "Mobile scroll hint",
+      "default": "Swipe to explore More",
+      "info": "Scenes continue to change as the page scrolls. Clear to hide."
+    },
+    {
+      "type": "header",
+      "content": "Scene transitions"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_transition",
+      "label": "Enable scene transition",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "transition_duration",
+      "label": "Transition duration",
+      "min": 200,
+      "max": 800,
+      "step": 50,
+      "unit": "ms",
+      "default": 400
     }
   ],
   "blocks": [
@@ -509,9 +634,85 @@
       "name": "Scene",
       "settings": [
         {
+          "type": "header",
+          "content": "Desktop background"
+        },
+        {
+          "type": "select",
+          "id": "media_type",
+          "label": "Desktop background type",
+          "options": [
+            {
+              "value": "image",
+              "label": "Image"
+            },
+            {
+              "value": "video",
+              "label": "Video"
+            }
+          ],
+          "default": "image"
+        },
+        {
           "type": "image_picker",
           "id": "image",
-          "label": "Background image"
+          "label": "Desktop image / video poster"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Desktop video"
+        },
+        {
+          "type": "range",
+          "id": "desktop_image_position",
+          "label": "Desktop background horizontal position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "header",
+          "content": "Mobile background"
+        },
+        {
+          "type": "select",
+          "id": "mobile_media_type",
+          "label": "Mobile background type",
+          "options": [
+            {
+              "value": "image",
+              "label": "Image"
+            },
+            {
+              "value": "video",
+              "label": "Video"
+            }
+          ],
+          "default": "image"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Mobile image / video poster",
+          "info": "Independent mobile background. Uses the desktop image or video poster when empty."
+        },
+        {
+          "type": "video",
+          "id": "mobile_video",
+          "label": "Mobile video"
+        },
+        {
+          "type": "range",
+          "id": "mobile_image_position",
+          "label": "Mobile background horizontal position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50
         },
         {
           "type": "text",
@@ -530,6 +731,28 @@
           "id": "body",
           "label": "Body",
           "default": "Moya stays close through slow morning, busy afternoon, and everything in between."
+        },
+        {
+          "type": "header",
+          "content": "Mobile text overrides"
+        },
+        {
+          "type": "text",
+          "id": "mobile_eyebrow",
+          "label": "Mobile eyebrow",
+          "info": "Optional. Uses the eyebrow above when empty."
+        },
+        {
+          "type": "inline_richtext",
+          "id": "mobile_heading",
+          "label": "Mobile heading",
+          "info": "Optional. Uses the heading above when empty."
+        },
+        {
+          "type": "textarea",
+          "id": "mobile_body",
+          "label": "Mobile body",
+          "info": "Optional. Uses the body above when empty."
         }
       ]
     }

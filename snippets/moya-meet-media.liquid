@@ -1,0 +1,52 @@
+{% comment %}
+  Responsive Meet Moya background. Each device selects its own image or hosted video.
+  Images double as video posters; video sources are attached only when needed by JS.
+  Accepts desktop_image, mobile_image, desktop_video, mobile_video,
+  desktop_type and mobile_type.
+{% endcomment %}
+{%- liquid
+  assign desktop_poster = desktop_image
+  if desktop_type == 'video'
+    assign desktop_poster = desktop_image | default: desktop_video.preview_image
+  endif
+  assign mobile_poster = mobile_image
+  if mobile_type == 'video'
+    assign mobile_poster = mobile_image | default: mobile_video.preview_image
+  endif
+  assign mobile_poster = mobile_poster | default: desktop_poster
+  assign fallback_poster = desktop_poster | default: mobile_poster
+-%}
+<div class="moya-meet__media" aria-hidden="true">
+  {%- if fallback_poster != blank -%}
+    <picture{% if desktop_poster == blank %} class="moya-meet__mobile-media"{% endif %}>
+      {%- if mobile_poster != blank -%}
+        <source
+          media="(max-width: 749px)"
+          srcset="{{ mobile_poster | image_url: width: 375 }} 375w, {{ mobile_poster | image_url: width: 750 }} 750w, {{ mobile_poster | image_url: width: 1100 }} 1100w, {{ mobile_poster | image_url: width: 1500 }} 1500w"
+          sizes="100vw"
+          width="{{ mobile_poster.width }}"
+          height="{{ mobile_poster.height }}"
+        >
+      {%- endif -%}
+      {{ fallback_poster | image_url: width: 3840 | image_tag: loading: 'lazy', widths: '750,1100,1500,1780,2000,2500,3000,3840', sizes: '100vw', alt: '' }}
+    </picture>
+  {%- endif -%}
+  {%- if desktop_type == 'video' and desktop_video != blank -%}
+    <video class="moya-meet__video moya-meet__desktop-media" data-moya-video-device="desktop" muted loop playsinline preload="none" tabindex="-1" width="{{ desktop_video.preview_image.width }}" height="{{ desktop_video.preview_image.height }}">
+      {%- for source in desktop_video.sources -%}
+        {%- if source.format == 'mp4' or source.format == 'webm' -%}
+          <source data-src="{{ source.url | escape }}" type="{{ source.mime_type | escape }}">
+        {%- endif -%}
+      {%- endfor -%}
+    </video>
+  {%- endif -%}
+  {%- if mobile_type == 'video' and mobile_video != blank -%}
+    <video class="moya-meet__video moya-meet__mobile-media" data-moya-video-device="mobile" muted loop playsinline preload="none" tabindex="-1" width="{{ mobile_video.preview_image.width }}" height="{{ mobile_video.preview_image.height }}">
+      {%- for source in mobile_video.sources -%}
+        {%- if source.format == 'mp4' or source.format == 'webm' -%}
+          <source data-src="{{ source.url | escape }}" type="{{ source.mime_type | escape }}">
+        {%- endif -%}
+      {%- endfor -%}
+    </video>
+  {%- endif -%}
+</div>
