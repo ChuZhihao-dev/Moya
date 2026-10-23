@@ -57,8 +57,11 @@ moya-talk.moya-talk { --talk-ink:#37584d; --talk-bg:#f0f2f2; --talk-height:100sv
  .moya-talk__avatar>span { mask-size:28px 28px; }
  .moya-talk__avatar>span img { width:85.52px; height:64.14px; left:-27.44px; top:-4.99px; }
  .moya-talk__dots { left:auto; right:5.2%; top:42.94%; transform:scale(.665); transform-origin:top right; }
- .moya-talk__options { top:auto; bottom:max(12.5%,env(safe-area-inset-bottom)); width:70.6%; gap:2px; }
- .moya-talk__option { min-height:44px; padding:9px 13px; font-size:10px; line-height:1.5; }
+ /* Figma 58:1265: 264.66px wide, first option at 397.42px in a 545px stage. */
+ .moya-talk__options { top:72.92%; bottom:auto; width:70.575%; gap:10.93px; }
+ .moya-talk__option { position:relative; min-height:35px; gap:10.64px; padding:9.31px 13.3px; border-width:.665px; font-size:10px; line-height:1.5; backdrop-filter:blur(4.256px); -webkit-backdrop-filter:blur(4.256px); }
+ /* Extend the touch target without filling the visible gap between bubbles. */
+ .moya-talk__option::before { content:""; position:absolute; inset-block:min(0px,calc(50% - 22px)); inset-inline:0; border-radius:inherit; }
  .moya-talk__option>img { transform:scale(.665); }
  .moya-talk__answer { left:8.53%; top:6%; width:82.94%; }
  .moya-talk__label { font-size:12px; margin-bottom:8px; }

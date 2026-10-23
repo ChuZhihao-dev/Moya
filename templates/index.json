@@ -103,8 +103,9 @@
         "scene_FiWijp": {
           "type": "scene",
           "settings": {
-            "media_type": "image",
+            "media_type": "video",
             "image": "shopify://shop_images/pic1_1_01396bfa-a733-438b-81a0-9ff430e8c791.webp",
+            "video": "shopify://files/videos/scene-sleep.mp4",
             "desktop_image_position": 50,
             "mobile_media_type": "image",
             "mobile_image_position": 50,
@@ -119,8 +120,8 @@
         "scene_WXxdhN": {
           "type": "scene",
           "settings": {
-            "media_type": "image",
-            "image": "shopify://shop_images/pic1_2_515b11d8-4391-4563-aa4f-cc329cb4c827.webp",
+            "media_type": "video",
+            "video": "shopify://files/videos/scene-everyday.mp4",
             "desktop_image_position": 50,
             "mobile_media_type": "image",
             "mobile_image_position": 50,
@@ -135,8 +136,8 @@
         "scene_hafWyR": {
           "type": "scene",
           "settings": {
-            "media_type": "image",
-            "image": "shopify://shop_images/pic1_3.webp",
+            "media_type": "video",
+            "video": "shopify://files/videos/scene-hug.mp4",
             "desktop_image_position": 50,
             "mobile_media_type": "image",
             "mobile_image_position": 36,
@@ -170,6 +171,121 @@
         "mobile_scroll_hint": "Swipe to explore More",
         "enable_transition": true,
         "transition_duration": 400
+      }
+    },
+    "moya_talk": {
+      "type": "moya-talk",
+      "blocks": {
+        "opening": {
+          "type": "dialogue",
+          "settings": {
+            "key": "opening",
+            "prompt": "Hi, I'm MoYa. What kind of company would feel right today?",
+            "text_start": 0,
+            "text_end": 0,
+            "option_1_label": "Let's talk a little",
+            "option_1_reply": "I'm all ears. You can start anywhere.",
+            "option_1_next": "conversation",
+            "option_1_motion": "look-up",
+            "option_1_action": "next",
+            "option_1_link": "",
+            "option_2_label": "Just stay with me",
+            "option_2_reply": "We can make room for quiet, too. I'll stay close.",
+            "option_2_next": "quiet",
+            "option_2_motion": "hug",
+            "option_2_action": "next",
+            "option_2_link": ""
+          }
+        },
+        "conversation": {
+          "type": "dialogue",
+          "settings": {
+            "key": "conversation",
+            "prompt": "When words feel heavy, what would help most?",
+            "text_start": 0,
+            "text_end": 0,
+            "option_1_label": "Just listen to me",
+            "option_1_reply": "I'm listening. No need to make it neat or sensible.",
+            "option_1_next": "closing",
+            "option_1_motion": "look-up",
+            "option_1_action": "next",
+            "option_1_link": "",
+            "option_2_label": "Let's breathe together",
+            "option_2_reply": "Okay. We'll take one slow breath at a time.",
+            "option_2_next": "closing",
+            "option_2_motion": "breathe",
+            "option_2_action": "next",
+            "option_2_link": ""
+          }
+        },
+        "quiet": {
+          "type": "dialogue",
+          "settings": {
+            "key": "quiet",
+            "prompt": "Would a little comfort help?",
+            "text_start": 0,
+            "text_end": 0,
+            "option_1_label": "A soft hug, please",
+            "option_1_reply": "Come closer. We can be still for a moment.",
+            "option_1_next": "closing",
+            "option_1_motion": "hug",
+            "option_1_action": "next",
+            "option_1_link": "",
+            "option_2_label": "Breathe with me",
+            "option_2_reply": "In gently, out slowly. I'll keep the rhythm with you.",
+            "option_2_next": "closing",
+            "option_2_motion": "breathe",
+            "option_2_action": "next",
+            "option_2_link": ""
+          }
+        },
+        "closing": {
+          "type": "dialogue",
+          "settings": {
+            "key": "closing",
+            "prompt": "Want to see the idea behind that kind of comfort?",
+            "text_start": 0,
+            "text_end": 0,
+            "option_1_label": "Show me the science",
+            "option_1_reply": "",
+            "option_1_next": "",
+            "option_1_motion": "breathe",
+            "option_1_action": "link",
+            "option_1_link": "#moya-science",
+            "option_2_label": "Let's start again",
+            "option_2_reply": "",
+            "option_2_next": "opening",
+            "option_2_motion": "breathe",
+            "option_2_action": "restart",
+            "option_2_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "opening",
+        "conversation",
+        "quiet",
+        "closing"
+      ],
+      "name": "Moya Talk",
+      "settings": {
+        "heading": "Talk to MoYa",
+        "introduction": "Choose a conversation and spend a little time with MoYa.",
+        "listening_label": "Listening ...",
+        "asked_label": "YOU ASKED",
+        "options_label": "Choose your reply",
+        "start_node": "opening",
+        "background": "#f0f2f2",
+        "text_color": "#37584d",
+        "enable_motion": true,
+        "enable_reveal": true,
+        "scroll_distance": 100,
+        "text_speed": 30,
+        "option_delay": 300,
+        "desktop_scale": 100,
+        "desktop_position": 50,
+        "mobile_scale": 100,
+        "mobile_position": 50
       }
     },
     "moya_meet_CFRBe8": {
@@ -543,102 +659,12 @@
         "divider_color": "#003521",
         "divider_opacity": 10
       }
-    },
-    "moya_talk": {
-      "type": "moya-talk",
-      "blocks": {
-        "opening": {
-          "type": "dialogue",
-          "settings": {
-            "key": "opening",
-            "prompt": "Hi, I'm MoYa. What kind of company would feel right today?",
-            "text_start": 0,
-            "text_end": 0,
-            "option_1_label": "Let's talk a little",
-            "option_1_reply": "I'm all ears. You can start anywhere.",
-            "option_1_next": "conversation",
-            "option_1_motion": "look-up",
-            "option_1_action": "next",
-            "option_2_label": "Just stay with me",
-            "option_2_reply": "We can make room for quiet, too. I'll stay close.",
-            "option_2_next": "quiet",
-            "option_2_motion": "hug",
-            "option_2_action": "next"
-          }
-        },
-        "conversation": {
-          "type": "dialogue",
-          "settings": {
-            "key": "conversation",
-            "prompt": "When words feel heavy, what would help most?",
-            "text_start": 0,
-            "text_end": 0,
-            "option_1_label": "Just listen to me",
-            "option_1_reply": "I'm listening. No need to make it neat or sensible.",
-            "option_1_next": "closing",
-            "option_1_motion": "look-up",
-            "option_1_action": "next",
-            "option_2_label": "Let's breathe together",
-            "option_2_reply": "Okay. We'll take one slow breath at a time.",
-            "option_2_next": "closing",
-            "option_2_motion": "breathe",
-            "option_2_action": "next"
-          }
-        },
-        "quiet": {
-          "type": "dialogue",
-          "settings": {
-            "key": "quiet",
-            "prompt": "Would a little comfort help?",
-            "text_start": 0,
-            "text_end": 0,
-            "option_1_label": "A soft hug, please",
-            "option_1_reply": "Come closer. We can be still for a moment.",
-            "option_1_next": "closing",
-            "option_1_motion": "hug",
-            "option_1_action": "next",
-            "option_2_label": "Breathe with me",
-            "option_2_reply": "In gently, out slowly. I'll keep the rhythm with you.",
-            "option_2_next": "closing",
-            "option_2_motion": "breathe",
-            "option_2_action": "next"
-          }
-        },
-        "closing": {
-          "type": "dialogue",
-          "settings": {
-            "key": "closing",
-            "prompt": "Want to see the idea behind that kind of comfort?",
-            "text_start": 0,
-            "text_end": 0,
-            "option_1_label": "Show me the science",
-            "option_1_reply": "",
-            "option_1_next": "",
-            "option_1_motion": "breathe",
-            "option_1_action": "link",
-            "option_2_label": "Let's start again",
-            "option_2_reply": "",
-            "option_2_next": "opening",
-            "option_2_motion": "breathe",
-            "option_2_action": "restart",
-            "option_1_link": "#moya-science"
-          }
-        }
-      },
-      "block_order": [
-        "opening",
-        "conversation",
-        "quiet",
-        "closing"
-      ],
-      "settings": {},
-      "name": "Moya Talk"
     }
   },
   "order": [
     "moya_hero_slideshow_JHHLaR",
-    "moya_talk",
     "moya_meet_fenGT4",
+    "moya_talk",
     "moya_meet_CFRBe8",
     "moya_science_intro",
     "moya_innovation_research_mDzrmc",

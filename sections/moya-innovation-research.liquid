@@ -45,6 +45,9 @@
     letter-spacing: 0.04em;
     text-transform: uppercase;
   }
+  .moya-ir__eyebrow--mobile {
+    display: none;
+  }
   .moya-ir__title {
     margin: 0 0 24px;
     color: var(--moya-ir-heading, #003521);
@@ -117,22 +120,68 @@
 
   @media (max-width: 749px) {
     .moya-ir {
-      padding: 64px 20px;
+      padding: 64px 25px 60px;
     }
     .moya-ir__inner {
-      gap: 32px;
+      gap: 44.7px;
+    }
+    .moya-ir__header {
+      width: 100%;
+      max-width: 289px;
+    }
+    .moya-ir__eyebrow {
+      margin-bottom: 3.42px;
+      padding: 2px 4px;
+      color: var(--moya-ir-heading, #003521);
+      font-size: 8px;
+      font-weight: 400;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+    .moya-ir__eyebrow--desktop {
+      display: none;
+    }
+    .moya-ir__eyebrow--mobile {
+      display: block;
+    }
+    .moya-ir__title {
+      max-width: 240px;
+      margin-bottom: 11.4px;
+      font-size: 36px;
+      line-height: 1.1;
+    }
+    .moya-ir__subtitle {
+      max-width: 257px;
+      color: var(--moya-ir-heading, #003521);
+      font-family: 'Outfit', var(--text-font-family, sans-serif);
+      font-size: 10px;
+      letter-spacing: 0;
+    }
+    .moya-ir__subtitle p:last-child br:last-child {
+      display: none;
     }
     .moya-ir__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10.1px 15.5px;
+      max-width: 325.66px;
     }
     .moya-ir__card {
-      height: 104px;
-      border-radius: 12px;
+      flex: 0 0 calc((100% - 31px) / 3);
+      min-width: 0;
+      height: 80.83px;
+      padding: 11.89px 8px;
+      border-radius: 5.94px;
+      background-color: color-mix(in srgb, var(--moya-ir-card-bg, #ffffff) 40%, transparent);
     }
     .moya-ir__logo {
-      max-width: 72px;
-      max-height: 72px;
+      max-width: min(57.05px, 100%);
+      max-height: 57.05px;
+    }
+    .moya-ir__placeholder {
+      overflow-wrap: anywhere;
+      font-size: 10px;
     }
   }
 
@@ -150,7 +199,10 @@
   <div class="moya-ir__inner">
     <div class="moya-ir__header">
       {%- if section.settings.eyebrow != blank -%}
-        <p class="moya-ir__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        <p class="moya-ir__eyebrow{% if section.settings.mobile_eyebrow != blank %} moya-ir__eyebrow--desktop{% endif %}">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      {%- if section.settings.mobile_eyebrow != blank -%}
+        <p class="moya-ir__eyebrow moya-ir__eyebrow--mobile">{{ section.settings.mobile_eyebrow | escape }}</p>
       {%- endif -%}
       {%- if section.settings.heading != blank -%}
         <h2 class="moya-ir__title">{{ section.settings.heading | escape }}</h2>
@@ -170,7 +222,7 @@
           <{{ card_tag }}
             class="moya-ir__card"
             role="listitem"
-            {% if card_tag == 'a' %}hdata-moya-ref="{{ block.settings.link }}"{% endif %}
+            {% if card_tag == 'a' %}href="{{ block.settings.link | escape }}"{% endif %}
             {% if block.settings.logo == blank and block.settings.title != blank %}aria-label="{{ block.settings.title | escape }}"{% endif %}
             {{ block.shopify_attributes }}
           >
@@ -178,7 +230,7 @@
               {%- assign alt_text = block.settings.title | default: 'Award logo' -%}
               {{ block.settings.logo
                  | image_url: width: 400
-                 | image_tag: loading: 'lazy', widths: '160,240,320,400', sizes: '(min-width: 750px) 18vw, 42vw', alt: alt_text, class: 'moya-ir__logo' }}
+                 | image_tag: loading: 'lazy', widths: '160,240,320,400', sizes: '(min-width: 750px) 96px, 57px', alt: alt_text, class: 'moya-ir__logo' }}
             {%- elsif block.settings.title != blank -%}
               <span class="moya-ir__placeholder">{{ block.settings.title | escape }}</span>
             {%- endif -%}
@@ -200,6 +252,13 @@
       "id": "eyebrow",
       "label": "Eyebrow",
       "default": "Recognition"
+    },
+    {
+      "type": "text",
+      "id": "mobile_eyebrow",
+      "label": "Mobile eyebrow",
+      "default": "Science behind MoYa",
+      "info": "Leave blank to use the main eyebrow on mobile."
     },
     {
       "type": "text",

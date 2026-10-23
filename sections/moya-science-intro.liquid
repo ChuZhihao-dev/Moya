@@ -125,6 +125,7 @@
         </div>
       </article>
     {% endfor %}
+    {% if section.blocks.size > 1 %}
     <nav class="moya-science__navigation" aria-label="Science slides">
       <button type="button" data-previous aria-label="Previous science slide"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m14 6-6 6 6 6M8 12h12" stroke="currentColor" stroke-width="1.5"/></svg></button>
       <div class="moya-science__tabs">
@@ -132,6 +133,7 @@
       </div>
       <button type="button" data-next aria-label="Next science slide"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m10 6 6 6-6 6M16 12H4" stroke="currentColor" stroke-width="1.5"/></svg></button>
     </nav>
+    {% endif %}
   </div>
   </div>
 </moya-science-intro>

@@ -1,5 +1,5 @@
 {% comment %}
-  Figma 20:359. Backgrounds are uploaded through the theme editor only.
+  Figma desktop 20:359 / mobile 58:981. Backgrounds are uploaded through the theme editor only.
   Uses Shopify's customer form for email marketing signup, not account creation.
 {% endcomment %}
 
@@ -20,7 +20,7 @@
 >
   {%- if section.settings.background_image != blank -%}
     <div class="moya-take-action__media" aria-hidden="true">
-      {{- section.settings.background_image | image_url: width: 2880 | image_tag: class: 'moya-take-action__image', widths: '375, 550, 750, 1100, 1500, 2000, 2400, 2880', sizes: '100vw', loading: 'lazy', alt: '' -}}
+      {{- section.settings.background_image | image_url: width: 2880 | image_tag: class: 'moya-take-action__image', widths: '375, 550, 750, 1100, 1500, 2000, 2400, 2880', sizes: '(max-width: 749px) 237vw, 100vw', loading: 'lazy', alt: '' -}}
     </div>
   {%- endif -%}
   <div class="moya-take-action__overlay" aria-hidden="true"></div>
@@ -111,16 +111,44 @@
   .moya-take-action__content--animated { animation: moya-take-action-enter var(--mta-duration, 600ms) ease-out var(--mta-delay, 0ms) both; }
   @keyframes moya-take-action-enter { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
   @media (max-width: 749px) {
-    .moya-take-action { padding: var(--mta-mobile-padding, 72px) 20px; }
-    .moya-take-action__description { font-size: 16px; }
-    .moya-take-action__form { margin-top: 32px; }
-    .moya-take-action__input { padding-inline: 20px 12px; }
-    .moya-take-action__submit .button { padding-inline: 24px; }
-    .moya-take-action__contacts { font-size: 14px; }
-  }
-  @media (max-width: 359px) {
-    .moya-take-action__input { padding-inline: 14px 8px; }
-    .moya-take-action__submit .button { padding-inline: 18px; }
+    .moya-take-action {
+      display: flex;
+      align-items: center;
+      min-height: 553px;
+      padding: var(--mta-mobile-padding, 72px) 14px calc(var(--mta-mobile-padding, 72px) + 16px);
+    }
+    /* Preserve the mobile design's enlarged, offset background crop. */
+    .moya-take-action__media .moya-take-action__image {
+      position: absolute;
+      top: -5.625%;
+      left: -40.53%;
+      width: 236.54%;
+      max-width: none;
+      height: 111.25%;
+    }
+    .moya-take-action__content { width: 100%; max-width: 374px; }
+    .moya-take-action__heading { font-size: 36px; line-height: 1.1; }
+    .moya-take-action__description {
+      max-width: 347.29px;
+      margin-top: 13.36px;
+      color: color-mix(in srgb, var(--mta-text, #fff) 80%, transparent);
+      font-size: 10px;
+      letter-spacing: 0;
+    }
+    .moya-take-action__form { max-width: 274px; margin-top: 22.26px; }
+    .moya-take-action__field {
+      min-height: 35.12px;
+      border-width: .56px;
+      -webkit-backdrop-filter: blur(3.34px);
+      backdrop-filter: blur(3.34px);
+    }
+    .moya-take-action__field:focus-within { outline: 2px solid var(--mta-text, #fff); outline-offset: 3px; }
+    .moya-take-action__input { padding: 8px 12px; font-size: 12px; }
+    .moya-take-action__submit { margin: -.56px; }
+    .moya-take-action__submit .button { min-height: 35.12px; padding: 8px 24px; font-size: 12px; white-space: nowrap; }
+    .moya-take-action__contacts { gap: 3.34px; margin-top: 11.13px; font-size: 8px; }
+    .moya-take-action__contacts a { text-underline-offset: 1px; }
+    .moya-take-action__message { padding: 10px 12px; font-size: 12px; }
   }
   @media (prefers-reduced-motion: reduce) { .moya-take-action__content--animated { animation: none; } }
 {% endstylesheet %}

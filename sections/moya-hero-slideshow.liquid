@@ -311,7 +311,16 @@
     .moya-hero {
       height: var(--moya-hero-mobile-height, 100vh);
     }
-    .moya-hero__slide--design { background-color: #f7f7f7; }
+    .moya-hero[data-mobile-height-mode="design"] {
+      --moya-hero-mobile-panel-height: clamp(465px, 145.333333vw, 720px);
+      height: calc(var(--moya-hero-mobile-panel-height) + var(--moya-hero-header-offset, 0px));
+    }
+    .moya-hero[data-mobile-height-mode="design"] .moya-hero__media,
+    .moya-hero[data-mobile-height-mode="design"] .moya-hero__overlay,
+    .moya-hero[data-mobile-height-mode="design"] .moya-hero__fade {
+      top: var(--moya-hero-header-offset, 0px);
+    }
+    .moya-hero__slide--mobile-centered { background-color: #f7f7f7; }
     .moya-hero__media--mobile-only,
     .moya-hero__mobile-video { display: block; }
     .moya-hero__content {
@@ -341,20 +350,20 @@
     .moya-hero__dot.is-active::before { width: 11px; }
     .moya-hero__action,
     .moya-hero__content--right .moya-hero__action { margin: 0; }
-    .moya-hero__arrows { inset: 260px 16px auto; transform: none; }
-    .moya-hero__arrow,
+    .moya-hero__arrows { inset: calc(250px + var(--moya-hero-header-offset, 0px)) 6px auto; transform: none; }
+    .moya-hero__arrow { width: 44px; height: 44px; }
     .moya-hero__arrow img { width: 24px; height: 24px; }
-    .moya-hero__slide--design .moya-hero__content {
+    .moya-hero__slide--mobile-centered .moya-hero__content {
       justify-content: flex-start;
       align-items: center;
       gap: 13.4375px;
       padding: calc(32px + var(--moya-hero-header-offset, 0px)) 16px 0;
     }
-    .moya-hero__slide--design .moya-hero__inner {
+    .moya-hero__slide--mobile-centered .moya-hero__inner {
       align-items: center;
       text-align: center;
     }
-    .moya-hero__slide--design .moya-hero__heading {
+    .moya-hero__slide--mobile-centered .moya-hero__heading {
       width: 229px;
       max-width: 100%;
       font-size: 36px;
@@ -363,7 +372,7 @@
       letter-spacing: normal;
       text-transform: capitalize;
     }
-    .moya-hero__slide--design .moya-hero__subheading {
+    .moya-hero__slide--mobile-centered .moya-hero__subheading {
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
@@ -378,7 +387,7 @@
       white-space: normal;
       text-overflow: ellipsis;
     }
-    .moya-hero__slide--design .moya-hero__action .button {
+    .moya-hero__slide--mobile-centered .moya-hero__action .button {
       min-width: 138px;
       min-height: 32px;
       padding: 8px 16px;
@@ -408,6 +417,7 @@
   aria-label="{{ section.settings.slideshow_label | escape }}"
   tabindex="0"
   data-moya-hero
+  data-mobile-height-mode="{{ section.settings.mobile_height_mode | default: 'design' }}"
   {% if section.settings.allow_transparent_header %}allow-transparent-header{% endif %}
   data-navigation-tone="{{ section.blocks.first.settings.navigation_tone | default: 'dark' }}"
   data-autoplay="{{ section.settings.autoplay }}"
@@ -416,9 +426,19 @@
   <div class="moya-hero__viewport">
     <div class="moya-hero__track" dir="ltr" data-moya-hero-track>
       {%- for block in section.blocks -%}
-        {%- assign moya_hero_mobile_poster = block.settings.mobile_image | default: block.settings.mobile_video.preview_image -%}
+        {%- liquid
+          assign moya_hero_mobile_poster = block.settings.mobile_image | default: block.settings.mobile_video.preview_image
+          case block.settings.mobile_layout
+            when 'centered'
+              assign moya_hero_mobile_centered = true
+            when 'inherit'
+              assign moya_hero_mobile_centered = false
+            else
+              assign moya_hero_mobile_centered = block.settings.use_design_image
+          endcase
+        -%}
         <div
-          class="moya-hero__slide{% if forloop.first %} is-active{% endif %}{% if block.settings.image == blank and block.settings.use_design_image %} moya-hero__slide--design{% endif %}{% if block.settings.mobile_image != blank or block.settings.mobile_video != blank %} moya-hero__slide--mobile-media{% endif %}"
+          class="moya-hero__slide{% if moya_hero_mobile_centered %} moya-hero__slide--mobile-centered{% endif %}{% if forloop.first %} is-active{% endif %}{% if block.settings.image == blank and block.settings.use_design_image %} moya-hero__slide--design{% endif %}{% if block.settings.mobile_image != blank or block.settings.mobile_video != blank %} moya-hero__slide--mobile-media{% endif %}"
           id="MoyaHeroSlide-{{ section.id }}-{{ block.id }}"
           dir="{% render 'direction' %}"
           data-moya-hero-slide
@@ -586,6 +606,17 @@
       "step": 1,
       "unit": "vh",
       "default": 100
+    },
+    {
+      "type": "select",
+      "id": "mobile_height_mode",
+      "label": "Mobile height mode",
+      "options": [
+        { "value": "design", "label": "Design proportions (375 × 545)" },
+        { "value": "viewport", "label": "Viewport height" }
+      ],
+      "default": "design",
+      "info": "Design proportions keeps the mobile artwork composition. Viewport height uses the setting below."
     },
     {
       "type": "range",
@@ -792,6 +823,18 @@
           "id": "subheading",
           "label": "Subheading",
           "default": "Share the small thoughts, long days, and ordinary moments that matter."
+        },
+        {
+          "type": "select",
+          "id": "mobile_layout",
+          "label": "Mobile content layout",
+          "options": [
+            { "value": "auto", "label": "Automatic" },
+            { "value": "centered", "label": "Centered at top (mobile design)" },
+            { "value": "inherit", "label": "Use content position settings" }
+          ],
+          "default": "auto",
+          "info": "Automatic uses the mobile design layout when Use original Moya design image is enabled, including when custom background images are selected."
         },
         {
           "type": "select",
