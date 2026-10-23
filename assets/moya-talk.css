@@ -1,0 +1,79 @@
+/* Talk to MoYa. Source file; deploy the generated .min.css. */
+moya-talk.moya-talk { --talk-ink:#37584d; --talk-bg:#f0f2f2; --talk-height:100svh; --talk-top:0px; display:block; position:relative; background:var(--talk-bg); color:var(--talk-ink); font-family:Outfit,var(--heading-font-family,sans-serif); }
+.moya-talk [hidden] { display:none!important; }
+.moya-talk__stage { position:relative; min-height:750px; isolation:isolate; overflow:hidden; background:var(--talk-bg); }
+.moya-talk.is-enhanced:not(.is-flow) { height:calc(var(--talk-height) * (1.6 + var(--talk-distance,100) / 100)); }
+.moya-talk.is-enhanced:not(.is-flow) .moya-talk__stage { position:sticky; top:var(--talk-top); height:var(--talk-height); min-height:0; }
+.moya-talk__media { position:absolute; inset:0; z-index:-1; overflow:hidden; }
+.moya-talk__poster,.moya-talk__video { position:absolute; inset:0; display:block; width:100%; height:100%; transform:scale(var(--talk-desktop-scale,1)); transform-origin:center; }
+.moya-talk__poster img,.moya-talk__video { width:100%; height:100%; max-width:none; object-fit:cover; object-position:var(--talk-desktop-position,50%) center; }
+.moya-talk__video { opacity:0; transition:opacity 180ms linear; pointer-events:none; }
+.moya-talk__video.is-active { opacity:1; }
+.moya-talk__title { position:absolute; z-index:1; top:12.7%; left:0; width:100%; margin:0; padding:0 16px; text-align:center; font-size:clamp(48px,6.667vw,112px); line-height:1.1; font-weight:600; letter-spacing:-.02em; color:var(--talk-ink); opacity:var(--talk-title-opacity,1); pointer-events:none; }
+.moya-talk__interface { position:absolute; inset:0; z-index:2; }
+.moya-talk__listening { position:absolute; display:flex; align-items:center; gap:12px; left:25.76%; top:34.27%; font-size:18px; white-space:nowrap; }
+.moya-talk__avatar { display:block; position:relative; width:42px; height:42px; transform:scaleX(-1); }
+.moya-talk__avatar-bg { max-width:none; position:absolute; left:-1.4px; top:-1.4px; }
+.moya-talk__avatar>span { position:absolute; inset:0; mask-image:var(--talk-avatar-mask); mask-size:42px 42px; mask-repeat:no-repeat; }
+.moya-talk__avatar>span img { position:absolute; width:128.282px; height:96.211px; max-width:none; left:-41.153px; top:-7.489px; }
+.moya-talk__dots { position:absolute; left:68.1%; top:45.5%; }
+.moya-talk__answer { position:absolute; left:7.22%; top:16%; width:27.57%; }
+.moya-talk__label { margin:0 0 12px; font-size:18px; font-weight:500; line-height:1.3; }
+.moya-talk__reply { position:relative; margin:0; font-size:clamp(25px,2.778vw,48px); font-weight:400; line-height:1.08; letter-spacing:-.02em; overflow-wrap:anywhere; }
+.moya-talk__reply-base { color:var(--talk-ink); opacity:.28; }
+.moya-talk__reply-ink { position:absolute; inset:0; color:var(--talk-ink); mask-image:linear-gradient(90deg,#000 0%,#000 var(--talk-reveal-solid,0%),transparent var(--talk-reveal-edge,0%)); }
+.moya-talk__reply-line { display:block; }
+.moya-talk__asked { position:absolute; right:7.22%; top:49%; width:27.57%; text-align:right; }
+.moya-talk__asked>.moya-talk__label { color:#fff; text-shadow:0 1px 5px #37584d55; }
+.moya-talk__asked>[data-question] { margin:0; font-size:clamp(22px,2.223vw,38px); line-height:1.08; letter-spacing:-.02em; color:#003521; overflow-wrap:anywhere; }
+.moya-talk__options { position:absolute; width:min(398px,38%); left:50%; top:67.6%; transform:translateX(-50%); display:grid; gap:16px; }
+.moya-talk__option { box-sizing:border-box; display:flex; align-items:center; justify-content:space-between; gap:16px; width:100%; min-height:52px; padding:14px 20px; border:1px solid #fff; border-radius:100px; background:rgb(255 255 255 / 60%); backdrop-filter:blur(6.4px); -webkit-backdrop-filter:blur(6.4px); color:#003521; font:400 16px/1.5 Outfit,sans-serif; text-align:left; text-decoration:none; cursor:pointer; transition:background 180ms,transform 180ms; }
+.moya-talk__option>span { min-width:0; overflow-wrap:anywhere; }
+.moya-talk__option>img { flex:none; }
+.moya-talk__option:focus-visible { outline:3px solid var(--talk-ink); outline-offset:4px; }
+.moya-talk__option:disabled { opacity:.55; cursor:wait; }
+.moya-talk__options:not(:empty) { animation:moya-talk-appear 240ms ease-out both; }
+.moya-talk__sr { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+.moya-talk__config { position:relative; z-index:4; background:#fff; padding:16px; color:#9c2020; font:14px/1.5 sans-serif; }
+.moya-talk__fallback { position:relative; padding:180px 24px 40px; background:rgb(240 242 242 / 90%); }
+.moya-talk.is-flow .moya-talk__stage { min-height:600px; }
+.moya-talk.is-flow .moya-talk__interface { position:relative; display:grid; grid-template-columns:1fr; gap:20px; min-height:600px; padding:200px 24px 32px; }
+.moya-talk.is-flow .moya-talk__listening,.moya-talk.is-flow .moya-talk__answer,.moya-talk.is-flow .moya-talk__asked,.moya-talk.is-flow .moya-talk__options { position:relative; inset:auto; transform:none; width:min(100%,580px); justify-self:center; }
+.moya-talk.is-flow .moya-talk__listening { align-self:end; }
+.moya-talk.is-flow .moya-talk__reply { font-size:clamp(23px,3vw,36px); }
+.moya-talk.is-flow .moya-talk__dots { display:none; }
+.moya-talk.is-flow .moya-talk__media { opacity:.5; }
+.moya-talk.is-flow .moya-talk__asked>.moya-talk__label { color:var(--talk-ink); text-shadow:none; }
+@media (hover:hover) { .moya-talk__option:hover { transform:translateY(-2px); background:rgb(173 219 206 / 80%); border-color:transparent; } }
+@media (min-width:750px) and (max-width:1199px) { .moya-talk__answer { left:4%; width:29%; } .moya-talk__asked { right:4%; width:29%; } .moya-talk__listening { left:19%; } .moya-talk__options { width:38%; } .moya-talk__option { font-size:14px; padding-inline:16px; } }
+@media (max-width:749px) {
+ .moya-talk__stage { min-height:545px; }
+ .moya-talk__poster,.moya-talk__video { transform:scale(var(--talk-mobile-scale,1)); }
+ .moya-talk__poster img,.moya-talk__video { object-position:var(--talk-mobile-position,50%) center; }
+ .moya-talk__title { top:21.5%; font-size:clamp(38px,12.267vw,58px); }
+ .moya-talk__listening { left:8.53%; top:46.42%; gap:8px; font-size:12px; }
+ .moya-talk__avatar { width:28px; height:28px; }
+ .moya-talk__avatar-bg { transform:scale(.666667); transform-origin:top left; left:-.93px; top:-.93px; }
+ .moya-talk__avatar>span { mask-size:28px 28px; }
+ .moya-talk__avatar>span img { width:85.52px; height:64.14px; left:-27.44px; top:-4.99px; }
+ .moya-talk__dots { left:auto; right:5.2%; top:42.94%; transform:scale(.665); transform-origin:top right; }
+ .moya-talk__options { top:auto; bottom:max(12.5%,env(safe-area-inset-bottom)); width:70.6%; gap:2px; }
+ .moya-talk__option { min-height:44px; padding:9px 13px; font-size:10px; line-height:1.5; }
+ .moya-talk__option>img { transform:scale(.665); }
+ .moya-talk__answer { left:8.53%; top:6%; width:82.94%; }
+ .moya-talk__label { font-size:12px; margin-bottom:8px; }
+ .moya-talk__reply { font-size:clamp(21px,5.867vw,28px); line-height:1.1; }
+ .moya-talk__asked { top:auto; bottom:32%; right:8.53%; width:65%; }
+ .moya-talk__asked>[data-question] { font-size:clamp(17px,4.8vw,23px); }
+ .moya-talk.is-flow .moya-talk__interface { padding-top:180px; padding-bottom:max(32px,env(safe-area-inset-bottom)); }
+ .moya-talk.is-flow .moya-talk__option { font-size:14px; }
+}
+@media (prefers-reduced-motion:reduce) { .moya-talk *, .moya-talk *::before,.moya-talk *::after { animation:none!important; transition:none!important; } }
+@keyframes moya-talk-appear { from { opacity:0; translate:0 8px; } to { opacity:1; translate:0 0; } }
+.moya-talk__reply-word { position:relative; display:inline-block; max-width:100%; vertical-align:top; }
+
+.moya-talk.has-answer .moya-talk__title { opacity:0; }
+.moya-talk__answer .moya-talk__label { display:flex; align-items:center; gap:12px; }
+@media (max-width:749px) { .moya-talk__title { transform:scale(var(--talk-title-zoom,1)); } .moya-talk__answer .moya-talk__label { gap:8px; } }
+
+.moya-talk__viewport { position:absolute; top:0; left:0; width:0; height:100vh; height:100svh; visibility:hidden; pointer-events:none; }

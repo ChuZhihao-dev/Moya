@@ -1,0 +1,11 @@
+{
+  "name": "moya-theme",
+  "private": true,
+  "scripts": {
+    "build:talk": "node scripts/build-moya-talk.mjs",
+    "test:talk": "node --test tests/moya-talk.test.cjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.1"
+  }
+}

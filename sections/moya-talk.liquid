@@ -1,0 +1,685 @@
+{% render 'moya-fonts' %}
+{{ 'moya-talk.min.css' | asset_url | stylesheet_tag }}
+<moya-talk id="Moya-Talk-{{ section.id }}" class="moya-talk" role="region" aria-labelledby="Moya-Talk-Heading-{{ section.id }}"
+  data-motion="{{ section.settings.enable_motion }}" data-reveal="{{ section.settings.enable_reveal }}" data-start="{{ section.settings.start_node | escape }}"
+  data-speed="{{ section.settings.text_speed }}" data-delay="{{ section.settings.option_delay }}" data-editor="{{ request.design_mode }}"
+  style="--talk-bg:{{ section.settings.background }};--talk-ink:{{ section.settings.text_color }};--talk-distance:{{ section.settings.scroll_distance }};--talk-desktop-scale:{{ section.settings.desktop_scale | divided_by: 100.0 }};--talk-mobile-scale:{{ section.settings.mobile_scale | divided_by: 100.0 }};--talk-desktop-position:{{ section.settings.desktop_position }}%;--talk-mobile-position:{{ section.settings.mobile_position }}%;--talk-avatar-mask:url('{{ 'moya-talk-avatar-mask.svg' | asset_url }}');">
+  <span class="moya-talk__viewport" data-viewport-probe aria-hidden="true"></span>
+  <div class="moya-talk__stage" data-stage>
+    <div class="moya-talk__media" aria-hidden="true">
+      <picture class="moya-talk__poster" data-poster="intro">
+        {% if section.settings.mobile_intro_image != blank %}<source media="(max-width:749px)" srcset="{{ section.settings.mobile_intro_image | image_url: width: 1500 }}">{% endif %}
+        {% if section.settings.intro_image != blank %}{{ section.settings.intro_image | image_url: width: 2400 | image_tag: loading: 'lazy', widths: '750,1500,1920,2400', sizes: '100vw', alt: '' }}{% else %}<img src="{{ 'moya-talk-intro-frame.jpg' | asset_img_url: '2400x' }}" width="5000" height="2500" alt="" loading="lazy">{% endif %}
+      </picture>
+      <picture class="moya-talk__poster" data-poster="full" hidden>
+        {% if section.settings.mobile_full_image != blank %}<source media="(max-width:749px)" srcset="{{ section.settings.mobile_full_image | image_url: width: 1500 }}">{% endif %}
+        {% if section.settings.full_image != blank %}{{ section.settings.full_image | image_url: width: 2400 | image_tag: loading: 'lazy', widths: '750,1500,1920,2400', sizes: '100vw', alt: '' }}{% else %}<img src="{{ 'moya-talk-scene.webp' | asset_url }}" width="4096" height="2048" alt="" loading="lazy">{% endif %}
+      </picture>
+      {%- liquid
+        assign desktop_video = section.settings.intro_video
+        assign mobile_video = section.settings.mobile_intro_video
+        assign desktop_fallback = 'moya-talk-intro-desktop.mp4' | asset_url
+        assign mobile_fallback = 'moya-talk-intro-mobile.mp4' | asset_url
+        assign desktop_src = desktop_fallback
+        assign mobile_src = mobile_fallback
+        if desktop_video != blank
+          for source in desktop_video.sources
+            if source.mime_type == 'video/mp4'
+              assign desktop_src = source.url
+              break
+            endif
+          endfor
+          assign mobile_src = desktop_src
+        endif
+        if mobile_video != blank
+          for source in mobile_video.sources
+            if source.mime_type == 'video/mp4'
+              assign mobile_src = source.url
+              break
+            endif
+          endfor
+        endif
+      -%}
+      <video class="moya-talk__video" data-clip="intro" data-desktop="{{ desktop_src | escape }}" data-mobile="{{ mobile_src | escape }}" muted playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+      {%- liquid
+        assign desktop_video = section.settings.breathe_video
+        assign mobile_video = section.settings.mobile_breathe_video
+        assign desktop_fallback = 'moya-talk-breathe-desktop.mp4' | asset_url
+        assign mobile_fallback = 'moya-talk-breathe-mobile.mp4' | asset_url
+        assign desktop_src = desktop_fallback
+        assign mobile_src = mobile_fallback
+        if desktop_video != blank
+          for source in desktop_video.sources
+            if source.mime_type == 'video/mp4'
+              assign desktop_src = source.url
+              break
+            endif
+          endfor
+          assign mobile_src = desktop_src
+        endif
+        if mobile_video != blank
+          for source in mobile_video.sources
+            if source.mime_type == 'video/mp4'
+              assign mobile_src = source.url
+              break
+            endif
+          endfor
+        endif
+      -%}
+      <video class="moya-talk__video" data-clip="breathe" data-desktop="{{ desktop_src | escape }}" data-mobile="{{ mobile_src | escape }}" muted playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+      {%- liquid
+        assign desktop_video = section.settings.hug_video
+        assign mobile_video = section.settings.mobile_hug_video
+        assign desktop_fallback = 'moya-talk-hug-desktop.mp4' | asset_url
+        assign mobile_fallback = 'moya-talk-hug-mobile.mp4' | asset_url
+        assign desktop_src = desktop_fallback
+        assign mobile_src = mobile_fallback
+        if desktop_video != blank
+          for source in desktop_video.sources
+            if source.mime_type == 'video/mp4'
+              assign desktop_src = source.url
+              break
+            endif
+          endfor
+          assign mobile_src = desktop_src
+        endif
+        if mobile_video != blank
+          for source in mobile_video.sources
+            if source.mime_type == 'video/mp4'
+              assign mobile_src = source.url
+              break
+            endif
+          endfor
+        endif
+      -%}
+      <video class="moya-talk__video" data-clip="hug" data-desktop="{{ desktop_src | escape }}" data-mobile="{{ mobile_src | escape }}" muted playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+      {%- liquid
+        assign desktop_video = section.settings.return_video
+        assign mobile_video = section.settings.mobile_return_video
+        assign desktop_fallback = 'moya-talk-return-desktop.mp4' | asset_url
+        assign mobile_fallback = 'moya-talk-return-mobile.mp4' | asset_url
+        assign desktop_src = desktop_fallback
+        assign mobile_src = mobile_fallback
+        if desktop_video != blank
+          for source in desktop_video.sources
+            if source.mime_type == 'video/mp4'
+              assign desktop_src = source.url
+              break
+            endif
+          endfor
+          assign mobile_src = desktop_src
+        endif
+        if mobile_video != blank
+          for source in mobile_video.sources
+            if source.mime_type == 'video/mp4'
+              assign mobile_src = source.url
+              break
+            endif
+          endfor
+        endif
+      -%}
+      <video class="moya-talk__video" data-clip="return" data-desktop="{{ desktop_src | escape }}" data-mobile="{{ mobile_src | escape }}" muted playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+      {%- liquid
+        assign desktop_video = section.settings.look_up_video
+        assign mobile_video = section.settings.mobile_look_up_video
+        assign desktop_fallback = 'moya-talk-look-up-desktop.mp4' | asset_url
+        assign mobile_fallback = 'moya-talk-look-up-mobile.mp4' | asset_url
+        assign desktop_src = desktop_fallback
+        assign mobile_src = mobile_fallback
+        if desktop_video != blank
+          for source in desktop_video.sources
+            if source.mime_type == 'video/mp4'
+              assign desktop_src = source.url
+              break
+            endif
+          endfor
+          assign mobile_src = desktop_src
+        endif
+        if mobile_video != blank
+          for source in mobile_video.sources
+            if source.mime_type == 'video/mp4'
+              assign mobile_src = source.url
+              break
+            endif
+          endfor
+        endif
+      -%}
+      <video class="moya-talk__video" data-clip="look-up" data-desktop="{{ desktop_src | escape }}" data-mobile="{{ mobile_src | escape }}" muted playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+      {%- liquid
+        assign desktop_video = section.settings.look_down_video
+        assign mobile_video = section.settings.mobile_look_down_video
+        assign desktop_fallback = 'moya-talk-look-down-desktop.mp4' | asset_url
+        assign mobile_fallback = 'moya-talk-look-down-mobile.mp4' | asset_url
+        assign desktop_src = desktop_fallback
+        assign mobile_src = mobile_fallback
+        if desktop_video != blank
+          for source in desktop_video.sources
+            if source.mime_type == 'video/mp4'
+              assign desktop_src = source.url
+              break
+            endif
+          endfor
+          assign mobile_src = desktop_src
+        endif
+        if mobile_video != blank
+          for source in mobile_video.sources
+            if source.mime_type == 'video/mp4'
+              assign mobile_src = source.url
+              break
+            endif
+          endfor
+        endif
+      -%}
+      <video class="moya-talk__video" data-clip="look-down" data-desktop="{{ desktop_src | escape }}" data-mobile="{{ mobile_src | escape }}" muted playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+    </div>
+    <h2 id="Moya-Talk-Heading-{{ section.id }}" class="moya-talk__title">{{ section.settings.heading | escape }}</h2>
+    <div class="moya-talk__interface" data-interface hidden>
+      <div class="moya-talk__listening" data-listening>
+        <span class="moya-talk__avatar" data-avatar aria-hidden="true"><img class="moya-talk__avatar-bg" src="{{ 'moya-talk-avatar-bg.svg' | asset_url }}" width="44.8" height="44.8" alt="" loading="lazy"><span><img src="{{ 'moya-talk-avatar.png' | asset_img_url: '256x' }}" width="128" height="96" alt="" loading="lazy"></span></span>
+        <span>{{ section.settings.listening_label | escape }}</span>
+      </div>
+      <img class="moya-talk__dots" data-dots src="{{ 'moya-talk-dots.svg' | asset_url }}" width="82" height="10" alt="" aria-hidden="true" loading="lazy">
+      <article class="moya-talk__answer" data-answer hidden>
+        <p class="moya-talk__label" data-answer-label>MoYa</p>
+        <p class="moya-talk__reply" data-reply></p>
+      </article>
+      <article class="moya-talk__asked" data-asked hidden><p class="moya-talk__label">{{ section.settings.asked_label | escape }}</p><p data-question></p></article>
+      <div class="moya-talk__options" data-options role="group" aria-label="{{ section.settings.options_label | escape }}"></div>
+      <p class="moya-talk__sr" data-live role="status" aria-live="polite" aria-atomic="true"></p>
+    </div>
+    <p class="moya-talk__config" data-config hidden></p>
+    <noscript><div class="moya-talk__fallback"><p>{{ section.settings.introduction | escape }}</p>{% for block in section.blocks %}<details><summary>{{ block.settings.prompt | escape }}</summary><p>{{ block.settings.option_1_label | escape }} — {{ block.settings.option_1_reply | escape }}</p><p>{{ block.settings.option_2_label | escape }} — {{ block.settings.option_2_reply | escape }}</p></details>{% endfor %}</div></noscript>
+  </div>
+  <div class="moya-talk__editor-nodes" hidden>{% for block in section.blocks %}<span data-editor-node="{{ block.settings.key | escape }}" {{ block.shopify_attributes }}></span>{% endfor %}</div>
+  <script type="application/json" data-nodes>[
+    {% for block in section.blocks %}{"key":{{ block.settings.key | json }},"prompt":{{ block.settings.prompt | json }},"start":{{ block.settings.text_start | json }},"end":{{ block.settings.text_end | json }},"options":[{% for slot in (1..2) %}{% assign prefix = 'option_' | append: slot %}{% assign label_key = prefix | append: '_label' %}{% assign reply_key = prefix | append: '_reply' %}{% assign next_key = prefix | append: '_next' %}{% assign motion_key = prefix | append: '_motion' %}{% assign action_key = prefix | append: '_action' %}{% assign link_key = prefix | append: '_link' %}{"label":{{ block.settings[label_key] | json }},"reply":{{ block.settings[reply_key] | json }},"next":{{ block.settings[next_key] | json }},"motion":{{ block.settings[motion_key] | json }},"action":{{ block.settings[action_key] | json }},"href":{{ block.settings[link_key] | json }}}{% unless forloop.last %},{% endunless %}{% endfor %}]}{% unless forloop.last %},{% endunless %}{% endfor %}
+  ]</script>
+  <template data-arrow><img src="{{ 'moya-talk-arrow.svg' | asset_url }}" width="13" height="13" alt="" aria-hidden="true"></template>
+</moya-talk>
+<script type="module" src="{{ 'moya-talk.min.js' | asset_url }}"></script>
+
+{% schema %}
+{
+  "name": "Moya Talk",
+  "tag": "section",
+  "class": "moya-talk-section",
+  "max_blocks": 30,
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer",
+      "aside"
+    ]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Talk to MoYa"
+    },
+    {
+      "type": "textarea",
+      "id": "introduction",
+      "label": "Introduction",
+      "default": "Choose a conversation and spend a little time with MoYa."
+    },
+    {
+      "type": "text",
+      "id": "listening_label",
+      "label": "Listening label",
+      "default": "Listening ..."
+    },
+    {
+      "type": "text",
+      "id": "asked_label",
+      "label": "Question label",
+      "default": "YOU ASKED"
+    },
+    {
+      "type": "text",
+      "id": "options_label",
+      "label": "Options label",
+      "default": "Choose your reply"
+    },
+    {
+      "type": "text",
+      "id": "start_node",
+      "label": "Starting node ID",
+      "default": "opening"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#f0f2f2"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#37584d"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_motion",
+      "label": "Enable character animation",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_reveal",
+      "label": "Enable answer reveal",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "scroll_distance",
+      "label": "Opening scroll distance",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "text_speed",
+      "label": "Text speed",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "ms",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "option_delay",
+      "label": "Options delay",
+      "min": 0,
+      "max": 1500,
+      "step": 100,
+      "unit": "ms",
+      "default": 300
+    },
+    {
+      "type": "header",
+      "content": "Desktop composition"
+    },
+    {
+      "type": "range",
+      "id": "desktop_scale",
+      "label": "Character scale",
+      "min": 80,
+      "max": 120,
+      "step": 1,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "desktop_position",
+      "label": "Horizontal position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Mobile composition"
+    },
+    {
+      "type": "range",
+      "id": "mobile_scale",
+      "label": "Character scale",
+      "min": 80,
+      "max": 120,
+      "step": 1,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "mobile_position",
+      "label": "Horizontal position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "image_picker",
+      "id": "intro_image",
+      "label": "Desktop intro poster"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_intro_image",
+      "label": "Mobile intro poster"
+    },
+    {
+      "type": "image_picker",
+      "id": "full_image",
+      "label": "Desktop full poster"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_full_image",
+      "label": "Mobile full poster"
+    },
+    {
+      "type": "video",
+      "id": "intro_video",
+      "label": "Desktop intro video"
+    },
+    {
+      "type": "video",
+      "id": "mobile_intro_video",
+      "label": "Mobile intro video"
+    },
+    {
+      "type": "video",
+      "id": "breathe_video",
+      "label": "Desktop breathe video"
+    },
+    {
+      "type": "video",
+      "id": "mobile_breathe_video",
+      "label": "Mobile breathe video"
+    },
+    {
+      "type": "video",
+      "id": "hug_video",
+      "label": "Desktop hug video"
+    },
+    {
+      "type": "video",
+      "id": "mobile_hug_video",
+      "label": "Mobile hug video"
+    },
+    {
+      "type": "video",
+      "id": "return_video",
+      "label": "Desktop return video"
+    },
+    {
+      "type": "video",
+      "id": "mobile_return_video",
+      "label": "Mobile return video"
+    },
+    {
+      "type": "video",
+      "id": "look_up_video",
+      "label": "Desktop look-up video"
+    },
+    {
+      "type": "video",
+      "id": "mobile_look_up_video",
+      "label": "Mobile look-up video"
+    },
+    {
+      "type": "video",
+      "id": "look_down_video",
+      "label": "Desktop look-down video"
+    },
+    {
+      "type": "video",
+      "id": "mobile_look_down_video",
+      "label": "Mobile look-down video"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "dialogue",
+      "name": "Dialogue node",
+      "settings": [
+        {
+          "type": "text",
+          "id": "key",
+          "label": "Unique node ID"
+        },
+        {
+          "type": "textarea",
+          "id": "prompt",
+          "label": "MoYa follow-up question"
+        },
+        {
+          "type": "range",
+          "id": "text_start",
+          "label": "Reply reveal starts",
+          "min": 0,
+          "max": 10,
+          "step": 0.5,
+          "unit": "s",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "text_end",
+          "label": "Reply reveal ends (0 = clip end)",
+          "min": 0,
+          "max": 20,
+          "step": 0.5,
+          "unit": "s",
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Option 1"
+        },
+        {
+          "type": "text",
+          "id": "option_1_label",
+          "label": "Label"
+        },
+        {
+          "type": "textarea",
+          "id": "option_1_reply",
+          "label": "MoYa reply"
+        },
+        {
+          "type": "text",
+          "id": "option_1_next",
+          "label": "Next node ID"
+        },
+        {
+          "type": "select",
+          "id": "option_1_motion",
+          "label": "Animation",
+          "options": [
+            {
+              "value": "hug",
+              "label": "Hug"
+            },
+            {
+              "value": "look-up",
+              "label": "Look-Up"
+            },
+            {
+              "value": "breathe",
+              "label": "Breathe"
+            }
+          ],
+          "default": "hug"
+        },
+        {
+          "type": "select",
+          "id": "option_1_action",
+          "label": "Action",
+          "options": [
+            {
+              "value": "next",
+              "label": "Continue dialogue"
+            },
+            {
+              "value": "restart",
+              "label": "Restart"
+            },
+            {
+              "value": "link",
+              "label": "Open link"
+            }
+          ],
+          "default": "next"
+        },
+        {
+          "type": "url",
+          "id": "option_1_link",
+          "label": "Destination link"
+        },
+        {
+          "type": "header",
+          "content": "Option 2"
+        },
+        {
+          "type": "text",
+          "id": "option_2_label",
+          "label": "Label"
+        },
+        {
+          "type": "textarea",
+          "id": "option_2_reply",
+          "label": "MoYa reply"
+        },
+        {
+          "type": "text",
+          "id": "option_2_next",
+          "label": "Next node ID"
+        },
+        {
+          "type": "select",
+          "id": "option_2_motion",
+          "label": "Animation",
+          "options": [
+            {
+              "value": "hug",
+              "label": "Hug"
+            },
+            {
+              "value": "look-up",
+              "label": "Look-Up"
+            },
+            {
+              "value": "breathe",
+              "label": "Breathe"
+            }
+          ],
+          "default": "hug"
+        },
+        {
+          "type": "select",
+          "id": "option_2_action",
+          "label": "Action",
+          "options": [
+            {
+              "value": "next",
+              "label": "Continue dialogue"
+            },
+            {
+              "value": "restart",
+              "label": "Restart"
+            },
+            {
+              "value": "link",
+              "label": "Open link"
+            }
+          ],
+          "default": "next"
+        },
+        {
+          "type": "url",
+          "id": "option_2_link",
+          "label": "Destination link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Moya Talk",
+      "blocks": [
+        {
+          "type": "dialogue",
+          "settings": {
+            "key": "opening",
+            "prompt": "Hi, I'm MoYa. What kind of company would feel right today?",
+            "text_start": 0,
+            "text_end": 0,
+            "option_1_label": "Let's talk a little",
+            "option_1_reply": "I'm all ears. You can start anywhere.",
+            "option_1_next": "conversation",
+            "option_1_motion": "look-up",
+            "option_1_action": "next",
+            "option_2_label": "Just stay with me",
+            "option_2_reply": "We can make room for quiet, too. I'll stay close.",
+            "option_2_next": "quiet",
+            "option_2_motion": "hug",
+            "option_2_action": "next"
+          }
+        },
+        {
+          "type": "dialogue",
+          "settings": {
+            "key": "conversation",
+            "prompt": "When words feel heavy, what would help most?",
+            "text_start": 0,
+            "text_end": 0,
+            "option_1_label": "Just listen to me",
+            "option_1_reply": "I'm listening. No need to make it neat or sensible.",
+            "option_1_next": "closing",
+            "option_1_motion": "look-up",
+            "option_1_action": "next",
+            "option_2_label": "Let's breathe together",
+            "option_2_reply": "Okay. We'll take one slow breath at a time.",
+            "option_2_next": "closing",
+            "option_2_motion": "breathe",
+            "option_2_action": "next"
+          }
+        },
+        {
+          "type": "dialogue",
+          "settings": {
+            "key": "quiet",
+            "prompt": "Would a little comfort help?",
+            "text_start": 0,
+            "text_end": 0,
+            "option_1_label": "A soft hug, please",
+            "option_1_reply": "Come closer. We can be still for a moment.",
+            "option_1_next": "closing",
+            "option_1_motion": "hug",
+            "option_1_action": "next",
+            "option_2_label": "Breathe with me",
+            "option_2_reply": "In gently, out slowly. I'll keep the rhythm with you.",
+            "option_2_next": "closing",
+            "option_2_motion": "breathe",
+            "option_2_action": "next"
+          }
+        },
+        {
+          "type": "dialogue",
+          "settings": {
+            "key": "closing",
+            "prompt": "Want to see the idea behind that kind of comfort?",
+            "text_start": 0,
+            "text_end": 0,
+            "option_1_label": "Show me the science",
+            "option_1_reply": "",
+            "option_1_next": "",
+            "option_1_motion": "breathe",
+            "option_1_action": "link",
+            "option_2_label": "Let's start again",
+            "option_2_reply": "",
+            "option_2_next": "opening",
+            "option_2_motion": "breathe",
+            "option_2_action": "restart",
+            "option_1_link": "#moya-science"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
