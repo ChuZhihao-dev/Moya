@@ -16,6 +16,7 @@
           "type": "slide",
           "settings": {
             "image": "shopify://shop_images/kv.webp",
+            "mobile_image": "shopify://shop_images/Mask_group_1.webp",
             "use_design_image": true,
             "label": "",
             "heading": "<p>Never feel alone again</p>",
@@ -90,7 +91,6 @@
         "autoplay": false,
         "autoplay_interval": 5,
         "transition_duration": 900,
-        "padding_inline": 104,
         "slideshow_label": "Highlights",
         "show_arrows": true,
         "button_background": "#addbce",
@@ -103,29 +103,46 @@
         "scene_FiWijp": {
           "type": "scene",
           "settings": {
+            "media_type": "image",
             "image": "shopify://shop_images/pic1_1_01396bfa-a733-438b-81a0-9ff430e8c791.webp",
+            "desktop_image_position": 50,
+            "mobile_media_type": "image",
+            "mobile_image_position": 50,
             "eyebrow": "BY YOUR SIDE",
             "heading": "<p>A listener for everyday moment</p>",
-            "body": "Share what is on your mind while you work, pause, or simply need someone there."
+            "body": "Share what is on your mind while you work, pause, or simply need someone there.",
+            "mobile_eyebrow": "",
+            "mobile_heading": "",
+            "mobile_body": ""
           }
         },
         "scene_WXxdhN": {
           "type": "scene",
           "settings": {
+            "media_type": "image",
             "image": "shopify://shop_images/pic1_2_515b11d8-4391-4563-aa4f-cc329cb4c827.webp",
+            "desktop_image_position": 50,
+            "mobile_media_type": "image",
+            "mobile_image_position": 50,
             "eyebrow": "CLOSE COMFORT",
             "heading": "<p>Comfort you can hold</p>",
-            "body": "Soft, reassuring, and ready to meet you where the words are not enough."
+            "body": "Soft, reassuring, and ready to meet you where the words are not enough.",
+            "mobile_eyebrow": "",
+            "mobile_heading": "",
+            "mobile_body": ""
           }
         },
         "scene_hafWyR": {
           "type": "scene",
           "settings": {
+            "media_type": "image",
             "image": "shopify://shop_images/pic1_3.webp",
+            "desktop_image_position": 50,
+            "mobile_media_type": "image",
+            "mobile_image_position": 36,
             "eyebrow": "AT NIGHT",
             "heading": "<p>Here when the world get quiet</p>",
             "body": "Settle with a familiar voice and gentle present beside you.",
-            "mobile_image_position": 36,
             "mobile_eyebrow": "SLEEP COMPANIONSHIP",
             "mobile_heading": "Here when the world gets quiet.",
             "mobile_body": "Share the small thoughts, long days, and ordinary moments that matter."
@@ -148,7 +165,11 @@
         "progress_color": "#ffffff",
         "progress_icon_color": "#ffffff",
         "progress_icon": "shopify://shop_images/Vector.svg",
-        "scene_scroll": 100
+        "cover_next_science": true,
+        "scene_scroll": 100,
+        "mobile_scroll_hint": "Swipe to explore More",
+        "enable_transition": true,
+        "transition_duration": 400
       }
     },
     "moya_meet_CFRBe8": {
@@ -157,38 +178,62 @@
         "scene_tQgmAh": {
           "type": "scene",
           "settings": {
+            "media_type": "image",
+            "image": "shopify://shop_images/pic1_5ef50940-d149-4146-8499-e33c4a5e0325.webp",
+            "desktop_image_position": 50,
+            "mobile_media_type": "image",
+            "mobile_image_position": 50,
             "eyebrow": "AT HOME",
             "heading": "<p>A quiet presence always within reach</p>",
             "body": "Moya stays close through slow morning, busy afternoon, and everything in between.",
-            "image": "shopify://shop_images/pic1_5ef50940-d149-4146-8499-e33c4a5e0325.webp"
+            "mobile_eyebrow": "",
+            "mobile_heading": "",
+            "mobile_body": ""
           }
         },
         "scene_x9XFd6": {
           "type": "scene",
           "settings": {
+            "media_type": "image",
             "image": "shopify://shop_images/pic1_1_01396bfa-a733-438b-81a0-9ff430e8c791.webp",
+            "desktop_image_position": 50,
+            "mobile_media_type": "image",
+            "mobile_image_position": 50,
             "eyebrow": "BY YOUR SIDE",
             "heading": "<p>A listener for everyday moment</p>",
-            "body": "Share what is on your mind while you work, pause, or simply need someone there."
+            "body": "Share what is on your mind while you work, pause, or simply need someone there.",
+            "mobile_eyebrow": "",
+            "mobile_heading": "",
+            "mobile_body": ""
           }
         },
         "scene_e8Up7q": {
           "type": "scene",
           "settings": {
+            "media_type": "image",
             "image": "shopify://shop_images/pic1_2_515b11d8-4391-4563-aa4f-cc329cb4c827.webp",
+            "desktop_image_position": 50,
+            "mobile_media_type": "image",
+            "mobile_image_position": 50,
             "eyebrow": "CLOSE COMFORT",
             "heading": "<p>Comfort you can hold</p>",
-            "body": "Soft, reassuring, and ready to meet you where the words are not enough."
+            "body": "Soft, reassuring, and ready to meet you where the words are not enough.",
+            "mobile_eyebrow": "",
+            "mobile_heading": "",
+            "mobile_body": ""
           }
         },
         "scene_t8YFeh": {
           "type": "scene",
           "settings": {
+            "media_type": "image",
             "image": "shopify://shop_images/pic1_3.webp",
+            "desktop_image_position": 50,
+            "mobile_media_type": "image",
+            "mobile_image_position": 36,
             "eyebrow": "AT NIGHT",
             "heading": "<p>Here when the world get quiet</p>",
             "body": "Settle with a familiar voice and gentle present beside you.",
-            "mobile_image_position": 36,
             "mobile_eyebrow": "SLEEP COMPANIONSHIP",
             "mobile_heading": "Here when the world gets quiet.",
             "mobile_body": "Share the small thoughts, long days, and ordinary moments that matter."
@@ -212,7 +257,11 @@
         "progress_color": "#ffffff",
         "progress_icon_color": "#ffffff",
         "progress_icon": "shopify://shop_images/Vector.svg",
-        "scene_scroll": 100
+        "cover_next_science": true,
+        "scene_scroll": 100,
+        "mobile_scroll_hint": "Swipe to explore More",
+        "enable_transition": true,
+        "transition_duration": 400
       }
     },
     "moya_science_intro": {
@@ -417,7 +466,30 @@
     },
     "moya_take_action": {
       "type": "moya-take-action",
-      "settings": {}
+      "settings": {
+        "background_image": "shopify://shop_images/624af086ccb2e8a5136f6fce5225ebff5d0a9cf2.webp",
+        "background_color": "#37584d",
+        "overlay_color": "#000000",
+        "overlay_opacity": 60,
+        "heading": "Take Action",
+        "description": "<p>Join the early access waitlist and be first in line when MoYa Launched.</p><p>No payment required to reserve your spot.</p>",
+        "text_color": "#ffffff",
+        "placeholder": "Enter your email",
+        "button_label": "Join Us",
+        "button_background": "#ffffff",
+        "button_text_color": "#37584d",
+        "success_message": "Thanks for joining! Please check your inbox for any confirmation email.",
+        "general_label": "General Inquiries:",
+        "general_email": "info@Moya.com",
+        "media_label": "Media Inquiries:",
+        "media_email": "media@Moya.com",
+        "alignment": "center",
+        "padding_vertical": 120,
+        "padding_vertical_mobile": 72,
+        "enable_animation": false,
+        "animation_duration": 600,
+        "animation_delay": 0
+      }
     },
     "moya_feature_bar_jXCdiz": {
       "type": "moya-feature-bar",
