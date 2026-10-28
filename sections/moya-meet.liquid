@@ -389,6 +389,19 @@
   }
 
   @media (max-width: 749px) {
+    /* Fill the visible screen when the browser toolbar collapses. */
+    .moya-meet.is-enhanced .moya-meet__sticky {
+      height: 100vh;
+      height: 100dvh;
+    }
+
+    @supports (height: 100dvh) {
+      .moya-meet.is-enhanced {
+        /* Keep scene milestones stable; only the visible panel follows browser chrome. */
+        height: calc((var(--moya-meet-scenes, 1) * var(--moya-meet-scroll, 100) - 100) * 1svh + 100dvh);
+      }
+    }
+
     .moya-meet__media::after {
       content: '';
       position: absolute;

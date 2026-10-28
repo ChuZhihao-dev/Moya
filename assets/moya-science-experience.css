@@ -69,6 +69,11 @@ moya-science-intro.moya-science { --science-stage-height:100vh; display:block; p
 .moya-science__tabs [aria-current=true] { width:25px; background:#fff; }
 .moya-science__tabs button:focus-visible,.moya-science__phases button:focus-visible { outline:2px solid #c8d6ee; outline-offset:5px; }
 @media(max-width:749px) {
+ @supports (height:100dvh) {
+  /* Match the pinned panel to the current screen without changing its scroll range. */
+  .moya-science.is-enhanced { height:calc(100dvh + 170svh); }
+  .moya-science.is-enhanced .moya-science__stage { height:100dvh; }
+ }
  .moya-science__content { padding:80px 24px; gap:19px; }
  .moya-science__eyebrow { font-size:10px; margin-bottom:20px; }
  .moya-science__heading { font-size:clamp(40px,11vw,64px); letter-spacing:-.045em; }

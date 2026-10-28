@@ -47,6 +47,12 @@ moya-talk.moya-talk { --talk-ink:#37584d; --talk-bg:#f0f2f2; --talk-height:100sv
 @media (hover:hover) { .moya-talk__option:hover { transform:translateY(-2px); background:rgb(173 219 206 / 80%); border-color:transparent; } }
 @media (min-width:750px) and (max-width:1199px) { .moya-talk__answer { left:4%; width:29%; } .moya-talk__asked { right:4%; width:29%; } .moya-talk__listening { left:19%; } .moya-talk__options { width:38%; } .moya-talk__option { font-size:14px; padding-inline:16px; } }
 @media (max-width:749px) {
+ /* The scroll clock uses the stable svh probe; the picture fills the current viewport. */
+ @supports (height:100dvh) {
+  moya-talk.moya-talk { --talk-stage-height:calc(100dvh - var(--talk-top)); }
+  .moya-talk.is-enhanced:not(.is-flow) { height:calc(var(--talk-height) * (.6 + var(--talk-distance,100) / 100) + var(--talk-stage-height)); }
+  .moya-talk.is-enhanced:not(.is-flow) .moya-talk__stage { height:var(--talk-stage-height); }
+ }
  .moya-talk__stage { min-height:545px; }
  .moya-talk__poster,.moya-talk__video { transform:scale(var(--talk-mobile-scale,1)); }
  .moya-talk__poster img,.moya-talk__video { object-position:var(--talk-mobile-position,50%) center; }
