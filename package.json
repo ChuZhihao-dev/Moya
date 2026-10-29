@@ -12,7 +12,8 @@
     "test:how-carousel": "node --test tests/moya-loop-geometry.test.cjs",
     "build:materials": "node scripts/build-moya-materials.mjs",
     "build:scenarios": "node scripts/build-moya-scenarios.mjs",
-    "build:specifications": "node scripts/build-moya-specifications.mjs"
+    "build:specifications": "node scripts/build-moya-specifications.mjs",
+    "build:product-nav": "node scripts/build-moya-product-nav.mjs"
   },
   "devDependencies": {
     "esbuild": "0.28.1"

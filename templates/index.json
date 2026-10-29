@@ -21,6 +21,7 @@
             "label": "",
             "heading": "<p>Never feel alone again</p>",
             "subheading": "MoYa is your always-on companion — here to listen, comfort,\nand hold you through every moment, big and small.",
+            "mobile_layout": "auto",
             "content_position": "left",
             "vertical_position": "bottom",
             "button_label": "Explore Features",
@@ -39,6 +40,7 @@
             "label": "02 / SLEEP COMPANIONSHIP",
             "heading": "<p>Here when the&nbsp;<br/>world gets quiet.</p>",
             "subheading": "Share the small thoughts, long days,\nand ordinary moments that matter.",
+            "mobile_layout": "auto",
             "content_position": "left",
             "vertical_position": "center",
             "button_label": "",
@@ -57,6 +59,7 @@
             "label": "03 / HUG & COMFORT",
             "heading": "<p>Comfort you&nbsp;<br/>can feel.</p>",
             "subheading": "A warm embrace and a gentle pat \nwhen words are not enough.",
+            "mobile_layout": "auto",
             "content_position": "left",
             "vertical_position": "center",
             "button_label": "",
@@ -76,6 +79,7 @@
       "settings": {
         "allow_transparent_header": true,
         "desktop_height_vh": 95,
+        "mobile_height_mode": "design",
         "mobile_height_vh": 100,
         "background_color": "#f0f2f2",
         "show_bottom_fade": true,
@@ -493,6 +497,7 @@
       "name": "Moya Innovation Research",
       "settings": {
         "eyebrow": "Recognition",
+        "mobile_eyebrow": "Science behind MoYa",
         "heading": "Innovation & Research",
         "subheading": "<p>Years of research and innovation go into every embrace.&nbsp;<br/>MoYa is protected by a global portfolio of patents.<br/></p>",
         "background_color": "#f0f2f2",
@@ -579,86 +584,6 @@
         "tag_color": "#003521",
         "intro_animation": true
       }
-    },
-    "moya_take_action": {
-      "type": "moya-take-action",
-      "settings": {
-        "background_image": "shopify://shop_images/624af086ccb2e8a5136f6fce5225ebff5d0a9cf2.webp",
-        "background_color": "#37584d",
-        "overlay_color": "#000000",
-        "overlay_opacity": 60,
-        "heading": "Take Action",
-        "description": "<p>Join the early access waitlist and be first in line when MoYa Launched.</p><p>No payment required to reserve your spot.</p>",
-        "text_color": "#ffffff",
-        "placeholder": "Enter your email",
-        "button_label": "Join Us",
-        "button_background": "#ffffff",
-        "button_text_color": "#37584d",
-        "success_message": "Thanks for joining! Please check your inbox for any confirmation email.",
-        "general_label": "General Inquiries:",
-        "general_email": "info@Moya.com",
-        "media_label": "Media Inquiries:",
-        "media_email": "media@Moya.com",
-        "alignment": "center",
-        "padding_vertical": 120,
-        "padding_vertical_mobile": 72,
-        "enable_animation": false,
-        "animation_duration": 600,
-        "animation_delay": 0
-      }
-    },
-    "moya_feature_bar_jXCdiz": {
-      "type": "moya-feature-bar",
-      "blocks": {
-        "feature_cCjyT3": {
-          "type": "feature",
-          "settings": {
-            "icon": "warranty",
-            "title": "<p>Warranty</p>",
-            "description": "<p>Coverage you can count on.</p>"
-          }
-        },
-        "feature_KVawb8": {
-          "type": "feature",
-          "settings": {
-            "icon": "secure",
-            "title": "<p>Secure Checkout</p>",
-            "description": "<p>Safe and secure payments.</p>"
-          }
-        },
-        "feature_VfPNax": {
-          "type": "feature",
-          "settings": {
-            "icon": "returns",
-            "title": "<p>Easy Returns</p>",
-            "description": "<p>Simple, worry-free returns.</p>"
-          }
-        },
-        "feature_NrUWDi": {
-          "type": "feature",
-          "settings": {
-            "icon": "care",
-            "title": "<p>Customer Care</p>",
-            "description": "<p>We're here when you need us.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "feature_cCjyT3",
-        "feature_KVawb8",
-        "feature_VfPNax",
-        "feature_NrUWDi"
-      ],
-      "name": "Moya Feature Bar",
-      "settings": {
-        "icon_size": 56,
-        "background_color": "#f4f6f4",
-        "title_color": "#003521",
-        "text_color": "#003521",
-        "icon_color": "#003521",
-        "divider_color": "#003521",
-        "divider_opacity": 10
-      }
     }
   },
   "order": [
@@ -668,8 +593,6 @@
     "moya_meet_CFRBe8",
     "moya_science_intro",
     "moya_innovation_research_mDzrmc",
-    "moya_customer_voices_4NnbFN",
-    "moya_take_action",
-    "moya_feature_bar_jXCdiz"
+    "moya_customer_voices_4NnbFN"
   ]
 }

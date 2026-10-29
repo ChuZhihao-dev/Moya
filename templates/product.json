@@ -73,10 +73,10 @@
         "eyebrow": "New Arrival",
         "subtitle": "Be the first to experience a new kind of companion.",
         "general_information": "<p>Today's families don't lack love — but in busy, fragmented daily life, care often stops at a greeting. MoYa was born to change that.</p>",
-        "coupon_code": "",
-        "coupon_title": "",
-        "coupon_description": "",
-        "coupon_end": "",
+        "coupon_code": "EZCAD",
+        "coupon_title": "25% OFF",
+        "coupon_description": "Big Sale + Fast Delivery",
+        "coupon_end": "2026-10-31",
         "accessories": [
           "accessories"
         ],
@@ -135,6 +135,131 @@
         "inertia_strength": 100,
         "autoplay": false,
         "autoplay_interval": 6
+      }
+    },
+    "moya_scenarios": {
+      "type": "moya-scenarios",
+      "blocks": {
+        "scenario_1": {
+          "type": "scenario",
+          "settings": {
+            "title": "Falling Asleep",
+            "description": "<p>When the lights go out, hold MoYa against your chest. Turn on Calming Rhythm mode — its slow breathing guides yours, optional warmth keeps you cozy, and steady patting slows your heart rate. No screens, no blue light, just a steady presence until you drift off.</p>"
+          }
+        },
+        "scenario_2": {
+          "type": "scenario",
+          "settings": {
+            "title": "Anxiety Relief",
+            "description": ""
+          }
+        },
+        "scenario_3": {
+          "type": "scenario",
+          "settings": {
+            "title": "Work From Home",
+            "description": ""
+          }
+        },
+        "scenario_4": {
+          "type": "scenario",
+          "settings": {
+            "title": "Evening Decompression",
+            "description": ""
+          }
+        },
+        "scenario_5": {
+          "type": "scenario",
+          "settings": {
+            "title": "Solo Living",
+            "description": ""
+          }
+        },
+        "scenario_6": {
+          "type": "scenario",
+          "settings": {
+            "title": "Travel & Hotel Stays",
+            "description": ""
+          }
+        }
+      },
+      "block_order": [
+        "scenario_1",
+        "scenario_2",
+        "scenario_3",
+        "scenario_4",
+        "scenario_5",
+        "scenario_6"
+      ],
+      "settings": {
+        "background": "shopify://shop_images/pic1_5ef50940-d149-4146-8499-e33c4a5e0325.webp",
+        "background_color": "#5b655e",
+        "content_position": "left",
+        "desktop_position": 50,
+        "mobile_position": 65,
+        "desktop_height_vh": 100,
+        "padding_block": 78,
+        "shade": 24,
+        "initial_item": 1,
+        "enable_motion": true,
+        "duration": 360,
+        "accessibility_label": "MoYa for everyday moments"
+      }
+    },
+    "moya_materials": {
+      "type": "moya-materials",
+      "blocks": {
+        "material_1": {
+          "type": "material",
+          "settings": {
+            "title": "Material For Everyday",
+            "description": "<p>Mink-Like Skin-Friendly Fabric<br/>Soft Against Skin; Outer Cover Removable And Washable.</p>",
+            "image": "shopify://shop_images/Mask_group_08aed011-14d8-451c-9bfc-e683fc187abf.webp"
+          }
+        },
+        "material_2": {
+          "type": "material",
+          "settings": {
+            "title": "Eyes That Meet You Back",
+            "description": "<p>Mink-Like Skin-Friendly Fabric<br/>Soft Against Skin; Outer Cover Removable And Washable.</p>",
+            "image": "shopify://shop_images/Mask_group_3.webp"
+          }
+        },
+        "material_3": {
+          "type": "material",
+          "settings": {
+            "title": "Softness With Support",
+            "description": "<p>Mink-Like Skin-Friendly Fabric<br/>Soft Against Skin; Outer Cover Removable And Washable.</p>",
+            "image": "shopify://shop_images/Mask_group_2.webp"
+          }
+        },
+        "material_4": {
+          "type": "material",
+          "settings": {
+            "title": "Weight Approx. 4.5 Kg",
+            "description": "<p>Stable And Reassuring To Hold And Lean On.</p>",
+            "image": "shopify://shop_images/Mask_group_1_be8326a0-6534-4d36-8b44-2c44d3670c71.webp"
+          }
+        }
+      },
+      "block_order": [
+        "material_1",
+        "material_2",
+        "material_3",
+        "material_4"
+      ],
+      "settings": {
+        "heading": "Soft On The Outside. Thoughtful Within.",
+        "image": "shopify://shop_images/Group_2090050691_1.webp",
+        "image_alt": "MoYa with arms open, showing its soft outer fabric",
+        "image_position": "left",
+        "background": "#f0f2f2",
+        "text_color": "#003521",
+        "active_color": "#37584d",
+        "card_color": "#ffffff",
+        "padding_block": 120,
+        "enable_motion": true,
+        "duration": 640
       }
     },
     "moya_how_carousel_V9HpEz": {
@@ -203,6 +328,219 @@
         "duration": 520,
         "autoplay": false,
         "autoplay_interval": 5
+      }
+    },
+    "moya_specifications": {
+      "type": "moya-specifications",
+      "blocks": {
+        "spec_1": {
+          "type": "group",
+          "settings": {
+            "title": "Main Parameter 1",
+            "open": true
+          }
+        },
+        "spec_2": {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 1",
+            "value": "<p>parameter detail parameter detail parameter detail parameter</p>",
+            "full_width": false
+          }
+        },
+        "spec_3": {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 2",
+            "value": "<p>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        "spec_4": {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 3",
+            "value": "<p>parameter detail:<br>parameter detail parameter detail parameter detail parameter detail<br>parameter detail parameter detail<br>parameter detail parameter detail<br>parameter detail parameter detail parameter detail parameter detail</p>",
+            "full_width": true
+          }
+        },
+        "spec_5": {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 4",
+            "value": "<p>parameter detail<br>parameter detail<br>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        "spec_6": {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 4",
+            "value": "<p>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        "spec_7": {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 5",
+            "value": "<p>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        "spec_8": {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 6",
+            "value": "<p>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        "spec_9": {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 7",
+            "value": "<p>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        "spec_10": {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 8",
+            "value": "<p>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        "spec_11": {
+          "type": "group",
+          "settings": {
+            "title": "Main Parameter 2",
+            "open": false
+          }
+        },
+        "spec_12": {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter",
+            "value": "<p>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        "spec_13": {
+          "type": "group",
+          "settings": {
+            "title": "Main Parameter 3",
+            "open": false
+          }
+        },
+        "spec_14": {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter",
+            "value": "<p>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        "spec_15": {
+          "type": "box_item",
+          "settings": {
+            "image": "shopify://shop_images/Mask_group_4.png",
+            "title": "Power Adapter"
+          }
+        },
+        "box_item_idXEHf": {
+          "type": "box_item",
+          "settings": {
+            "image": "shopify://shop_images/Mask_group_4.png",
+            "title": "Power Adapter"
+          }
+        },
+        "box_item_kUe3jf": {
+          "type": "box_item",
+          "settings": {
+            "image": "shopify://shop_images/Mask_group_4.png",
+            "title": "Power Adapter"
+          }
+        },
+        "box_item_T7KVPt": {
+          "type": "box_item",
+          "settings": {
+            "image": "shopify://shop_images/Mask_group_4.png",
+            "title": "Power Adapter"
+          }
+        },
+        "box_item_CQcYcM": {
+          "type": "box_item",
+          "settings": {
+            "image": "shopify://shop_images/Mask_group_4.png",
+            "title": "Power Adapter"
+          }
+        },
+        "box_item_ThtE7L": {
+          "type": "box_item",
+          "settings": {
+            "image": "shopify://shop_images/Mask_group_4.png",
+            "title": "Power Adapter"
+          }
+        },
+        "box_item_rzep8Q": {
+          "type": "box_item",
+          "settings": {
+            "image": "shopify://shop_images/Mask_group_4.png",
+            "title": "Power Adapter"
+          }
+        },
+        "box_item_KgN3fB": {
+          "type": "box_item",
+          "settings": {
+            "image": "shopify://shop_images/Mask_group_4.png",
+            "title": "Power Adapter"
+          }
+        },
+        "box_item_tDzeVL": {
+          "type": "box_item",
+          "settings": {
+            "image": "shopify://shop_images/Mask_group_4.png",
+            "title": "Power Adapter"
+          }
+        }
+      },
+      "block_order": [
+        "spec_1",
+        "spec_2",
+        "spec_3",
+        "spec_4",
+        "spec_5",
+        "spec_6",
+        "spec_7",
+        "spec_8",
+        "spec_9",
+        "spec_10",
+        "spec_11",
+        "spec_12",
+        "spec_13",
+        "spec_14",
+        "spec_15",
+        "box_item_idXEHf",
+        "box_item_kUe3jf",
+        "box_item_T7KVPt",
+        "box_item_CQcYcM",
+        "box_item_ThtE7L",
+        "box_item_rzep8Q",
+        "box_item_KgN3fB",
+        "box_item_tDzeVL"
+      ],
+      "settings": {
+        "heading": "Technical Specification",
+        "box_heading": "What’s in the box",
+        "product_image": "shopify://shop_images/image_-_2026-10-19T214131.885_2.png",
+        "background": "#ffffff",
+        "text_color": "#003521",
+        "panel_background": "#f2f2f2",
+        "padding_block": 120,
+        "enable_motion": true,
+        "duration": 360
       }
     },
     "moya_faq_tCi7Pn": {
@@ -421,7 +759,7 @@
       "settings": {
         "heading": "Frequently Asked Questions",
         "heading_alignment": "left",
-        "background": "#F0F2F2",
+        "background": "#f0f2f2",
         "card_background": "#ffffff",
         "text_color": "#003521",
         "padding_block": 120,
@@ -447,294 +785,76 @@
         "checksum": "7f30c8909833774e88b2b9f408a93f5551101a5a696edfdb8b27b3c51828a182_1"
       }
     },
-    "moya_materials": {
-      "type": "moya-materials",
+    "moya_product_nav": {
+      "type": "moya-product-nav",
       "blocks": {
-        "material_1": {
-          "type": "material",
+        "anchor_1": {
+          "type": "anchor",
           "settings": {
-            "title": "Material For Everyday",
-            "description": "<p>Mink-Like Skin-Friendly Fabric<br>Soft Against Skin; Outer Cover Removable And Washable.</p>"
+            "label": "Key Selling Points",
+            "section_kind": "selling-points",
+            "target_id": "moya_selling_points"
           }
         },
-        "material_2": {
-          "type": "material",
+        "anchor_2": {
+          "type": "anchor",
           "settings": {
-            "title": "Eyes That Meet You Back",
-            "description": "<p>Mink-Like Skin-Friendly Fabric<br>Soft Against Skin; Outer Cover Removable And Washable.</p>"
+            "label": "Everyday Moments",
+            "section_kind": "scenarios",
+            "target_id": "moya_scenarios"
           }
         },
-        "material_3": {
-          "type": "material",
+        "anchor_3": {
+          "type": "anchor",
           "settings": {
-            "title": "Softness With Support",
-            "description": "<p>Mink-Like Skin-Friendly Fabric<br>Soft Against Skin; Outer Cover Removable And Washable.</p>"
+            "label": "Materials & Care",
+            "section_kind": "materials",
+            "target_id": "moya_materials"
           }
         },
-        "material_4": {
-          "type": "material",
+        "anchor_4": {
+          "type": "anchor",
           "settings": {
-            "title": "Weight Approx. 4.5 Kg",
-            "description": "<p>Stable And Reassuring To Hold And Lean On.</p>"
+            "label": "How It Works",
+            "section_kind": "how-carousel",
+            "target_id": "moya_how_carousel_V9HpEz"
+          }
+        },
+        "anchor_5": {
+          "type": "anchor",
+          "settings": {
+            "label": "Specifications",
+            "section_kind": "specifications",
+            "target_id": "moya_specifications"
+          }
+        },
+        "anchor_6": {
+          "type": "anchor",
+          "settings": {
+            "label": "FAQ",
+            "section_kind": "faq",
+            "target_id": "moya_faq_tCi7Pn"
           }
         }
       },
       "block_order": [
-        "material_1",
-        "material_2",
-        "material_3",
-        "material_4"
-      ],
-      "settings": {}
-    },
-    "moya_scenarios": {
-      "type": "moya-scenarios",
-      "blocks": {
-        "scenario_1": {
-          "type": "scenario",
-          "settings": {
-            "title": "Falling Asleep",
-            "description": "<p>When the lights go out, hold MoYa against your chest. Turn on Calming Rhythm mode — its slow breathing guides yours, optional warmth keeps you cozy, and steady patting slows your heart rate. No screens, no blue light, just a steady presence until you drift off.</p>"
-          }
-        },
-        "scenario_2": {
-          "type": "scenario",
-          "settings": {
-            "title": "Anxiety Relief"
-          }
-        },
-        "scenario_3": {
-          "type": "scenario",
-          "settings": {
-            "title": "Work From Home"
-          }
-        },
-        "scenario_4": {
-          "type": "scenario",
-          "settings": {
-            "title": "Evening Decompression"
-          }
-        },
-        "scenario_5": {
-          "type": "scenario",
-          "settings": {
-            "title": "Solo Living"
-          }
-        },
-        "scenario_6": {
-          "type": "scenario",
-          "settings": {
-            "title": "Travel & Hotel Stays"
-          }
-        }
-      },
-      "block_order": [
-        "scenario_1",
-        "scenario_2",
-        "scenario_3",
-        "scenario_4",
-        "scenario_5",
-        "scenario_6"
-      ],
-      "settings": {}
-    },
-    "moya_specifications": {
-      "type": "moya-specifications",
-      "blocks": {
-        "spec_1": {
-          "type": "group",
-          "settings": {
-            "title": "Main Parameter 1",
-            "open": true
-          }
-        },
-        "spec_2": {
-          "type": "parameter",
-          "settings": {
-            "label": "Parameter 1",
-            "value": "<p>parameter detail parameter detail parameter detail parameter</p>",
-            "full_width": false
-          }
-        },
-        "spec_3": {
-          "type": "parameter",
-          "settings": {
-            "label": "Parameter 2",
-            "value": "<p>parameter detail</p>",
-            "full_width": false
-          }
-        },
-        "spec_4": {
-          "type": "parameter",
-          "settings": {
-            "label": "Parameter 3",
-            "value": "<p>parameter detail:<br>parameter detail parameter detail parameter detail parameter detail<br>parameter detail parameter detail<br>parameter detail parameter detail<br>parameter detail parameter detail parameter detail parameter detail</p>",
-            "full_width": true
-          }
-        },
-        "spec_5": {
-          "type": "parameter",
-          "settings": {
-            "label": "Parameter 4",
-            "value": "<p>parameter detail<br>parameter detail<br>parameter detail</p>",
-            "full_width": false
-          }
-        },
-        "spec_6": {
-          "type": "parameter",
-          "settings": {
-            "label": "Parameter 4",
-            "value": "<p>parameter detail</p>",
-            "full_width": false
-          }
-        },
-        "spec_7": {
-          "type": "parameter",
-          "settings": {
-            "label": "Parameter 5",
-            "value": "<p>parameter detail</p>",
-            "full_width": false
-          }
-        },
-        "spec_8": {
-          "type": "parameter",
-          "settings": {
-            "label": "Parameter 6",
-            "value": "<p>parameter detail</p>",
-            "full_width": false
-          }
-        },
-        "spec_9": {
-          "type": "parameter",
-          "settings": {
-            "label": "Parameter 7",
-            "value": "<p>parameter detail</p>",
-            "full_width": false
-          }
-        },
-        "spec_10": {
-          "type": "parameter",
-          "settings": {
-            "label": "Parameter 8",
-            "value": "<p>parameter detail</p>",
-            "full_width": false
-          }
-        },
-        "spec_11": {
-          "type": "group",
-          "settings": {
-            "title": "Main Parameter 2"
-          }
-        },
-        "spec_12": {
-          "type": "parameter",
-          "settings": {
-            "label": "Parameter",
-            "value": "<p>parameter detail</p>"
-          }
-        },
-        "spec_13": {
-          "type": "group",
-          "settings": {
-            "title": "Main Parameter 3"
-          }
-        },
-        "spec_14": {
-          "type": "parameter",
-          "settings": {
-            "label": "Parameter",
-            "value": "<p>parameter detail</p>"
-          }
-        },
-        "spec_15": {
-          "type": "box_item",
-          "settings": {
-            "title": "Power Adapter"
-          }
-        },
-        "spec_16": {
-          "type": "box_item",
-          "settings": {
-            "title": "Power Adapter"
-          }
-        },
-        "spec_17": {
-          "type": "box_item",
-          "settings": {
-            "title": "Power Adapter"
-          }
-        },
-        "spec_18": {
-          "type": "box_item",
-          "settings": {
-            "title": "Power Adapter"
-          }
-        },
-        "spec_19": {
-          "type": "box_item",
-          "settings": {
-            "title": "Power Adapter"
-          }
-        },
-        "spec_20": {
-          "type": "box_item",
-          "settings": {
-            "title": "Power Adapter"
-          }
-        },
-        "spec_21": {
-          "type": "box_item",
-          "settings": {
-            "title": "Power Adapter"
-          }
-        },
-        "spec_22": {
-          "type": "box_item",
-          "settings": {
-            "title": "Power Adapter"
-          }
-        },
-        "spec_23": {
-          "type": "box_item",
-          "settings": {
-            "title": "Power Adapter"
-          }
-        }
-      },
-      "block_order": [
-        "spec_1",
-        "spec_2",
-        "spec_3",
-        "spec_4",
-        "spec_5",
-        "spec_6",
-        "spec_7",
-        "spec_8",
-        "spec_9",
-        "spec_10",
-        "spec_11",
-        "spec_12",
-        "spec_13",
-        "spec_14",
-        "spec_15",
-        "spec_16",
-        "spec_17",
-        "spec_18",
-        "spec_19",
-        "spec_20",
-        "spec_21",
-        "spec_22",
-        "spec_23"
+        "anchor_1",
+        "anchor_2",
+        "anchor_3",
+        "anchor_4",
+        "anchor_5",
+        "anchor_6"
       ],
       "settings": {}
     }
   },
   "order": [
     "main",
+    "moya_product_nav",
     "moya_selling_points",
     "moya_scenarios",
-    "moya_how_carousel_V9HpEz",
     "moya_materials",
+    "moya_how_carousel_V9HpEz",
     "moya_specifications",
     "moya_faq_tCi7Pn",
     "gp_shopify_original_section_537219160984257394",

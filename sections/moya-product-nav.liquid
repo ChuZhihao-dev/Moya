@@ -1,0 +1,215 @@
+{{ 'moya-product-nav.min.css' | asset_url | stylesheet_tag }}
+<script src='{{ 'moya-product-nav.min.js' | asset_url }}' defer></script>
+{% assign template_prefix = section.id | split: '__' | first %}
+<moya-product-nav
+  class='moya-product-nav'
+  data-motion='{{ section.settings.enable_motion }}'
+  data-duration='{{ section.settings.duration }}'
+  style='--product-nav-ink: {{ section.settings.text_color }}; --product-nav-surface: {{ section.settings.background.rgb }}; --product-nav-opacity: {{ section.settings.background_opacity | divided_by: 100.0 }};'
+>
+  <nav
+    class='moya-product-nav__container'
+    aria-label='{{ section.settings.accessibility_label | escape }}'
+  >
+    <div class='moya-product-nav__scroller'>
+      <ul class='moya-product-nav__list' role='list'>
+        {% for block in section.blocks %}
+          {% liquid
+            assign target_id = block.settings.target_id | remove_first: '#'
+            unless target_id contains 'shopify-section-'
+              assign target_id = 'shopify-section-' | append: template_prefix | append: '__' | append: target_id
+            endunless
+          %}
+          {% if block.settings.label != blank %}
+            <li class='moya-product-nav__item' {{ block.shopify_attributes }}>
+              <a
+                class='moya-product-nav__link'
+                href='#{{ target_id | escape }}'
+                data-section-kind='{{ block.settings.section_kind }}'
+              >
+                <span class='moya-product-nav__label'>{{ block.settings.label | escape }}</span>
+                <span class='moya-product-nav__reserve' aria-hidden='true'>
+                  {{- block.settings.label | escape -}}
+                </span>
+              </a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  </nav>
+</moya-product-nav>
+
+{% schema %}
+{
+  "name": "Moya product navigation",
+  "tag": "section",
+  "class": "shopify-section--moya-product-nav",
+  "max_blocks": 12,
+  "limit": 1,
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "accessibility_label",
+      "label": "Accessibility label",
+      "default": "Product section navigation"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#003521"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background tint",
+      "default": "#addbce"
+    },
+    {
+      "type": "range",
+      "id": "background_opacity",
+      "label": "Background opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 6
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_motion",
+      "label": "Smooth anchor scrolling",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "duration",
+      "label": "Scroll duration",
+      "min": 200,
+      "max": 1000,
+      "step": 50,
+      "unit": "ms",
+      "default": 600
+    }
+  ],
+  "blocks": [
+    {
+      "type": "anchor",
+      "name": "Section link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Section"
+        },
+        {
+          "type": "select",
+          "id": "section_kind",
+          "label": "Section type",
+          "default": "selling-points",
+          "options": [
+            {
+              "value": "selling-points",
+              "label": "Key Selling Points"
+            },
+            {
+              "value": "scenarios",
+              "label": "Everyday Moments"
+            },
+            {
+              "value": "materials",
+              "label": "Materials & Care"
+            },
+            {
+              "value": "how-carousel",
+              "label": "How It Works"
+            },
+            {
+              "value": "specifications",
+              "label": "Specifications"
+            },
+            {
+              "value": "faq",
+              "label": "FAQ"
+            },
+            {
+              "value": "product-details",
+              "label": "Product overview"
+            },
+            {
+              "value": "custom",
+              "label": "Custom section"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "target_id",
+          "label": "Target section ID",
+          "info": "Use the section ID suffix, e.g. moya_selling_points, or the full shopify-section ID. Section type is used as a fallback if the ID changes."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Moya product navigation",
+      "blocks": [
+        {
+          "type": "anchor",
+          "settings": {
+            "label": "Key Selling Points",
+            "section_kind": "selling-points",
+            "target_id": "moya_selling_points"
+          }
+        },
+        {
+          "type": "anchor",
+          "settings": {
+            "label": "Everyday Moments",
+            "section_kind": "scenarios",
+            "target_id": "moya_scenarios"
+          }
+        },
+        {
+          "type": "anchor",
+          "settings": {
+            "label": "Materials & Care",
+            "section_kind": "materials",
+            "target_id": "moya_materials"
+          }
+        },
+        {
+          "type": "anchor",
+          "settings": {
+            "label": "How It Works",
+            "section_kind": "how-carousel",
+            "target_id": "moya_how_carousel_V9HpEz"
+          }
+        },
+        {
+          "type": "anchor",
+          "settings": {
+            "label": "Specifications",
+            "section_kind": "specifications",
+            "target_id": "moya_specifications"
+          }
+        },
+        {
+          "type": "anchor",
+          "settings": {
+            "label": "FAQ",
+            "section_kind": "faq",
+            "target_id": "moya_faq_tCi7Pn"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
