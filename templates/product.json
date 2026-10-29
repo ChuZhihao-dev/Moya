@@ -17,21 +17,27 @@
           "settings": {
             "selector_style": "block",
             "swatch_selector_style": "swatch",
-            "stack_blocks": true
+            "stack_blocks": true,
+            "variant_image_options": "",
+            "size_chart_page": ""
           }
         },
         "details": {
           "type": "accordion",
           "settings": {
             "title": "Product Details",
-            "content": "<p>A warmer kind of intelligent companionship.</p>"
+            "content": "<p>A warmer kind of intelligent companionship.</p>",
+            "page": "",
+            "open": false
           }
         },
         "care": {
           "type": "accordion",
           "settings": {
             "title": "Materials & Care",
-            "content": "<p>Mink-like skin-friendly fabric, soft against skin. Outer cover removable and washable.</p>"
+            "content": "<p>Mink-like skin-friendly fabric, soft against skin. Outer cover removable and washable.</p>",
+            "page": "",
+            "open": false
           }
         },
         "shipping": {
@@ -39,7 +45,8 @@
           "settings": {
             "icon": "shipping",
             "title": "Shipping information",
-            "content": "<p>See our shipping policy for delivery information.</p>"
+            "content": "<p>See our shipping policy for delivery information.</p>",
+            "page": ""
           }
         },
         "warranty": {
@@ -47,7 +54,8 @@
           "settings": {
             "icon": "warranty",
             "title": "Warranty & Support",
-            "content": "<p>Contact our customer care team for warranty and product support.</p>"
+            "content": "<p>Contact our customer care team for warranty and product support.</p>",
+            "page": ""
           }
         }
       },
@@ -64,38 +72,369 @@
         "accent_color": "#addbce",
         "eyebrow": "New Arrival",
         "subtitle": "Be the first to experience a new kind of companion.",
-        "show_payment_button": true,
-        "show_payment_security": true,
-        "show_share": true,
+        "general_information": "<p>Today's families don't lack love — but in busy, fragmented daily life, care often stops at a greeting. MoYa was born to change that.</p>",
+        "coupon_code": "",
+        "coupon_title": "",
+        "coupon_description": "",
+        "coupon_end": "",
         "accessories": [
           "accessories"
-        ]
+        ],
+        "accessories_collection": "",
+        "show_payment_button": true,
+        "show_payment_security": true,
+        "show_share": true
       }
     },
-    "related-products": {
-      "type": "related-products",
+    "moya_selling_points": {
+      "type": "moya-selling-points",
+      "blocks": {
+        "point_1": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Group_2090050667.webp",
+            "show_icon": true,
+            "heading": "Responsive Embrace",
+            "text": "<p>Chest and abdomen sensors detect your touch the moment you lean in. Flexible airbag arms, wrapped in a soft cushion layer, hold you firmly yet gently — adapting to how you want to be held.</p>"
+          }
+        },
+        "point_2": {
+          "type": "slide",
+          "settings": {
+            "show_icon": true,
+            "heading": "Selling point 02",
+            "text": "<p>Feature description.</p>"
+          }
+        },
+        "point_3": {
+          "type": "slide",
+          "settings": {
+            "show_icon": true,
+            "heading": "Selling point 03",
+            "text": "<p>Feature description.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "point_1",
+        "point_2",
+        "point_3"
+      ],
       "settings": {
-        "recommendations_count": 6,
-        "products": [],
-        "full_width": true,
-        "stack_products": true,
-        "show_progress_bar": false,
-        "products_per_row_mobile": "1",
-        "products_per_row_desktop": 3,
-        "subheading": "",
-        "title": "You may also like",
-        "content": "",
-        "background": "",
-        "background_gradient": "",
-        "text_color": "",
-        "heading_color": "",
-        "heading_gradient": "",
-        "product_card_background": "",
-        "product_card_text_color": ""
+        "heading": "Key Selling Points",
+        "image_position": "left",
+        "mobile_image_position": "top",
+        "card_height": 520,
+        "padding_block": 120,
+        "background": "#f0f2f2",
+        "card_background": "#ffffff",
+        "text_color": "#003521",
+        "enable_motion": true,
+        "transition_duration": 520,
+        "enable_inertia": true,
+        "inertia_strength": 100,
+        "autoplay": false,
+        "autoplay_interval": 6
+      }
+    },
+    "moya_how_carousel_V9HpEz": {
+      "type": "moya-how-carousel",
+      "blocks": {
+        "slide_89aae7": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/2b27477deabeb2dacedf9cccf0239c447de08cca.webp",
+            "title": "Sensing",
+            "description": "Chest and abdomen sensors trigger\nthe basic hugging motion."
+          }
+        },
+        "slide_dnpt6J": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/7ebc1f9afc0c9bc09a47fd5c48b09e91d220438d.webp",
+            "title": "Flexible Airbag Arms",
+            "description": "The airbags are covered with soft cushion layers. It hugs firmly and safely."
+          }
+        },
+        "slide_Nne4PR": {
+          "type": "slide",
+          "settings": {
+            "title": "Rhythmic Breathing",
+            "description": "Gentle rhythmic breathing for comfort, also serves as soft white noise."
+          }
+        },
+        "slide_VG3ta3": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/5d387a77785a73ab232d344764972663579c333f.webp",
+            "title": "Quiet Operation",
+            "description": "Operating noise:\napprox. 45dB"
+          }
+        },
+        "slide_CcT8MA": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/c2212ad6634bf9f8c74ef89f4b886d672a9de62d.webp",
+            "title": "Stop as your motion",
+            "description": "Stops when you release your body or give a voice command."
+          }
+        }
+      },
+      "block_order": [
+        "slide_89aae7",
+        "slide_dnpt6J",
+        "slide_Nne4PR",
+        "slide_VG3ta3",
+        "slide_CcT8MA"
+      ],
+      "name": "Moya how it works",
+      "settings": {
+        "eyebrow": "Science behind MoYa",
+        "heading": "How it work",
+        "intro": "<p>From touch to context, MoYa bring signals together to create calmer, more meaningful moments.</p>",
+        "heading_alignment": "left",
+        "background": "shopify://shop_images/Component_15.webp",
+        "background_color": "#050907",
+        "card_height": 265,
+        "mobile_card_height": 200,
+        "card_gap": 40,
+        "padding_top": 120,
+        "enable_motion": true,
+        "duration": 520,
+        "autoplay": false,
+        "autoplay_interval": 5
+      }
+    },
+    "moya_faq_tCi7Pn": {
+      "type": "moya-faq",
+      "blocks": {
+        "category_UnVQEa": {
+          "type": "category",
+          "settings": {
+            "title": "Product Basics"
+          }
+        },
+        "question_wwaXDz": {
+          "type": "question",
+          "settings": {
+            "question": "What is MoYa?",
+            "answer": "<p>MoYa is the first soft robot that hugs back. It's an AI-powered companion designed for emotional support at home — with responsive embrace, calming rhythm, and quiet intelligence. It's not a medical device, but a soft, warm presence designed to make care feel tangible in everyday life.</p>",
+            "open": true
+          }
+        },
+        "question_46F6RL": {
+          "type": "question",
+          "settings": {
+            "question": "How is MoYa different from a stuffed animal or a weighted blanket?",
+            "answer": "",
+            "open": false
+          }
+        },
+        "question_RmYtbk": {
+          "type": "question",
+          "settings": {
+            "question": "Does MoYa actually talk?",
+            "answer": "",
+            "open": false
+          }
+        },
+        "category_iWdeF6": {
+          "type": "category",
+          "settings": {
+            "title": "Features & Usage"
+          }
+        },
+        "question_4CHh8b": {
+          "type": "question",
+          "settings": {
+            "question": "How does the responsive hug work?",
+            "answer": "<p>When you lean in or touch MoYa's chest and abdomen area, sensors detect your proximity and trigger a natural hug. Flexible airbag arms inflate gently, adapting to your body and posture. To stop, simply release your body or use a voice command — MoYa stops immediately.</p>",
+            "open": true
+          }
+        },
+        "question_bAnNBz": {
+          "type": "question",
+          "settings": {
+            "question": "What is Calming Rhythm mode?",
+            "answer": "",
+            "open": false
+          }
+        },
+        "question_HFpXM6": {
+          "type": "question",
+          "settings": {
+            "question": "How loud is MoYa during operation?",
+            "answer": "",
+            "open": false
+          }
+        },
+        "question_pFUJE9": {
+          "type": "question",
+          "settings": {
+            "question": "Is there an app? What does it do?",
+            "answer": "",
+            "open": false
+          }
+        },
+        "question_BaFW74": {
+          "type": "question",
+          "settings": {
+            "question": "How do I turn MoYa on/off?",
+            "answer": "",
+            "open": false
+          }
+        },
+        "category_bm3TaR": {
+          "type": "category",
+          "settings": {
+            "title": "Materials & Care"
+          }
+        },
+        "question_XynUD8": {
+          "type": "question",
+          "settings": {
+            "question": "What is MoYa made of?",
+            "answer": "<p>MoYa is wrapped in ultra-soft, skin-friendly mink-like plush fabric with a supportive structured inner filling. The outer cover is fully removable and machine washable. Total weight is approximately 4.5kg, calibrated for a secure, grounded hug.</p>",
+            "open": true
+          }
+        },
+        "question_43fYMC": {
+          "type": "question",
+          "settings": {
+            "question": "How do I clean MoYa?",
+            "answer": "",
+            "open": false
+          }
+        },
+        "question_DijPgU": {
+          "type": "question",
+          "settings": {
+            "question": "Is the fabric safe for sensitive skin?",
+            "answer": "",
+            "open": false
+          }
+        },
+        "question_DQiJGV": {
+          "type": "question",
+          "settings": {
+            "question": "How much does MoYa weigh? Is it heavy to hold?",
+            "answer": "",
+            "open": false
+          }
+        },
+        "category_6zbkJF": {
+          "type": "category",
+          "settings": {
+            "title": "Safety & Privacy"
+          }
+        },
+        "question_yKgkm3": {
+          "type": "question",
+          "settings": {
+            "question": "Is MoYa safe to use while sleeping?",
+            "answer": "<p>Yes. MoYa is designed for bedtime use. It has no screen or blue light, operates at a quiet ~45dB, and includes overheat protection that automatically shuts off warmth if temperature exceeds safe limits. We recommend following the usage guidelines in the user manual.</p>",
+            "open": true
+          }
+        },
+        "question_TH6bcw": {
+          "type": "question",
+          "settings": {
+            "question": "Does MoYa store my conversations?",
+            "answer": "",
+            "open": false
+          }
+        },
+        "question_iQwmjU": {
+          "type": "question",
+          "settings": {
+            "question": "Is my data private and secure?",
+            "answer": "",
+            "open": false
+          }
+        },
+        "question_qUNFtY": {
+          "type": "question",
+          "settings": {
+            "question": "What certifications does MoYa have?",
+            "answer": "",
+            "open": false
+          }
+        },
+        "category_zjaVj3": {
+          "type": "category",
+          "settings": {
+            "title": "Who It's For"
+          }
+        },
+        "question_r3Y3QJ": {
+          "type": "question",
+          "settings": {
+            "question": "Who is MoYa for?",
+            "answer": "<p>MoYa is designed for anyone seeking emotional support and comfort — whether you live alone, work long hours, struggle with sleep, or simply want a warm, non-judgmental presence in your life. It's suitable for ages 14 and up.</p>",
+            "open": true
+          }
+        },
+        "question_Bfp4fp": {
+          "type": "question",
+          "settings": {
+            "question": "Is MoYa a medical device? Can it treat anxiety or depression?",
+            "answer": "",
+            "open": false
+          }
+        },
+        "question_WMMzrd": {
+          "type": "question",
+          "settings": {
+            "question": "Can children use MoYa?",
+            "answer": "",
+            "open": false
+          }
+        }
+      },
+      "block_order": [
+        "category_UnVQEa",
+        "question_wwaXDz",
+        "question_46F6RL",
+        "question_RmYtbk",
+        "category_iWdeF6",
+        "question_4CHh8b",
+        "question_bAnNBz",
+        "question_HFpXM6",
+        "question_pFUJE9",
+        "question_BaFW74",
+        "category_bm3TaR",
+        "question_XynUD8",
+        "question_43fYMC",
+        "question_DijPgU",
+        "question_DQiJGV",
+        "category_6zbkJF",
+        "question_yKgkm3",
+        "question_TH6bcw",
+        "question_iQwmjU",
+        "question_qUNFtY",
+        "category_zjaVj3",
+        "question_r3Y3QJ",
+        "question_Bfp4fp",
+        "question_WMMzrd"
+      ],
+      "name": "Moya FAQ",
+      "settings": {
+        "heading": "Frequently Asked Questions",
+        "heading_alignment": "left",
+        "background": "#F0F2F2",
+        "card_background": "#ffffff",
+        "text_color": "#003521",
+        "padding_block": 120,
+        "single_open": false,
+        "enable_motion": true,
+        "duration": 320,
+        "empty_answer": "Please contact our team for more information.",
+        "enable_schema": true
       }
     },
     "gp_shopify_original_section_537219160984257394": {
       "type": "gp-section-537219160984257394",
+      "disabled": true,
       "settings": {
         "section_preload": "true",
         "checksum": "35a596966c717bca8deb477df1f2ad950a05d70c6dd44878f82e34bb151cf888_1"
@@ -108,35 +447,43 @@
         "checksum": "7f30c8909833774e88b2b9f408a93f5551101a5a696edfdb8b27b3c51828a182_1"
       }
     },
-    "moya_selling_points": {
-      "type": "moya-selling-points",
+    "moya_materials": {
+      "type": "moya-materials",
       "blocks": {
-        "point_1": {
-          "type": "slide",
+        "material_1": {
+          "type": "material",
           "settings": {
-            "heading": "Responsive Embrace",
-            "text": "<p>Chest and abdomen sensors detect your touch the moment you lean in. Flexible airbag arms, wrapped in a soft cushion layer, hold you firmly yet gently \u2014 adapting to how you want to be held.</p>"
+            "title": "Material For Everyday",
+            "description": "<p>Mink-Like Skin-Friendly Fabric<br>Soft Against Skin; Outer Cover Removable And Washable.</p>"
           }
         },
-        "point_2": {
-          "type": "slide",
+        "material_2": {
+          "type": "material",
           "settings": {
-            "heading": "Selling point 02",
-            "text": "<p>Feature description.</p>"
+            "title": "Eyes That Meet You Back",
+            "description": "<p>Mink-Like Skin-Friendly Fabric<br>Soft Against Skin; Outer Cover Removable And Washable.</p>"
           }
         },
-        "point_3": {
-          "type": "slide",
+        "material_3": {
+          "type": "material",
           "settings": {
-            "heading": "Selling point 03",
-            "text": "<p>Feature description.</p>"
+            "title": "Softness With Support",
+            "description": "<p>Mink-Like Skin-Friendly Fabric<br>Soft Against Skin; Outer Cover Removable And Washable.</p>"
+          }
+        },
+        "material_4": {
+          "type": "material",
+          "settings": {
+            "title": "Weight Approx. 4.5 Kg",
+            "description": "<p>Stable And Reassuring To Hold And Lean On.</p>"
           }
         }
       },
       "block_order": [
-        "point_1",
-        "point_2",
-        "point_3"
+        "material_1",
+        "material_2",
+        "material_3",
+        "material_4"
       ],
       "settings": {}
     }
@@ -144,7 +491,9 @@
   "order": [
     "main",
     "moya_selling_points",
-    "related-products",
+    "moya_how_carousel_V9HpEz",
+    "moya_materials",
+    "moya_faq_tCi7Pn",
     "gp_shopify_original_section_537219160984257394",
     "gp_shopify_original_section_537215604331906196"
   ]

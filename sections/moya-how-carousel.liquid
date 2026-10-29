@@ -1,0 +1,344 @@
+{%- assign desktop_image_width = section.settings.card_height
+  | times: 398.0
+  | divided_by: 265
+  | round
+-%}
+{%- assign mobile_image_width = section.settings.mobile_card_height
+  | times: 398.0
+  | divided_by: 265
+  | round
+-%}
+{%- capture card_sizes -%}(max-width: 749px) {{ mobile_image_width }}px, {{ desktop_image_width }}px{%- endcapture -%}
+{{ 'moya-how-carousel.min.css' | asset_url | stylesheet_tag }}
+<script type='module' src='{{ 'moya-how-carousel.min.js' | asset_url }}'></script>
+<moya-how-carousel
+  id='MoyaHow-{{ section.id }}'
+  class='moya-how{% if section.settings.heading_alignment == 'center' %} moya-how--center{% endif %}'
+  data-motion='{{ section.settings.enable_motion }}'
+  data-duration='{{ section.settings.duration }}'
+  data-autoplay='{{ section.settings.autoplay }}'
+  data-delay='{{ section.settings.autoplay_interval | times: 1000 }}'
+  role='region'
+  aria-roledescription='carousel'
+  aria-label='{{ section.settings.heading | default: "How it works" | escape }}'
+  style='
+    --how-background: {{ section.settings.background_color }};
+    --how-desktop-height: {{ section.settings.card_height }}px;
+    --how-mobile-height: {{ section.settings.mobile_card_height }}px;
+    --how-desktop-gap: {{ section.settings.card_gap }}px;
+    --how-padding: {{ section.settings.padding_top }}px;
+  '
+>
+  {%- if section.settings.background != blank -%}
+    {{
+      section.settings.background
+      | image_url: width: 1920
+      | image_tag:
+        class: 'moya-how__background',
+        loading: 'lazy',
+        widths: '480,800,1200,1600,1920',
+        sizes: '100vw',
+        alt: ''
+    }}
+  {%- endif -%}
+  <div class='moya-how__header'>
+    {%- if section.settings.eyebrow != blank -%}
+      <p class='moya-how__eyebrow'>{{ section.settings.eyebrow | escape }}</p>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h2 class='moya-how__heading'>{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+    {%- if section.settings.intro != blank -%}
+      <div class='moya-how__intro prose'>{{ section.settings.intro }}</div>
+    {%- endif -%}
+  </div>
+  <div
+    class='moya-how__viewport'
+    id='MoyaHowViewport-{{ section.id }}'
+    data-how-viewport
+    tabindex='0'
+    aria-label='Slides. Use left and right arrow keys.'
+    dir='ltr'
+  >
+    {%- for block in section.blocks -%}
+      <article
+        class='moya-how__card'
+        data-how-card
+        data-title='{{ block.settings.title | escape }}'
+        role='group'
+        aria-roledescription='slide'
+        aria-label='{{ forloop.index }} of {{ section.blocks.size }}'
+        dir='{% render 'direction' %}'
+        {{ block.shopify_attributes }}
+      >
+        <div class='moya-how__media'>
+          {%- if block.settings.image != blank -%}
+            {%- assign image_alt = block.settings.image.alt | default: block.settings.title -%}
+            {{
+              block.settings.image
+              | image_url: width: 1200
+              | image_tag:
+                loading: 'lazy',
+                decoding: 'async',
+                widths: '240,360,480,640,800,1200',
+                sizes: card_sizes,
+                alt: image_alt,
+                draggable: false
+            }}
+          {%- else -%}
+            <div
+              class='moya-how__placeholder'
+              role='img'
+              aria-label='{{ block.settings.title | escape }} — Image placeholder'
+            >
+              {{ 'lifestyle-1' | placeholder_svg_tag }}
+            </div>
+          {%- endif -%}
+        </div>
+        <div class='moya-how__caption'>
+          {%- if block.settings.title != blank -%}
+            <h3 class='moya-how__title'>{{ block.settings.title | escape }}</h3>
+          {%- endif -%}
+          {%- if block.settings.description != blank -%}
+            <p class='moya-how__description'>
+              {{ block.settings.description | escape | newline_to_br }}
+            </p>
+          {%- endif -%}
+        </div>
+      </article>
+    {%- endfor -%}
+  </div>
+  <div
+    class='moya-how__controls'
+    {% if section.blocks.size < 2 %}
+      hidden
+    {% endif %}
+  >
+    <button
+      class='moya-how__arrow'
+      type='button'
+      data-how-step='-1'
+      aria-label='Previous slide'
+      aria-controls='MoyaHowViewport-{{ section.id }}'
+      hidden
+    >
+      <img
+        src='{{ 'moya-how-previous.svg' | asset_url }}'
+        alt=''
+        width='50'
+        height='50'
+        loading='lazy'
+      >
+    </button>
+    <button
+      class='moya-how__arrow moya-how__arrow--next'
+      type='button'
+      data-how-step='1'
+      aria-label='Next slide'
+      aria-controls='MoyaHowViewport-{{ section.id }}'
+      hidden
+    >
+      <img src='{{ 'moya-how-next.svg' | asset_url }}' alt='' width='50' height='50' loading='lazy'>
+    </button>
+  </div>
+  <p class='sr-only' data-how-status aria-live='polite' aria-atomic='true'></p>
+</moya-how-carousel>
+{% schema %}
+{
+  "name": "Moya how it works",
+  "tag": "section",
+  "class": "shopify-section--moya-how",
+  "max_blocks": 12,
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Science behind MoYa"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "How it work"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Introduction",
+      "default": "<p>From touch to context, MoYa bring signals together to create calmer, more meaningful moments.</p>"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left — design layout"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "background",
+      "label": "Background image",
+      "info": "Choose an image from Shopify Files. Leave empty for the background color."
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#050907"
+    },
+    {
+      "type": "range",
+      "id": "card_height",
+      "label": "Desktop focused image height",
+      "min": 200,
+      "max": 400,
+      "step": 5,
+      "unit": "px",
+      "default": 265
+    },
+    {
+      "type": "range",
+      "id": "mobile_card_height",
+      "label": "Mobile focused image height",
+      "min": 160,
+      "max": 280,
+      "step": 10,
+      "unit": "px",
+      "default": 200
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Desktop card gap",
+      "min": 20,
+      "max": 64,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top spacing",
+      "min": 40,
+      "max": 160,
+      "step": 10,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_motion",
+      "label": "Animate slide changes",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "duration",
+      "label": "Slide settling time",
+      "min": 200,
+      "max": 1000,
+      "step": 20,
+      "unit": "ms",
+      "default": 520
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Auto-advance slides",
+      "default": false,
+      "info": "Loops continuously; pauses on hover, keyboard focus and when outside the viewport."
+    },
+    {
+      "type": "range",
+      "id": "autoplay_interval",
+      "label": "Auto-advance delay",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "unit": "s",
+      "default": 5
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Loaded through Shopify CDN with responsive sizes. A landscape image is recommended."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Feature"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Moya how it works",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "title": "Sensing",
+            "description": "Chest and abdomen sensors trigger\nthe basic hugging motion."
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "title": "Flexible Airbag Arms",
+            "description": "The airbags are covered with soft cushion layers. It hugs firmly and safely."
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "title": "Rhythmic Breathing",
+            "description": "Gentle rhythmic breathing for comfort, also serves as soft white noise."
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "title": "Quiet Operation",
+            "description": "Operating noise:\napprox. 45dB"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "title": "Stop as your motion",
+            "description": "Stops when you release your body or give a voice command."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

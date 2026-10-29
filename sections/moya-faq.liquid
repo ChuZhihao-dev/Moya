@@ -1,0 +1,370 @@
+{{ 'moya-faq.min.css' | asset_url | stylesheet_tag }}
+<script src='{{ 'moya-faq.min.js' | asset_url }}' defer></script>
+
+<moya-faq
+  class='moya-faq{% if section.settings.heading_alignment == 'center' %} moya-faq--center{% endif %}'
+  data-motion='{{ section.settings.enable_motion }}'
+  data-duration='{{ section.settings.duration }}'
+  data-single='{{ section.settings.single_open }}'
+  style='
+    --faq-background: {{ section.settings.background }};
+    --faq-card: {{ section.settings.card_background }};
+    --faq-ink: {{ section.settings.text_color }};
+    --faq-spacing: {{ section.settings.padding_block }}px;
+    --faq-duration: {{ section.settings.duration }}ms;
+  '
+>
+  <div class='moya-faq__container'>
+    {%- if section.settings.heading != blank -%}
+      <h2 class='moya-faq__heading'>{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+    <div class='moya-faq__groups'>
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'category' or forloop.first -%}
+          {%- assign question_offset = forloop.index0 -%}
+          <div class='moya-faq__group' data-faq-group>
+            {%- if block.type == 'category' -%}
+              <h3 class='moya-faq__category' {{ block.shopify_attributes }}>
+                {{ block.settings.title | escape }}
+              </h3>
+              {%- assign question_offset = forloop.index -%}
+            {%- endif -%}
+            {%- for question in section.blocks offset: question_offset -%}
+              {%- if question.type == 'category' -%}{%- break -%}{%- endif -%}
+              {%- render 'moya-faq-item', block: question, section: section -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</moya-faq>
+
+{%- if section.settings.enable_schema -%}
+  {%- capture faq_entities -%}
+    {%- assign has_entity = false -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'question' and block.settings.question != blank and block.settings.answer != blank -%}
+        {%- if has_entity -%},{%- endif -%}
+        {"@type":"Question","name":{{ block.settings.question | json }},"acceptedAnswer":{"@type":"Answer","text":{{ block.settings.answer | json }}}}
+        {%- assign has_entity = true -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- if faq_entities != blank -%}
+    <script type='application/ld+json'>
+      {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{{ faq_entities }}]}
+    </script>
+  {%- endif -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Moya FAQ",
+  "tag": "section",
+  "class": "shopify-section--moya-faq",
+  "max_blocks": 50,
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading alignment",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left — design layout"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Question background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#003521"
+    },
+    {
+      "type": "range",
+      "id": "padding_block",
+      "label": "Vertical spacing",
+      "min": 40,
+      "max": 160,
+      "step": 10,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "checkbox",
+      "id": "single_open",
+      "label": "One open question per category",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_motion",
+      "label": "Animate expand and collapse",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "duration",
+      "label": "Transition duration",
+      "min": 160,
+      "max": 600,
+      "step": 20,
+      "unit": "ms",
+      "default": 320
+    },
+    {
+      "type": "text",
+      "id": "empty_answer",
+      "label": "Text for answers not yet provided",
+      "default": "Please contact our team for more information."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_schema",
+      "label": "Output FAQ structured data",
+      "default": true,
+      "info": "Includes only questions with a configured answer. Enable once per page."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category heading",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Category",
+          "default": "Category"
+        }
+      ]
+    },
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer"
+        },
+        {
+          "type": "checkbox",
+          "id": "open",
+          "label": "Open by default",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Moya FAQ",
+      "blocks": [
+        {
+          "type": "category",
+          "settings": {
+            "title": "Product Basics"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "What is MoYa?",
+            "open": true,
+            "answer": "<p>MoYa is the first soft robot that hugs back. It's an AI-powered companion designed for emotional support at home — with responsive embrace, calming rhythm, and quiet intelligence. It's not a medical device, but a soft, warm presence designed to make care feel tangible in everyday life.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "How is MoYa different from a stuffed animal or a weighted blanket?",
+            "open": false
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Does MoYa actually talk?",
+            "open": false
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Features & Usage"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "How does the responsive hug work?",
+            "open": true,
+            "answer": "<p>When you lean in or touch MoYa's chest and abdomen area, sensors detect your proximity and trigger a natural hug. Flexible airbag arms inflate gently, adapting to your body and posture. To stop, simply release your body or use a voice command — MoYa stops immediately.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "What is Calming Rhythm mode?",
+            "open": false
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "How loud is MoYa during operation?",
+            "open": false
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Is there an app? What does it do?",
+            "open": false
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "How do I turn MoYa on/off?",
+            "open": false
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Materials & Care"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "What is MoYa made of?",
+            "open": true,
+            "answer": "<p>MoYa is wrapped in ultra-soft, skin-friendly mink-like plush fabric with a supportive structured inner filling. The outer cover is fully removable and machine washable. Total weight is approximately 4.5kg, calibrated for a secure, grounded hug.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "How do I clean MoYa?",
+            "open": false
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Is the fabric safe for sensitive skin?",
+            "open": false
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "How much does MoYa weigh? Is it heavy to hold?",
+            "open": false
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Safety & Privacy"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Is MoYa safe to use while sleeping?",
+            "open": true,
+            "answer": "<p>Yes. MoYa is designed for bedtime use. It has no screen or blue light, operates at a quiet ~45dB, and includes overheat protection that automatically shuts off warmth if temperature exceeds safe limits. We recommend following the usage guidelines in the user manual.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Does MoYa store my conversations?",
+            "open": false
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Is my data private and secure?",
+            "open": false
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "What certifications does MoYa have?",
+            "open": false
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "title": "Who It's For"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Who is MoYa for?",
+            "open": true,
+            "answer": "<p>MoYa is designed for anyone seeking emotional support and comfort — whether you live alone, work long hours, struggle with sleep, or simply want a warm, non-judgmental presence in your life. It's suitable for ages 14 and up.</p>"
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Is MoYa a medical device? Can it treat anxiety or depression?",
+            "open": false
+          }
+        },
+        {
+          "type": "question",
+          "settings": {
+            "question": "Can children use MoYa?",
+            "open": false
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

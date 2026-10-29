@@ -6,7 +6,11 @@
     "test:talk": "node --test tests/moya-talk.test.cjs",
     "build:pdp": "node scripts/build-moya-product-details.mjs",
     "build:selling-points": "node scripts/build-moya-selling-points.mjs",
-    "test:selling-points": "node --test tests/moya-selling-physics.test.cjs"
+    "test:selling-points": "node --test tests/moya-selling-physics.test.cjs",
+    "build:faq": "node scripts/build-moya-faq.mjs",
+    "build:how-carousel": "node scripts/build-moya-how-carousel.mjs",
+    "test:how-carousel": "node --test tests/moya-loop-geometry.test.cjs",
+    "build:materials": "node scripts/build-moya-materials.mjs"
   },
   "devDependencies": {
     "esbuild": "0.28.1"

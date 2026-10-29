@@ -1,0 +1,36 @@
+{%- if block.settings.question != blank -%}
+  <details
+    class='moya-faq__item'
+    data-faq-item
+    {% if block.settings.open %}
+      open
+    {% endif %}
+    {{ block.shopify_attributes }}
+  >
+    <summary
+      class='moya-faq__summary'
+      aria-controls='FaqAnswer-{{ section.id }}-{{ block.id }}'
+    >
+      <span class='moya-faq__question'>{{ block.settings.question | escape }}</span>
+      <img
+        class='moya-faq__chevron'
+        src='{{ 'moya-faq-chevron.svg' | asset_url }}'
+        alt=''
+        width='12'
+        height='7'
+        loading='lazy'
+      >
+    </summary>
+    <div
+      class='moya-faq__answer prose'
+      id='FaqAnswer-{{ section.id }}-{{ block.id }}'
+      data-faq-answer
+    >
+      {%- if block.settings.answer != blank -%}
+        {{ block.settings.answer }}
+      {%- else -%}
+        <p>{{ section.settings.empty_answer | escape }}</p>
+      {%- endif -%}
+    </div>
+  </details>
+{%- endif -%}
