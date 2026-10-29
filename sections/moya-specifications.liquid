@@ -1,0 +1,426 @@
+{{ 'moya-specifications.min.css' | asset_url | stylesheet_tag }}
+<script src='{{ 'moya-specifications.min.js' | asset_url }}' defer></script>
+
+<moya-specifications
+  class='moya-specs'
+  data-motion='{{ section.settings.enable_motion }}'
+  data-duration='{{ section.settings.duration }}'
+  style='--specs-background: {{ section.settings.background }}; --specs-ink: {{ section.settings.text_color }}; --specs-panel: {{ section.settings.panel_background }}; --specs-spacing: {{ section.settings.padding_block }}px; --specs-duration: {{ section.settings.duration }}ms;'
+>
+  <div class='moya-specs__container'>
+    <div class='moya-specs__information'>
+      {% if section.settings.heading != blank %}
+        <h2 class='moya-specs__heading'>{{ section.settings.heading | escape }}</h2>
+      {% endif %}
+      <div class='moya-specs__groups'>
+        {% for block in section.blocks %}
+          {% if block.type == 'group' %}
+            {% assign parameter_offset = forloop.index %}
+            <details
+              class='moya-specs__group'
+              data-specs-group
+              {% if block.settings.open %}
+                open
+              {% endif %}
+              {{ block.shopify_attributes }}
+            >
+              <summary
+                class='moya-specs__summary'
+                aria-controls='Specs-{{ section.id }}-{{ block.id }}'
+              >
+                <h3>{{ block.settings.title | escape }}</h3>
+                <img
+                  class='moya-specs__chevron'
+                  src='{{ 'moya-specifications-chevron.svg' | asset_url }}'
+                  alt=''
+                  width='20'
+                  height='20'
+                  loading='lazy'
+                >
+              </summary>
+              <div
+                class='moya-specs__body'
+                id='Specs-{{ section.id }}-{{ block.id }}'
+                data-specs-body
+              >
+                <dl class='moya-specs__parameters'>
+                  {% for parameter in section.blocks offset: parameter_offset %}
+                    {% if parameter.type == 'group' %}{% break %}{% endif %}
+                    {% if parameter.type == 'parameter' %}
+                      <div
+                        class='moya-specs__parameter{% if parameter.settings.full_width %} moya-specs__parameter--wide{% endif %}'
+                        {{ parameter.shopify_attributes }}
+                      >
+                        <dt>{{ parameter.settings.label | escape }}</dt>
+                        <dd class='moya-specs__value'>{{ parameter.settings.value }}</dd>
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+                </dl>
+              </div>
+            </details>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    <aside
+      class='moya-specs__box'
+      {% if section.settings.box_heading != blank %}
+        aria-labelledby='SpecsBox-{{ section.id }}'
+      {% endif %}
+    >
+      {% if section.settings.box_heading != blank %}
+        <h2 class='moya-specs__box-heading' id='SpecsBox-{{ section.id }}'>
+          {{ section.settings.box_heading | escape }}
+        </h2>
+      {% endif %}
+      <div class='moya-specs__hero'>
+        {% if section.settings.product_image != blank %}
+          {{
+            section.settings.product_image
+            | image_url: width: 1080
+            | image_tag:
+              widths: '300, 450, 600, 800, 1080',
+              sizes: '(min-width: 1000px) 354px, (min-width: 750px) 42vw, 80vw',
+              loading: 'lazy',
+              class: 'moya-specs__image'
+          }}
+        {% else %}
+          {{ 'product-1' | placeholder_svg_tag: 'moya-specs__placeholder' }}
+        {% endif %}
+      </div>
+      <ul class='moya-specs__items' role='list'>
+        {% for block in section.blocks %}
+          {% if block.type == 'box_item' %}
+            <li class='moya-specs__item' {{ block.shopify_attributes }}>
+              <div class='moya-specs__item-media'>
+                {% if block.settings.image != blank %}
+                  {{
+                    block.settings.image
+                    | image_url: width: 480
+                    | image_tag:
+                      widths: '120, 180, 240, 360, 480',
+                      sizes: '(min-width: 1000px) 144px, (min-width: 750px) 15vw, 40vw',
+                      loading: 'lazy',
+                      class: 'moya-specs__image'
+                  }}
+                {% else %}
+                  {{ 'image' | placeholder_svg_tag: 'moya-specs__placeholder' }}
+                {% endif %}
+              </div>
+              {% if block.settings.title != blank %}
+                <p class='moya-specs__item-title'>{{ block.settings.title | escape }}</p>
+              {% endif %}
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </aside>
+  </div>
+</moya-specifications>
+
+{% schema %}
+{
+  "name": "Moya specifications",
+  "tag": "section",
+  "max_blocks": 50,
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Technical Specification"
+    },
+    {
+      "type": "text",
+      "id": "box_heading",
+      "label": "Box heading",
+      "default": "What’s in the box"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Main package image"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#003521"
+    },
+    {
+      "type": "color",
+      "id": "panel_background",
+      "label": "Box panel background",
+      "default": "#f2f2f2"
+    },
+    {
+      "type": "range",
+      "id": "padding_block",
+      "label": "Vertical spacing",
+      "min": 40,
+      "max": 160,
+      "step": 10,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_motion",
+      "label": "Animate expand and collapse",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "duration",
+      "label": "Transition duration",
+      "min": 160,
+      "max": 600,
+      "step": 20,
+      "unit": "ms",
+      "default": 360
+    }
+  ],
+  "blocks": [
+    {
+      "type": "group",
+      "name": "Specification group",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Group title",
+          "default": "Main Parameter"
+        },
+        {
+          "type": "checkbox",
+          "id": "open",
+          "label": "Open by default",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "parameter",
+      "name": "Parameter",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Place below a specification group. Parameters belong to the nearest group above."
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Parameter name",
+          "default": "Parameter"
+        },
+        {
+          "type": "richtext",
+          "id": "value",
+          "label": "Value",
+          "default": "<p>parameter detail</p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "full_width",
+          "label": "Span both columns",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "box_item",
+      "name": "Box item",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Item name",
+          "default": "Power Adapter"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Moya specifications",
+      "blocks": [
+        {
+          "type": "group",
+          "settings": {
+            "title": "Main Parameter 1",
+            "open": true
+          }
+        },
+        {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 1",
+            "value": "<p>parameter detail parameter detail parameter detail parameter</p>",
+            "full_width": false
+          }
+        },
+        {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 2",
+            "value": "<p>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 3",
+            "value": "<p>parameter detail:<br>parameter detail parameter detail parameter detail parameter detail<br>parameter detail parameter detail<br>parameter detail parameter detail<br>parameter detail parameter detail parameter detail parameter detail</p>",
+            "full_width": true
+          }
+        },
+        {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 4",
+            "value": "<p>parameter detail<br>parameter detail<br>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 4",
+            "value": "<p>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 5",
+            "value": "<p>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 6",
+            "value": "<p>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 7",
+            "value": "<p>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 8",
+            "value": "<p>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        {
+          "type": "group",
+          "settings": {
+            "title": "Main Parameter 2"
+          }
+        },
+        {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter",
+            "value": "<p>parameter detail</p>"
+          }
+        },
+        {
+          "type": "group",
+          "settings": {
+            "title": "Main Parameter 3"
+          }
+        },
+        {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter",
+            "value": "<p>parameter detail</p>"
+          }
+        },
+        {
+          "type": "box_item",
+          "settings": {
+            "title": "Power Adapter"
+          }
+        },
+        {
+          "type": "box_item",
+          "settings": {
+            "title": "Power Adapter"
+          }
+        },
+        {
+          "type": "box_item",
+          "settings": {
+            "title": "Power Adapter"
+          }
+        },
+        {
+          "type": "box_item",
+          "settings": {
+            "title": "Power Adapter"
+          }
+        },
+        {
+          "type": "box_item",
+          "settings": {
+            "title": "Power Adapter"
+          }
+        },
+        {
+          "type": "box_item",
+          "settings": {
+            "title": "Power Adapter"
+          }
+        },
+        {
+          "type": "box_item",
+          "settings": {
+            "title": "Power Adapter"
+          }
+        },
+        {
+          "type": "box_item",
+          "settings": {
+            "title": "Power Adapter"
+          }
+        },
+        {
+          "type": "box_item",
+          "settings": {
+            "title": "Power Adapter"
+          }
+        }
+      ]
+    }
+  ],
+  "class": "shopify-section--moya-specifications"
+}
+{% endschema %}

@@ -1,0 +1,272 @@
+{{ 'moya-scenarios.min.css' | asset_url | stylesheet_tag }}
+<script type='module' src='{{ 'moya-scenarios.min.js' | asset_url }}'></script>
+{%- assign initial_index = section.settings.initial_item | minus: 1 -%}
+{%- if initial_index >= section.blocks.size -%}{%- assign initial_index = 0 -%}{%- endif -%}
+<moya-scenarios
+  id='MoyaScenarios-{{ section.id }}'
+  class='moya-scenarios{% if section.settings.content_position == 'right' %} moya-scenarios--right{% endif %}'
+  data-motion='{{ section.settings.enable_motion }}'
+  data-duration='{{ section.settings.duration }}'
+  data-initial='{{ initial_index | plus: 1 }}'
+  role='region'
+  aria-label='{{ section.settings.accessibility_label | escape }}'
+  style='
+    --scenario-background: {{ section.settings.background_color }};
+    --scenario-height: {{ section.settings.desktop_height_vh }}vh;
+    --scenario-spacing: {{ section.settings.padding_block }}px;
+    --scenario-desktop-position: {{ section.settings.desktop_position }}%;
+    --scenario-mobile-position: {{ section.settings.mobile_position }}%;
+    --scenario-shade: {{ section.settings.shade | divided_by: 100.0 }};
+    --scenario-duration: {{ section.settings.duration }}ms;
+  '
+>
+  {%- if section.settings.background != blank -%}
+    {{
+      section.settings.background
+      | image_url: width: 2400
+      | image_tag:
+        class: 'moya-scenarios__background',
+        widths: '480,750,1100,1440,1920,2400',
+        sizes: '100vw',
+        loading: 'lazy',
+        decoding: 'async',
+        alt: '',
+        style: 'object-position: var(--scenario-position);'
+    }}
+  {%- else -%}
+    {{ 'lifestyle-1' | placeholder_svg_tag: 'moya-scenarios__placeholder' }}
+  {%- endif -%}
+  <div class='moya-scenarios__container'>
+    <div class='moya-scenarios__list' data-scenario-list>
+      {%- for block in section.blocks -%}
+        {%- assign is_active = false -%}
+        {%- if forloop.index0 == initial_index -%}{%- assign is_active = true -%}{%- endif -%}
+        <details
+          id='Scenario-{{ section.id }}-{{ block.id }}'
+          class='moya-scenarios__item{% if is_active %} is-active{% endif %}'
+          data-scenario
+          {% if is_active %}
+            open
+          {% endif %}
+          {{ block.shopify_attributes }}
+        >
+          <summary
+            class='moya-scenarios__summary'
+            aria-expanded='{{ is_active }}'
+            aria-disabled='{{ is_active }}'
+            aria-controls='ScenarioBody-{{ section.id }}-{{ block.id }}'
+          >
+            <img
+              class='moya-scenarios__icon'
+              src='{{ 'moya-scenarios-plus.svg' | asset_url }}'
+              width='26'
+              height='26'
+              alt=''
+              loading='lazy'
+            >
+            <span class='moya-scenarios__title' data-scenario-title>
+              {{- block.settings.title | default: 'Scenario' | escape -}}
+            </span>
+          </summary>
+          <div
+            id='ScenarioBody-{{ section.id }}-{{ block.id }}'
+            class='moya-scenarios__body'
+            data-scenario-body
+            aria-hidden='{% if is_active %}false{% else %}true{% endif %}'
+            {% unless is_active %}
+              inert
+            {% endunless %}
+          >
+            <div class='moya-scenarios__copy prose'>{{- block.settings.description -}}</div>
+          </div>
+        </details>
+      {%- endfor -%}
+    </div>
+  </div>
+</moya-scenarios>
+{% schema %}
+{
+  "name": "Moya life scenarios",
+  "tag": "section",
+  "class": "shopify-section--moya-scenarios",
+  "max_blocks": 8,
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background",
+      "label": "Section background image",
+      "info": "One fixed background for every scenario. Loaded through Shopify CDN."
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Fallback background color",
+      "default": "#5b655e"
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Desktop content position",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left — design layout"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "desktop_position",
+      "label": "Desktop image horizontal position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "mobile_position",
+      "label": "Mobile image horizontal position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 65
+    },
+    {
+      "type": "range",
+      "id": "desktop_height_vh",
+      "label": "Desktop viewport height",
+      "min": 60,
+      "max": 120,
+      "step": 5,
+      "unit": "vh",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_block",
+      "label": "Desktop vertical spacing",
+      "min": 40,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 78
+    },
+    {
+      "type": "range",
+      "id": "shade",
+      "label": "Desktop background shading",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "%",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "initial_item",
+      "label": "Initially expanded scenario",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_motion",
+      "label": "Animate expand and collapse",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "duration",
+      "label": "Transition duration",
+      "min": 200,
+      "max": 700,
+      "step": 20,
+      "unit": "ms",
+      "default": 360
+    },
+    {
+      "type": "text",
+      "id": "accessibility_label",
+      "label": "Accessibility label",
+      "default": "MoYa for everyday moments"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "scenario",
+      "name": "Scenario",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Scenario"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "info": "The design only provides copy for Falling Asleep. Add approved copy for the other scenarios here."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Moya life scenarios",
+      "blocks": [
+        {
+          "type": "scenario",
+          "settings": {
+            "title": "Falling Asleep",
+            "description": "<p>When the lights go out, hold MoYa against your chest. Turn on Calming Rhythm mode — its slow breathing guides yours, optional warmth keeps you cozy, and steady patting slows your heart rate. No screens, no blue light, just a steady presence until you drift off.</p>"
+          }
+        },
+        {
+          "type": "scenario",
+          "settings": {
+            "title": "Anxiety Relief"
+          }
+        },
+        {
+          "type": "scenario",
+          "settings": {
+            "title": "Work From Home"
+          }
+        },
+        {
+          "type": "scenario",
+          "settings": {
+            "title": "Evening Decompression"
+          }
+        },
+        {
+          "type": "scenario",
+          "settings": {
+            "title": "Solo Living"
+          }
+        },
+        {
+          "type": "scenario",
+          "settings": {
+            "title": "Travel & Hotel Stays"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

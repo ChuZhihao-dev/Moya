@@ -1,5 +1,10 @@
 .moya-materials {
   --material-columns: 2;
+  --material-hover-lift: -3px;
+  --material-hover-scale: 1.03;
+  --material-press-scale: 0.985;
+  --material-halo-x: calc(50% - min(24vw, 300px));
+  --material-halo-y: 60%;
   position: relative;
   display: block;
   overflow: hidden;
@@ -8,6 +13,27 @@
   background: var(--material-background, #f0f2f2);
   color: var(--material-ink, #003521);
   font-family: var(--text-font-family);
+}
+.moya-materials::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 680px 460px at var(--material-halo-x) var(--material-halo-y),
+      rgb(173 219 206 / 34%) 0%,
+      rgb(173 219 206 / 14%) 42%,
+      rgb(173 219 206 / 0%) 78%
+    ),
+    radial-gradient(
+      ellipse 520px 360px at calc(var(--material-halo-x) - 140px)
+        calc(var(--material-halo-y) + 60px),
+      rgb(221 230 190 / 28%) 0%,
+      rgb(221 230 190 / 10%) 40%,
+      rgb(221 230 190 / 0%) 78%
+    );
 }
 .moya-materials [hidden] {
   display: none !important;
@@ -39,21 +65,14 @@
 .moya-materials--reverse .moya-materials__scene {
   order: 2;
 }
+.moya-materials--reverse {
+  --material-halo-x: calc(50% + min(24vw, 300px));
+}
 .moya-materials__scene {
   position: relative;
   min-width: 0;
   aspect-ratio: 735 / 560;
   isolation: isolate;
-}
-.moya-materials__scene::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  inset: -15%;
-  background:
-    radial-gradient(ellipse at 58% 48%, rgb(173 219 206 / 45%), transparent 62%),
-    radial-gradient(ellipse at 22% 68%, rgb(221 230 190 / 50%), transparent 54%);
-  pointer-events: none;
 }
 .moya-materials__product {
   position: absolute;
@@ -74,6 +93,7 @@
 .moya-materials__scene > .moya-materials__placeholder {
   position: absolute;
   inset: 0;
+  background: transparent;
 }
 .moya-materials__placeholder > svg {
   display: block;
@@ -98,7 +118,8 @@
     background-color 300ms ease,
     color 300ms ease,
     box-shadow 300ms ease,
-    border-color 300ms ease;
+    border-color 300ms ease,
+    transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .moya-materials__card.is-active {
   background: var(--material-active, #37584d);
@@ -118,6 +139,13 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+.moya-materials__thumbnail > img {
+  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.moya-materials__card:active {
+  transform: scale(var(--material-press-scale));
+  transition-duration: 120ms;
 }
 .moya-materials__title {
   margin: 0 3px 8px;
@@ -167,9 +195,16 @@
   text-decoration: underline;
   text-underline-offset: 4px;
 }
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .moya-materials__card:hover {
     border-color: rgb(0 53 33 / 15%);
+    transform: translate3d(0, var(--material-hover-lift), 0);
+  }
+  .moya-materials__card:hover .moya-materials__thumbnail > img {
+    transform: scale(var(--material-hover-scale));
+  }
+  .moya-materials__card:hover:active {
+    transform: translate3d(0, var(--material-hover-lift), 0) scale(var(--material-press-scale));
   }
 }
 @media (min-width: 750px) and (max-width: 1099px) {
@@ -186,7 +221,10 @@
   }
 }
 @media (max-width: 749px) {
-  .moya-materials {
+  .moya-materials,
+  .moya-materials--reverse {
+    --material-halo-x: 50%;
+    --material-halo-y: calc(170px + min(35vw, 190px));
     padding-block: min(var(--material-spacing, 120px), 64px);
   }
   .moya-materials__container {
@@ -244,11 +282,21 @@
     font-size: 14px;
   }
 }
+.moya-materials[data-motion='false'] {
+  --material-hover-lift: 0px;
+  --material-hover-scale: 1;
+  --material-press-scale: 1;
+}
 .moya-materials[data-motion='false'] *,
 .moya-materials[data-motion='false'] *::after {
   transition: none;
 }
 @media (prefers-reduced-motion: reduce) {
+  .moya-materials {
+    --material-hover-lift: 0px;
+    --material-hover-scale: 1;
+    --material-press-scale: 1;
+  }
   .moya-materials *,
   .moya-materials *::after {
     transition: none;

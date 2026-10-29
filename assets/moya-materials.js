@@ -47,7 +47,7 @@ class MoyaMaterials extends HTMLElement {
     });
     on(this.motion, 'change', () => this.finishIntro());
     this.select(0);
-    if (this.dataset.motion !== 'false' && !this.motion.matches) {
+    if (!this.hasRevealed && this.dataset.motion !== 'false' && !this.motion.matches) {
       this.observer = new IntersectionObserver(
         (entries) => {
           if (!entries.some((entry) => entry.isIntersecting)) return;
@@ -76,22 +76,24 @@ class MoyaMaterials extends HTMLElement {
   }
 
   reveal() {
-    if (this.dataset.motion === 'false' || this.motion.matches) return;
+    if (this.hasRevealed || this.dataset.motion === 'false' || this.motion.matches) return;
+    this.hasRevealed = true;
     const duration = Number(this.dataset.duration) || 640;
     const elements = [
-      this.querySelector('.moya-materials__heading'),
-      this.querySelector('.moya-materials__scene'),
-      ...this.cards,
-    ].filter(Boolean);
-    this.animations = elements.map((element, index) =>
+      { element: this.querySelector('.moya-materials__heading'), delay: 0, distance: 16 },
+      { element: this.querySelector('.moya-materials__scene'), delay: 90, distance: 24 },
+      ...this.cards.map((element, index) => ({ element, delay: 180 + index * 70, distance: 16 })),
+    ].filter(({ element }) => element && typeof element.animate === 'function');
+    this.animations = elements.map(({ element, delay, distance }) =>
       element.animate(
         [
-          { opacity: 0, transform: 'translate3d(0, 20px, 0)' },
-          { opacity: 1, transform: 'translate3d(0, 0, 0)' },
+          // Individual translate composes with the card's hover/press transform.
+          { opacity: 0, translate: `0 ${distance}px` },
+          { opacity: 1, translate: '0 0' },
         ],
         {
           duration,
-          delay: index * 65,
+          delay,
           easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
           fill: 'backwards',
         },

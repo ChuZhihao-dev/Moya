@@ -486,13 +486,256 @@
         "material_4"
       ],
       "settings": {}
+    },
+    "moya_scenarios": {
+      "type": "moya-scenarios",
+      "blocks": {
+        "scenario_1": {
+          "type": "scenario",
+          "settings": {
+            "title": "Falling Asleep",
+            "description": "<p>When the lights go out, hold MoYa against your chest. Turn on Calming Rhythm mode — its slow breathing guides yours, optional warmth keeps you cozy, and steady patting slows your heart rate. No screens, no blue light, just a steady presence until you drift off.</p>"
+          }
+        },
+        "scenario_2": {
+          "type": "scenario",
+          "settings": {
+            "title": "Anxiety Relief"
+          }
+        },
+        "scenario_3": {
+          "type": "scenario",
+          "settings": {
+            "title": "Work From Home"
+          }
+        },
+        "scenario_4": {
+          "type": "scenario",
+          "settings": {
+            "title": "Evening Decompression"
+          }
+        },
+        "scenario_5": {
+          "type": "scenario",
+          "settings": {
+            "title": "Solo Living"
+          }
+        },
+        "scenario_6": {
+          "type": "scenario",
+          "settings": {
+            "title": "Travel & Hotel Stays"
+          }
+        }
+      },
+      "block_order": [
+        "scenario_1",
+        "scenario_2",
+        "scenario_3",
+        "scenario_4",
+        "scenario_5",
+        "scenario_6"
+      ],
+      "settings": {}
+    },
+    "moya_specifications": {
+      "type": "moya-specifications",
+      "blocks": {
+        "spec_1": {
+          "type": "group",
+          "settings": {
+            "title": "Main Parameter 1",
+            "open": true
+          }
+        },
+        "spec_2": {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 1",
+            "value": "<p>parameter detail parameter detail parameter detail parameter</p>",
+            "full_width": false
+          }
+        },
+        "spec_3": {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 2",
+            "value": "<p>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        "spec_4": {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 3",
+            "value": "<p>parameter detail:<br>parameter detail parameter detail parameter detail parameter detail<br>parameter detail parameter detail<br>parameter detail parameter detail<br>parameter detail parameter detail parameter detail parameter detail</p>",
+            "full_width": true
+          }
+        },
+        "spec_5": {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 4",
+            "value": "<p>parameter detail<br>parameter detail<br>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        "spec_6": {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 4",
+            "value": "<p>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        "spec_7": {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 5",
+            "value": "<p>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        "spec_8": {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 6",
+            "value": "<p>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        "spec_9": {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 7",
+            "value": "<p>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        "spec_10": {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter 8",
+            "value": "<p>parameter detail</p>",
+            "full_width": false
+          }
+        },
+        "spec_11": {
+          "type": "group",
+          "settings": {
+            "title": "Main Parameter 2"
+          }
+        },
+        "spec_12": {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter",
+            "value": "<p>parameter detail</p>"
+          }
+        },
+        "spec_13": {
+          "type": "group",
+          "settings": {
+            "title": "Main Parameter 3"
+          }
+        },
+        "spec_14": {
+          "type": "parameter",
+          "settings": {
+            "label": "Parameter",
+            "value": "<p>parameter detail</p>"
+          }
+        },
+        "spec_15": {
+          "type": "box_item",
+          "settings": {
+            "title": "Power Adapter"
+          }
+        },
+        "spec_16": {
+          "type": "box_item",
+          "settings": {
+            "title": "Power Adapter"
+          }
+        },
+        "spec_17": {
+          "type": "box_item",
+          "settings": {
+            "title": "Power Adapter"
+          }
+        },
+        "spec_18": {
+          "type": "box_item",
+          "settings": {
+            "title": "Power Adapter"
+          }
+        },
+        "spec_19": {
+          "type": "box_item",
+          "settings": {
+            "title": "Power Adapter"
+          }
+        },
+        "spec_20": {
+          "type": "box_item",
+          "settings": {
+            "title": "Power Adapter"
+          }
+        },
+        "spec_21": {
+          "type": "box_item",
+          "settings": {
+            "title": "Power Adapter"
+          }
+        },
+        "spec_22": {
+          "type": "box_item",
+          "settings": {
+            "title": "Power Adapter"
+          }
+        },
+        "spec_23": {
+          "type": "box_item",
+          "settings": {
+            "title": "Power Adapter"
+          }
+        }
+      },
+      "block_order": [
+        "spec_1",
+        "spec_2",
+        "spec_3",
+        "spec_4",
+        "spec_5",
+        "spec_6",
+        "spec_7",
+        "spec_8",
+        "spec_9",
+        "spec_10",
+        "spec_11",
+        "spec_12",
+        "spec_13",
+        "spec_14",
+        "spec_15",
+        "spec_16",
+        "spec_17",
+        "spec_18",
+        "spec_19",
+        "spec_20",
+        "spec_21",
+        "spec_22",
+        "spec_23"
+      ],
+      "settings": {}
     }
   },
   "order": [
     "main",
     "moya_selling_points",
+    "moya_scenarios",
     "moya_how_carousel_V9HpEz",
     "moya_materials",
+    "moya_specifications",
     "moya_faq_tCi7Pn",
     "gp_shopify_original_section_537219160984257394",
     "gp_shopify_original_section_537215604331906196"
