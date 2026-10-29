@@ -3,7 +3,10 @@
   "private": true,
   "scripts": {
     "build:talk": "node scripts/build-moya-talk.mjs",
-    "test:talk": "node --test tests/moya-talk.test.cjs"
+    "test:talk": "node --test tests/moya-talk.test.cjs",
+    "build:pdp": "node scripts/build-moya-product-details.mjs",
+    "build:selling-points": "node scripts/build-moya-selling-points.mjs",
+    "test:selling-points": "node --test tests/moya-selling-physics.test.cjs"
   },
   "devDependencies": {
     "esbuild": "0.28.1"

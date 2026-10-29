@@ -1,0 +1,105 @@
+{%- if accessories != blank -%}
+  <div class='moya-pdp__accessories'>
+    <div class='moya-pdp__accessories-heading'>
+      <p>Frequently Bought Together</p>
+      <a
+        class='moya-pdp__accessories-more'
+        href='{{ section.settings.accessories_collection.url | default: routes.all_products_collection_url }}'
+      >
+        More Accessories
+        <img
+          src='{{ 'moya-pdp-accessories-arrow.svg' | asset_url }}'
+          alt=''
+          width='10'
+          height='6.41421'
+        >
+      </a>
+    </div>
+    <div class='moya-pdp__accessory-list'>
+      {%- for accessory in accessories -%}
+        {%- if accessory.id == product.id -%}{%- continue -%}{%- endif -%}
+        {%- assign accessory_variant = accessory.selected_or_first_available_variant -%}
+        {%- assign accessory_image = accessory_variant.featured_image
+          | default: accessory.featured_image
+        -%}
+        {%- assign accessory_description = accessory.metafields.custom.short_description.value
+          | default: accessory.description
+          | strip_html
+        -%}
+        <div class='moya-pdp__accessory' data-accessory>
+          <input
+            type='checkbox'
+            class='moya-pdp__accessory-check'
+            data-accessory-check
+            value='{{ accessory_variant.id }}'
+            data-quantity='{{ accessory_variant.quantity_rule.min | default: 1 }}'
+            aria-label='Add {{ accessory.title | escape }} with {{ product.title | escape }}'
+            {% unless accessory_variant.available %}
+              disabled
+            {% endunless %}
+          >
+          <div class='moya-pdp__accessory-image' aria-hidden='true'>
+            {%- if accessory_image != blank -%}
+              {%- assign accessory_alt = accessory_image.alt | default: accessory.title -%}
+              {{
+                accessory_image
+                | image_url: width: 144
+                | image_tag: loading: 'lazy', widths: '48,96,144', sizes: '48px', alt: accessory_alt
+              }}
+            {%- endif -%}
+          </div>
+          <div class='moya-pdp__accessory-copy'>
+            <span class='moya-pdp__accessory-title'>
+              {{- accessory.title | escape -}}
+            </span>
+            {%- if accessory_description != blank -%}
+              <p>{{ accessory_description | escape }}</p>
+            {%- endif -%}
+          </div>
+          <div class='moya-pdp__accessory-option'>
+            <div class='moya-pdp__accessory-prices' aria-live='polite'>
+              <span data-accessory-price>{{ accessory_variant.price | money }}</span>
+              <s
+                data-accessory-compare
+                {% unless accessory_variant.compare_at_price > accessory_variant.price %}
+                  hidden
+                {% endunless %}
+              >
+                {{- accessory_variant.compare_at_price | money -}}
+              </s>
+            </div>
+            <img
+              src='{{ 'moya-pdp-accessory-chevron.svg' | asset_url }}'
+              alt=''
+              width='12'
+              height='7'
+            >
+            <select
+              data-accessory-variant
+              aria-label='Choose {{ accessory.title | escape }} option'
+            >
+              {%- for accessory_option in accessory.variants -%}
+                <option
+                  value='{{ accessory_option.id }}'
+                  data-price='{{ accessory_option.price | money | escape }}'
+                  data-compare='{% if accessory_option.compare_at_price > accessory_option.price %}{{ accessory_option.compare_at_price | money | escape }}{% endif %}'
+                  data-quantity='{{ accessory_option.quantity_rule.min | default: 1 }}'
+                  {% if accessory_option.id == accessory_variant.id %}
+                    selected
+                  {% endif %}
+                  {% unless accessory_option.available %}
+                    disabled
+                  {% endunless %}
+                >
+                  {{ accessory_option.title | escape }} — {{ accessory_option.price | money -}}
+                  {%- unless accessory_option.available %} — Sold out{% endunless %}
+                </option>
+              {%- endfor -%}
+            </select>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+    <p class='sr-only' data-accessory-status role='status'></p>
+  </div>
+{%- endif -%}

@@ -27,13 +27,24 @@ class MoyaCustomerVoices extends HTMLElement {
       card.addEventListener('focus', () => this.#show(card), { signal });
       card.addEventListener('click', () => this.#show(card), { signal });
     }
-    this.#collage.addEventListener('mouseleave', () => {
-      if (!this.#cards.includes(document.activeElement)) this.#show(this.#cards[0]);
-    }, { signal });
-    this.addEventListener('shopify:block:select', (event) => {
-      const card = event.target instanceof Element && event.target.closest('[data-cv-card]');
-      if (this.#cards.includes(card)) { this.#finishIntro(); this.#show(card); }
-    }, { signal });
+    this.#collage.addEventListener(
+      'mouseleave',
+      () => {
+        if (!this.#cards.includes(document.activeElement)) this.#show(this.#cards[0]);
+      },
+      { signal },
+    );
+    this.addEventListener(
+      'shopify:block:select',
+      (event) => {
+        const card = event.target instanceof Element && event.target.closest('[data-cv-card]');
+        if (this.#cards.includes(card)) {
+          this.#finishIntro();
+          this.#show(card);
+        }
+      },
+      { signal },
+    );
     this.#motion.addEventListener('change', this.#finishIntro, { signal });
     this.#resizeObserver = new ResizeObserver(this.#resize);
     this.#resizeObserver.observe(this.#collage);
@@ -78,18 +89,21 @@ class MoyaCustomerVoices extends HTMLElement {
       card.style.setProperty('--cv-tag-delay', '410ms');
     });
     this.classList.add('is-stacked');
-    this.#introObserver = new IntersectionObserver((entries) => {
-      if (!entries.some((entry) => entry.isIntersecting)) return;
-      this.#introObserver.disconnect();
-      this.classList.add('is-animating');
-      this.#frame = requestAnimationFrame(() => {
+    this.#introObserver = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        this.#introObserver.disconnect();
+        this.classList.add('is-animating');
         this.#frame = requestAnimationFrame(() => {
-          this.#frame = undefined;
-          this.classList.remove('is-stacked');
+          this.#frame = requestAnimationFrame(() => {
+            this.#frame = undefined;
+            this.classList.remove('is-stacked');
+          });
         });
-      });
-      this.#timer = setTimeout(this.#finishIntro, 1120);
-    }, { threshold: 0.3 });
+        this.#timer = setTimeout(this.#finishIntro, 1120);
+      },
+      { threshold: 0.3 },
+    );
     this.#introObserver.observe(this.#collage);
   }
 
@@ -102,4 +116,5 @@ class MoyaCustomerVoices extends HTMLElement {
   };
 }
 
-if (!customElements.get('moya-customer-voices-component')) customElements.define('moya-customer-voices-component', MoyaCustomerVoices);
+if (!customElements.get('moya-customer-voices-component'))
+  customElements.define('moya-customer-voices-component', MoyaCustomerVoices);

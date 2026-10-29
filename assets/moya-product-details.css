@@ -1,0 +1,945 @@
+@font-face {
+  font-family: 'Moya PDP Public Sans';
+  src: url('moya-public-sans-regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+.moya-pdp {
+  display: block;
+  background: var(--moya-pdp-bg, #fff);
+  color: var(--moya-pdp-ink, #385950);
+  font-family: var(--text-font-family);
+  padding-bottom: 48px;
+}
+
+.moya-pdp__breadcrumb {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  max-width: 1232px;
+  margin: 0 auto;
+  padding: 10px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.moya-pdp__breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.moya-pdp__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 918fr) minmax(0, 397fr);
+  gap: 20px;
+  padding-right: 104px;
+  margin: auto;
+  align-items: start;
+}
+
+.moya-pdp__gallery {
+  display: grid;
+  grid-template-columns: minmax(0, 298fr) minmax(0, 318fr) minmax(0, 298fr);
+  grid-template-rows: repeat(4, minmax(0, 1fr));
+  aspect-ratio: 918/1238;
+  grid-auto-flow: row dense;
+  gap: 2px;
+  min-width: 0;
+}
+
+.moya-pdp__tile {
+  position: relative;
+  background: #d3d3d3;
+  overflow: hidden;
+}
+
+.moya-pdp__tile--1 {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.moya-pdp__tile--6 {
+  grid-column: 2 / span 2;
+  grid-row: 3 / span 2;
+}
+
+.moya-pdp__gallery--product {
+  aspect-ratio: auto;
+  grid-template-rows: none;
+  grid-auto-rows: auto;
+}
+
+.moya-pdp__tile--dynamic {
+  aspect-ratio: 1;
+}
+
+.moya-pdp__tile--dynamic:first-child {
+  grid-column: span 2;
+  grid-row: span 2;
+  aspect-ratio: 1;
+}
+
+.moya-pdp__tile--dynamic:only-of-type {
+  grid-column: 1/-1;
+}
+
+.moya-pdp__zoom {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: zoom-in;
+}
+
+.moya-pdp__tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 0;
+}
+
+.moya-pdp__tile .moya-pdp__zoom,
+.moya-pdp__tile video-media,
+.moya-pdp__tile model-media {
+  position: absolute;
+  inset: 0;
+}
+
+.moya-pdp__info {
+  min-width: 0;
+}
+
+.moya-pdp__eyebrow {
+  color: #989898;
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.moya-pdp__title {
+  font-family: var(--heading-font-family);
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 1.2;
+  margin: 0 0 10px;
+  letter-spacing: 0;
+}
+
+.moya-pdp__subtitle {
+  font-size: 16px;
+  line-height: 1.2;
+  margin-bottom: 16px;
+}
+
+.moya-pdp__rating {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.moya-pdp product-rerender {
+  display: block;
+}
+
+.moya-pdp__price {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 16px 0 24px;
+}
+
+.moya-pdp__price price-list {
+  gap: 14px;
+  align-items: center;
+}
+
+.moya-pdp__price sale-price {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+  color: #37584d;
+}
+
+.moya-pdp__price compare-at-price {
+  color: #888;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.moya-pdp__saving {
+  background: var(--moya-pdp-mint);
+  border-radius: 6px;
+  padding: 1px 12px;
+  color: #37584d;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.moya-pdp__coupon {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 5.524px;
+  background: #71abb3;
+  margin: 24px 0 18px;
+  color: #fff;
+  font-family: var(--text-font-family);
+}
+
+.moya-pdp__coupon-background {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.moya-pdp__coupon-background img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.moya-pdp__countdown:not([hidden]) {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr) 11.048px minmax(0, 1fr) 11.048px minmax(0, 1fr)
+    11.048px minmax(0, 1fr);
+  align-items: center;
+  gap: 16.571px;
+  height: 62.143px;
+  padding: 11.048px;
+}
+
+.moya-pdp__countdown span {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
+  height: 40.048px;
+  border-radius: 6.905px;
+  background: rgb(0 0 0 / 25%);
+  backdrop-filter: blur(6.905px);
+  text-align: center;
+}
+
+.moya-pdp__countdown b {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 23px;
+  font-variant-numeric: tabular-nums;
+}
+
+.moya-pdp__countdown small {
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 13px;
+  white-space: nowrap;
+}
+
+.moya-pdp__countdown i {
+  font-family: 'Moya PDP Public Sans', sans-serif;
+  font-size: 11.048px;
+  font-style: normal;
+  line-height: 1;
+  text-align: center;
+}
+
+.moya-pdp__coupon-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 57.238px;
+  padding: 11.048px 16.571px;
+}
+
+.moya-pdp__coupon-body > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.moya-pdp__coupon-offer {
+  width: 103px;
+  gap: 2.762px;
+}
+
+.moya-pdp__coupon-code {
+  padding-inline: 5.524px;
+  gap: 4.143px;
+}
+
+.moya-pdp__coupon-body strong {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 18px;
+  overflow-wrap: anywhere;
+}
+
+.moya-pdp__coupon-body small {
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 13px;
+}
+
+.moya-pdp__coupon-divider {
+  flex-shrink: 0;
+}
+
+.moya-pdp__coupon-body button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 85.095px;
+  min-height: 24.857px;
+  padding: 4.143px 11.048px;
+  border-radius: 8px;
+  background: var(--moya-pdp-mint);
+  color: #37584d;
+  font-size: 11.048px;
+  font-weight: 600;
+  line-height: 14px;
+  white-space: nowrap;
+}
+
+.moya-pdp__variants:empty {
+  display: none;
+}
+
+.moya-pdp__variants .variant-picker {
+  margin: 20px 0;
+}
+
+/* Accessory products use the current Shopify product data. */
+.moya-pdp__accessories {
+  margin: 20px 0 30px;
+}
+
+.moya-pdp__accessories-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.moya-pdp__accessories-heading > p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.moya-pdp__accessories-more {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 24px;
+  white-space: nowrap;
+}
+
+.moya-pdp__accessories-more img {
+  transform: rotate(-90deg);
+  flex-shrink: 0;
+}
+
+.moya-pdp__accessory-list {
+  display: grid;
+  gap: 8px;
+}
+
+.moya-pdp__accessory {
+  display: grid;
+  grid-template-columns: 20px 48px minmax(0, 1fr) 76px;
+  gap: 8px;
+  align-items: center;
+  min-height: 72px;
+  padding: 11px 12px;
+  border: 1px solid var(--moya-pdp-mint);
+  border-radius: 8px;
+}
+
+.moya-pdp__accessory-check {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  border: 1px solid var(--moya-pdp-mint);
+  border-radius: 3px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.moya-pdp__accessory-check:checked {
+  border: 0;
+  background: url('moya-pdp-accessory-check.svg') center / 20px 20px no-repeat;
+}
+
+.moya-pdp__accessory-check:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.moya-pdp__accessory-image {
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.moya-pdp__accessory-image img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+}
+
+.moya-pdp__accessory-copy {
+  min-width: 0;
+  margin-left: 4px;
+}
+
+.moya-pdp__accessory-title {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+.moya-pdp__accessory-copy > p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: #929292;
+}
+
+.moya-pdp__accessory-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  min-height: 48px;
+}
+
+.moya-pdp__accessory-prices {
+  display: grid;
+  gap: 3px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.moya-pdp__accessory-prices > span {
+  color: #37584d;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+}
+
+.moya-pdp__accessory-prices > s {
+  color: rgb(102 102 102 / 60%);
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.moya-pdp__accessory-option > img {
+  flex-shrink: 0;
+}
+
+.moya-pdp__accessory-option > select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.moya-pdp .moya-pdp__checkout {
+  display: flex;
+  align-items: center;
+  grid-column: 1 / -1;
+  justify-content: center;
+  min-height: 44px;
+  padding: 12px 24px;
+  background: var(--moya-pdp-ink);
+  color: #fff;
+  border-radius: 48px;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 700;
+}
+
+.moya-pdp__purchase {
+  display: grid;
+  grid-template-columns: 136px minmax(0, 1fr);
+  gap: 16px;
+  margin: 30px 0 13px;
+  align-items: start;
+}
+
+.moya-pdp__quantity {
+  width: 136px;
+  height: 44px;
+  border: 1px solid var(--moya-pdp-ink);
+  border-radius: 40px;
+  justify-content: center;
+}
+
+.moya-pdp__quantity .quantity-selector__input {
+  width: 40px;
+  min-width: 0;
+  font-size: 18px;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.moya-pdp__quantity input::-webkit-inner-spin-button {
+  appearance: none;
+}
+
+.moya-pdp__quantity .quantity-selector__button {
+  width: 36px;
+  padding: 10px;
+}
+
+.moya-pdp__form,
+.moya-pdp__form > [data-block-type],
+.moya-pdp__buttons {
+  display: contents;
+}
+
+.moya-pdp__buttons .moya-pdp__add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--moya-pdp-mint);
+  color: var(--moya-pdp-ink);
+  border-radius: 48px;
+  min-height: 44px;
+  height: auto;
+  padding: 12px 16px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: 0;
+}
+
+.moya-pdp__add:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.moya-pdp__buttons .shopify-payment-button {
+  grid-column: 1/-1;
+  margin: 0;
+}
+
+.moya-pdp .shopify-payment-button__button--unbranded {
+  background: var(--moya-pdp-ink) !important;
+  color: #fff;
+  border-radius: 48px !important;
+  min-height: 44px;
+  padding: 12px 24px !important;
+  font-size: 16px !important;
+}
+
+.moya-pdp__accordion,
+.moya-pdp__service {
+  /* Share disclosure behavior while keeping each design variant's appearance. */
+  --moya-pdp-disclosure-height: 58px;
+  --moya-pdp-disclosure-divider: 1px solid rgb(0 0 0 / 12%);
+  --moya-pdp-disclosure-padding: 16px;
+  border: 0;
+}
+
+.moya-pdp :is(.moya-pdp__accordion, .moya-pdp__service).is-animating {
+  overflow: hidden;
+}
+
+.moya-pdp summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 16px;
+  line-height: 1.4;
+  min-height: var(--moya-pdp-disclosure-height);
+  padding: var(--moya-pdp-disclosure-padding) 0;
+  border-bottom: var(--moya-pdp-disclosure-divider);
+  font-weight: 400;
+}
+
+.moya-pdp summary::-webkit-details-marker {
+  display: none;
+}
+
+.moya-pdp__accordion-chevron {
+  flex-shrink: 0;
+  transform: rotate(-90deg);
+  transition: transform 280ms ease;
+}
+
+.moya-pdp
+  :is(.moya-pdp__accordion, .moya-pdp__service)[open]
+  > summary
+  > .moya-pdp__accordion-chevron {
+  transform: rotate(0deg);
+}
+
+.moya-pdp
+  :is(.moya-pdp__accordion, .moya-pdp__service).is-closing
+  > summary
+  > .moya-pdp__accordion-chevron {
+  transform: rotate(-90deg);
+}
+
+.moya-pdp__accordion-content {
+  font-family: 'Moya PDP Public Sans', var(--text-font-family);
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 20px 0 0;
+  color: color-mix(in srgb, var(--moya-pdp-ink) 70%, transparent);
+}
+
+.moya-pdp__accordion-content .prose:empty {
+  display: none;
+}
+
+.moya-pdp__accordion-content > .prose > :first-child {
+  margin-top: 0;
+}
+
+.moya-pdp__accordion-content > .prose > :last-child {
+  margin-bottom: 0;
+}
+
+.moya-pdp__general-description {
+  font-family: 'Moya PDP Public Sans', var(--text-font-family);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.moya-pdp__general-description > :first-child {
+  margin-top: 0;
+}
+
+.moya-pdp__general-description > :last-child {
+  margin-bottom: 0;
+}
+
+.moya-pdp__general-description table {
+  width: 100%;
+  margin: 20px 0 0;
+  border: 0;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-family: var(--text-font-family);
+  font-size: 14px;
+  line-height: 1.2;
+  color: var(--moya-pdp-ink);
+}
+
+.moya-pdp__general-description tr {
+  height: 41px;
+  border: 0;
+  background: #fff;
+}
+
+.moya-pdp__general-description tr:nth-child(odd) {
+  background: #efefef;
+}
+
+.moya-pdp__general-description :is(th, td) {
+  padding: 12px 10px;
+  border: 0;
+  background: inherit;
+  vertical-align: middle;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.moya-pdp__general-description :is(th, td):first-child {
+  width: 150px !important;
+  font-weight: 700;
+}
+
+.moya-pdp__general-description :is(th, td):last-child {
+  width: auto !important;
+}
+
+.moya-pdp__parameters {
+  margin: 20px 0 0;
+  color: var(--moya-pdp-ink);
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.moya-pdp__parameters > div {
+  display: grid;
+  grid-template-columns: minmax(100px, 130px) minmax(0, 1fr);
+  gap: 20px;
+  padding: 12px 10px;
+  min-height: 41px;
+  background: #fff;
+}
+
+.moya-pdp__parameters > div:nth-child(odd) {
+  background: #efefef;
+}
+
+.moya-pdp__parameters dt {
+  font-weight: 700;
+}
+
+.moya-pdp__parameters dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.moya-pdp__service {
+  --moya-pdp-disclosure-height: 60px;
+  --moya-pdp-disclosure-divider: 0;
+  --moya-pdp-disclosure-padding: 18px;
+}
+
+.moya-pdp__service summary {
+  justify-content: flex-start;
+}
+
+.moya-pdp__service-icon {
+  width: 24px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.moya-pdp__service summary > span:nth-child(2) {
+  min-width: 0;
+}
+
+.moya-pdp__service summary > img {
+  flex-shrink: 0;
+  margin-left: 0;
+}
+
+.moya-pdp__security {
+  background: #f2f6fd;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 0;
+}
+
+.moya-pdp__security h2 {
+  font-size: 14px;
+  line-height: 1.2;
+  font-weight: 700;
+  margin: 0 0 16px;
+  letter-spacing: 0;
+}
+
+.moya-pdp__security p {
+  font-size: 12px;
+  line-height: 1.5;
+  opacity: 0.7;
+  margin-top: 16px;
+}
+
+.moya-pdp__payment-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  padding: 0;
+}
+
+.moya-pdp__payment-icons svg {
+  width: 34px;
+  height: 24px;
+}
+
+.moya-pdp__share {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 0;
+  font-size: 16px;
+}
+
+.moya-pdp__share > span {
+  margin-right: 4px;
+}
+
+.moya-pdp__lightbox {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(80vw, 80vh);
+  max-width: none;
+  max-height: 90vh;
+  border: 0;
+  padding: 0;
+  overflow: visible;
+  background: #d3d3d3;
+}
+
+.moya-pdp__lightbox::backdrop {
+  background: #003521cc;
+}
+
+.moya-pdp__lightbox .moya-pdp__tile {
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.moya-pdp__close {
+  position: absolute;
+  right: 0;
+  top: -44px;
+  color: white;
+  font-size: 32px;
+  width: 44px;
+  height: 44px;
+}
+
+@media (min-width: 1441px) {
+  .moya-pdp__layout {
+    padding-right: 104px;
+  }
+
+  .moya-pdp__breadcrumb {
+    max-width: 1232px;
+  }
+}
+
+@media (min-width: 750px) and (max-width: 1100px) {
+  .moya-pdp__layout {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    padding-right: 24px;
+  }
+
+  .moya-pdp__purchase {
+    grid-template-columns: 112px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .moya-pdp__quantity {
+    width: 112px;
+  }
+
+  .moya-pdp__buttons .moya-pdp__add {
+    padding: 12px 8px;
+    font-size: 14px;
+  }
+
+  .moya-pdp__service summary {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 749px) {
+  .moya-pdp {
+    padding-bottom: 28px;
+  }
+
+  .moya-pdp__breadcrumb {
+    padding: 10px 20px;
+    font-size: 12px;
+    min-height: 38px;
+  }
+
+  .moya-pdp__layout {
+    display: block;
+    padding: 0;
+  }
+
+  .moya-pdp__gallery {
+    display: flex;
+    aspect-ratio: auto;
+    overflow: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    gap: 2px;
+  }
+
+  .moya-pdp__gallery::-webkit-scrollbar {
+    display: none;
+  }
+
+  .moya-pdp__gallery > .moya-pdp__tile {
+    flex: 0 0 86%;
+    aspect-ratio: 1;
+    scroll-snap-align: center;
+  }
+
+  .moya-pdp__gallery > .moya-pdp__tile--dynamic:only-of-type {
+    flex-basis: 100%;
+  }
+
+  .moya-pdp__gallery > dialog {
+    flex: none;
+  }
+
+  .moya-pdp__info {
+    padding: 26px 20px 0;
+  }
+
+  .moya-pdp__title {
+    font-size: 32px;
+  }
+
+  .moya-pdp__subtitle {
+    font-size: 15px;
+  }
+
+  .moya-pdp__purchase {
+    margin-top: 24px;
+  }
+
+  .moya-pdp__service summary {
+    font-size: 14px;
+  }
+
+  .moya-pdp__lightbox {
+    width: 92vw;
+  }
+
+  .moya-pdp__lightbox .moya-pdp__tile {
+    flex: none;
+  }
+
+  .moya-pdp__parameters > div {
+    grid-template-columns: 115px minmax(0, 1fr);
+    gap: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .moya-pdp__accordion-chevron {
+    transition: none;
+  }
+
+  .moya-pdp__gallery {
+    scroll-behavior: auto;
+  }
+}

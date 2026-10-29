@@ -202,8 +202,8 @@
   }
 </style>
 
-<div id="Moya-Feature-Bar-{{ section.id }}" class="moya-fb">
-  <div class="moya-fb__grid" role="list">
+<div id='Moya-Feature-Bar-{{ section.id }}' class='moya-fb'>
+  <div class='moya-fb__grid' role='list'>
     {%- for block in section.blocks -%}
       {%- liquid
         assign mobile_icon = ''
@@ -214,26 +214,41 @@
           endcase
         endif
       -%}
-      <div class="moya-fb__item" role="listitem" {{ block.shopify_attributes }}>
-        <span class="moya-fb__icon-wrap{% if mobile_icon != blank %} moya-fb__icon-wrap--design{% endif %}">
+      <div class='moya-fb__item' role='listitem' {{ block.shopify_attributes }}>
+        <span class='moya-fb__icon-wrap{% if mobile_icon != blank %} moya-fb__icon-wrap--design{% endif %}'>
           {%- if block.settings.icon_image != blank -%}
-            {%- assign icon_alt = block.settings.title | strip_html | default: 'Feature icon' | escape -%}
-            {{ block.settings.icon_image
-               | image_url: width: 224
-               | image_tag: loading: 'lazy', widths: '56,84,112,168,224', sizes: '96px', alt: icon_alt, class: 'moya-fb__icon-img' }}
+            {%- assign icon_alt = block.settings.title
+              | strip_html
+              | default: 'Feature icon'
+              | escape
+            -%}
+            {{
+              block.settings.icon_image
+              | image_url: width: 224
+              | image_tag:
+                loading: 'lazy',
+                widths: '56,84,112,168,224',
+                sizes: '96px',
+                alt: icon_alt,
+                class: 'moya-fb__icon-img'
+            }}
           {%- else -%}
             {%- if mobile_icon != blank -%}
-              <span class="moya-fb__mobile-icon" style="--moya-fb-icon-mask: url('{{ mobile_icon | asset_url }}');" aria-hidden="true"></span>
+              <span
+                class='moya-fb__mobile-icon'
+                style="--moya-fb-icon-mask: url('{{ mobile_icon | asset_url }}');"
+                aria-hidden='true'
+              ></span>
             {%- endif -%}
             <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.6"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-              focusable="false"
+              viewBox='0 0 24 24'
+              fill='none'
+              stroke='currentColor'
+              stroke-width='1.6'
+              stroke-linecap='round'
+              stroke-linejoin='round'
+              aria-hidden='true'
+              focusable='false'
             >
               {%- case block.settings.icon -%}
                 {%- when 'secure' -%}
@@ -266,12 +281,12 @@
             </svg>
           {%- endif -%}
         </span>
-        <div class="moya-fb__content">
+        <div class='moya-fb__content'>
           {%- if block.settings.title != blank -%}
-            <div class="moya-fb__title">{{ block.settings.title }}</div>
+            <div class='moya-fb__title'>{{ block.settings.title }}</div>
           {%- endif -%}
           {%- if block.settings.description != blank -%}
-            <div class="moya-fb__text">{{ block.settings.description }}</div>
+            <div class='moya-fb__text'>{{ block.settings.description }}</div>
           {%- endif -%}
         </div>
       </div>
@@ -388,10 +403,38 @@
     {
       "name": "Moya Feature Bar",
       "blocks": [
-        { "type": "feature", "settings": { "icon": "warranty", "title": "<p>Warranty</p>", "description": "<p>Coverage you can count on.</p>" } },
-        { "type": "feature", "settings": { "icon": "secure", "title": "<p>Secure Checkout</p>", "description": "<p>Safe and secure payments.</p>" } },
-        { "type": "feature", "settings": { "icon": "returns", "title": "<p>Easy Returns</p>", "description": "<p>Simple, worry-free returns.</p>" } },
-        { "type": "feature", "settings": { "icon": "care", "title": "<p>Customer Care</p>", "description": "<p>We're here when you need us.</p>" } }
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "warranty",
+            "title": "<p>Warranty</p>",
+            "description": "<p>Coverage you can count on.</p>"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "secure",
+            "title": "<p>Secure Checkout</p>",
+            "description": "<p>Safe and secure payments.</p>"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "returns",
+            "title": "<p>Easy Returns</p>",
+            "description": "<p>Simple, worry-free returns.</p>"
+          }
+        },
+        {
+          "type": "feature",
+          "settings": {
+            "icon": "care",
+            "title": "<p>Customer Care</p>",
+            "description": "<p>We're here when you need us.</p>"
+          }
+        }
       ]
     }
   ]

@@ -15,26 +15,26 @@
 -%}
 
 <section
-  class="moya-tab-slider-section"
-  style="
+  class='moya-tab-slider-section'
+  style='
     --moya-tab-background: {{ section.settings.background_color }};
     --moya-tab-heading: {{ section.settings.heading_color }};
     --moya-tab-text: {{ section.settings.text_color }};
     --moya-tab-label: {{ section.settings.tab_color }};
     --moya-tab-background-opacity: {{ section.settings.background_opacity | divided_by: 100.0 }};
     {% if moya_tab_background_image != blank %}--moya-tab-background-image: url('{{ moya_tab_background_image }}');{% endif %}
-  "
+  '
 >
   <moya-tab-slider-component
-    class="moya-tab-slider"
-    data-autoplay="{{ section.settings.autoplay }}"
-    data-autoplay-interval="{{ section.settings.autoplay_interval | times: 1000 }}"
-    aria-label="{{ section.settings.accessibility_label | escape }}"
+    class='moya-tab-slider'
+    data-autoplay='{{ section.settings.autoplay }}'
+    data-autoplay-interval='{{ section.settings.autoplay_interval | times: 1000 }}'
+    aria-label='{{ section.settings.accessibility_label | escape }}'
   >
-    <div class="moya-tab-slider__background" aria-hidden="true"></div>
+    <div class='moya-tab-slider__background' aria-hidden='true'></div>
 
-    <div class="moya-tab-slider__viewport" data-moya-ref="viewport">
-      <div class="moya-tab-slider__track" dir="ltr" data-moya-ref="track">
+    <div class='moya-tab-slider__viewport' data-moya-ref='viewport'>
+      <div class='moya-tab-slider__track' dir='ltr' data-moya-ref='track'>
         {%- for block in section.blocks -%}
           {%- assign moya_tab_loading = 'lazy' -%}
           {%- assign moya_tab_alt = block.settings.heading | strip_html -%}
@@ -42,27 +42,27 @@
             {%- assign moya_tab_loading = 'eager' -%}
           {%- endif -%}
           <article
-            class="moya-tab-slider__slide{% if forloop.first %} is-active{% endif %}"
-            data-moya-ref="slides[]"
-            data-slide-index="{{ forloop.index0 }}"
-            id="MoyaTabPanel-{{ section.id }}-{{ block.id }}"
-            role="tabpanel"
-            dir="{% render 'direction' %}"
-            aria-labelledby="MoyaTab-{{ section.id }}-{{ block.id }}"
-            aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
+            class='moya-tab-slider__slide{% if forloop.first %} is-active{% endif %}'
+            data-moya-ref='slides[]'
+            data-slide-index='{{ forloop.index0 }}'
+            id='MoyaTabPanel-{{ section.id }}-{{ block.id }}'
+            role='tabpanel'
+            dir='{% render 'direction' %}'
+            aria-labelledby='MoyaTab-{{ section.id }}-{{ block.id }}'
+            aria-hidden='{% if forloop.first %}false{% else %}true{% endif %}'
             {{ block.shopify_attributes }}
           >
-            <div class="moya-tab-slider__card">
-              <div class="moya-tab-slider__content">
+            <div class='moya-tab-slider__card'>
+              <div class='moya-tab-slider__content'>
                 {%- if block.settings.heading != blank -%}
-                  <h2 class="moya-tab-slider__heading">{{ block.settings.heading }}</h2>
+                  <h2 class='moya-tab-slider__heading'>{{ block.settings.heading }}</h2>
                 {%- endif -%}
                 {%- if block.settings.text != blank -%}
-                  <p class="moya-tab-slider__text">{{ block.settings.text }}</p>
+                  <p class='moya-tab-slider__text'>{{ block.settings.text }}</p>
                 {%- endif -%}
               </div>
 
-              <div class="moya-tab-slider__visual" aria-hidden="true">
+              <div class='moya-tab-slider__visual' aria-hidden='true'>
                 {%- if block.settings.image != blank -%}
                   {{
                     block.settings.image
@@ -75,21 +75,33 @@
                       class: 'moya-tab-slider__image'
                   }}
                 {%- else -%}
-                  <div class="moya-tab-slider__diagram">
-                    <span class="moya-tab-slider__line moya-tab-slider__line--one"></span>
-                    <span class="moya-tab-slider__line moya-tab-slider__line--two"></span>
-                    <span class="moya-tab-slider__line moya-tab-slider__line--three"></span>
-                    <span class="moya-tab-slider__line moya-tab-slider__line--four"></span>
-                    <span class="moya-tab-slider__line moya-tab-slider__line--five"></span>
-                    <span class="moya-tab-slider__dot moya-tab-slider__dot--one"></span>
-                    <span class="moya-tab-slider__dot moya-tab-slider__dot--two"></span>
-                    <span class="moya-tab-slider__dot moya-tab-slider__dot--three"></span>
-                    <span class="moya-tab-slider__bubble moya-tab-slider__bubble--one">{{ block.settings.bubble_1 | escape }}</span>
-                    <span class="moya-tab-slider__bubble moya-tab-slider__bubble--two">{{ block.settings.bubble_2 | escape }}</span>
-                    <span class="moya-tab-slider__bubble moya-tab-slider__bubble--three">{{ block.settings.bubble_3 | escape }}</span>
-                    <span class="moya-tab-slider__bubble moya-tab-slider__bubble--four">{{ block.settings.bubble_4 | escape }}</span>
-                    <span class="moya-tab-slider__bubble moya-tab-slider__bubble--five">{{ block.settings.bubble_5 | escape }}</span>
-                    <span class="moya-tab-slider__bubble moya-tab-slider__bubble--six">{{ block.settings.bubble_6 | escape }}</span>
+                  <div class='moya-tab-slider__diagram'>
+                    <span class='moya-tab-slider__line moya-tab-slider__line--one'></span>
+                    <span class='moya-tab-slider__line moya-tab-slider__line--two'></span>
+                    <span class='moya-tab-slider__line moya-tab-slider__line--three'></span>
+                    <span class='moya-tab-slider__line moya-tab-slider__line--four'></span>
+                    <span class='moya-tab-slider__line moya-tab-slider__line--five'></span>
+                    <span class='moya-tab-slider__dot moya-tab-slider__dot--one'></span>
+                    <span class='moya-tab-slider__dot moya-tab-slider__dot--two'></span>
+                    <span class='moya-tab-slider__dot moya-tab-slider__dot--three'></span>
+                    <span class='moya-tab-slider__bubble moya-tab-slider__bubble--one'>
+                      {{- block.settings.bubble_1 | escape -}}
+                    </span>
+                    <span class='moya-tab-slider__bubble moya-tab-slider__bubble--two'>
+                      {{- block.settings.bubble_2 | escape -}}
+                    </span>
+                    <span class='moya-tab-slider__bubble moya-tab-slider__bubble--three'>
+                      {{- block.settings.bubble_3 | escape -}}
+                    </span>
+                    <span class='moya-tab-slider__bubble moya-tab-slider__bubble--four'>
+                      {{- block.settings.bubble_4 | escape -}}
+                    </span>
+                    <span class='moya-tab-slider__bubble moya-tab-slider__bubble--five'>
+                      {{- block.settings.bubble_5 | escape -}}
+                    </span>
+                    <span class='moya-tab-slider__bubble moya-tab-slider__bubble--six'>
+                      {{- block.settings.bubble_6 | escape -}}
+                    </span>
                   </div>
                 {%- endif -%}
               </div>
@@ -100,44 +112,50 @@
     </div>
 
     {%- if section.blocks.size > 0 -%}
-      <div class="moya-tab-slider__controls">
-        <div class="moya-tab-slider__tabs" role="tablist" aria-label="{{ section.settings.accessibility_label | escape }}">
-          <span class="moya-tab-slider__tab-indicator" data-moya-ref="tabIndicator" aria-hidden="true"></span>
+      <div class='moya-tab-slider__controls'>
+        <div
+          class='moya-tab-slider__tabs'
+          role='tablist'
+          aria-label='{{ section.settings.accessibility_label | escape }}'
+        >
+          <span
+            class='moya-tab-slider__tab-indicator'
+            data-moya-ref='tabIndicator'
+            aria-hidden='true'
+          ></span>
           {%- for block in section.blocks -%}
             <button
-              class="moya-tab-slider__tab"
-              id="MoyaTab-{{ section.id }}-{{ block.id }}"
-              type="button"
-              role="tab"
-              data-moya-ref="tabs[]"
-              data-tab-index="{{ forloop.index0 }}"
-              aria-controls="MoyaTabPanel-{{ section.id }}-{{ block.id }}"
-              aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
-              tabindex="{% if forloop.first %}0{% else %}-1{% endif %}"
-              
-              
+              class='moya-tab-slider__tab'
+              id='MoyaTab-{{ section.id }}-{{ block.id }}'
+              type='button'
+              role='tab'
+              data-moya-ref='tabs[]'
+              data-tab-index='{{ forloop.index0 }}'
+              aria-controls='MoyaTabPanel-{{ section.id }}-{{ block.id }}'
+              aria-selected='{% if forloop.first %}true{% else %}false{% endif %}'
+              tabindex='{% if forloop.first %}0{% else %}-1{% endif %}'
             >
               {{ block.settings.tab_label | escape }}
             </button>
           {%- endfor -%}
         </div>
 
-        <div class="moya-tab-slider__arrows">
+        <div class='moya-tab-slider__arrows'>
           <button
-            class="moya-tab-slider__arrow moya-tab-slider__arrow--previous"
-            type="button"
-            aria-label="{{ 'general.accessibility.previous' | t }}"
+            class='moya-tab-slider__arrow moya-tab-slider__arrow--previous'
+            type='button'
+            aria-label='{{ 'general.accessibility.previous' | t }}'
             data-moya-previous
           >
-            <span aria-hidden="true">{% render 'icon', icon: 'chevron-left' %}</span>
+            <span aria-hidden='true'>{% render 'icon', icon: 'chevron-left' %}</span>
           </button>
           <button
-            class="moya-tab-slider__arrow moya-tab-slider__arrow--next"
-            type="button"
-            aria-label="{{ 'general.accessibility.next' | t }}"
+            class='moya-tab-slider__arrow moya-tab-slider__arrow--next'
+            type='button'
+            aria-label='{{ 'general.accessibility.next' | t }}'
             data-moya-next
           >
-            <span aria-hidden="true">{% render 'icon', icon: 'chevron-right' %}</span>
+            <span aria-hidden='true'>{% render 'icon', icon: 'chevron-right' %}</span>
           </button>
         </div>
       </div>
@@ -145,7 +163,7 @@
   </moya-tab-slider-component>
 </section>
 
-<script type="module">
+<script type='module'>
   import '{{ 'moya-tab-slider.js' | asset_url }}';
 </script>
 
@@ -222,7 +240,12 @@
     border-radius: 38px;
     background:
       radial-gradient(circle at 85% 80%, rgba(174, 218, 207, 0.48), transparent 42%),
-      linear-gradient(152deg, rgba(255, 255, 255, 0.47), rgba(218, 239, 233, 0.39) 56%, rgba(240, 248, 246, 0.48));
+      linear-gradient(
+        152deg,
+        rgba(255, 255, 255, 0.47),
+        rgba(218, 239, 233, 0.39) 56%,
+        rgba(240, 248, 246, 0.48)
+      );
     box-shadow:
       0 14px 42px rgba(61, 85, 62, 0.08),
       inset 0 2px 0 rgba(255, 255, 255, 0.95),
@@ -368,12 +391,30 @@
     white-space: nowrap;
   }
 
-  .moya-tab-slider__bubble--one { top: 4%; right: 7%; }
-  .moya-tab-slider__bubble--two { top: 17%; left: 20%; }
-  .moya-tab-slider__bubble--three { top: 30%; left: 40%; }
-  .moya-tab-slider__bubble--four { top: 52%; left: 2%; }
-  .moya-tab-slider__bubble--five { top: 58%; right: 15%; }
-  .moya-tab-slider__bubble--six { right: 17%; bottom: 10%; }
+  .moya-tab-slider__bubble--one {
+    top: 4%;
+    right: 7%;
+  }
+  .moya-tab-slider__bubble--two {
+    top: 17%;
+    left: 20%;
+  }
+  .moya-tab-slider__bubble--three {
+    top: 30%;
+    left: 40%;
+  }
+  .moya-tab-slider__bubble--four {
+    top: 52%;
+    left: 2%;
+  }
+  .moya-tab-slider__bubble--five {
+    top: 58%;
+    right: 15%;
+  }
+  .moya-tab-slider__bubble--six {
+    right: 17%;
+    bottom: 10%;
+  }
 
   .moya-tab-slider__controls {
     display: flex;
@@ -398,7 +439,9 @@
     scrollbar-width: none;
   }
 
-  .moya-tab-slider__tabs::-webkit-scrollbar { display: none; }
+  .moya-tab-slider__tabs::-webkit-scrollbar {
+    display: none;
+  }
 
   .moya-tab-slider__tab-indicator {
     position: absolute;
@@ -464,7 +507,9 @@
     background: transparent;
     color: #385950;
     cursor: pointer;
-    transition: background-color 180ms ease, color 180ms ease;
+    transition:
+      background-color 180ms ease,
+      color 180ms ease;
   }
 
   .moya-tab-slider__arrow:hover {
@@ -484,31 +529,76 @@
   }
 
   @media (max-width: 989px) {
-    .moya-tab-slider__card { grid-template-columns: minmax(0, 0.9fr) minmax(300px, 1.1fr); }
-    .moya-tab-slider__heading { font-size: clamp(38px, 6vw, 52px); }
-    .moya-tab-slider__text { font-size: 16px; }
-    .moya-tab-slider__visual { width: calc(100% - 16px); margin-inline-end: 16px; }
+    .moya-tab-slider__card {
+      grid-template-columns: minmax(0, 0.9fr) minmax(300px, 1.1fr);
+    }
+    .moya-tab-slider__heading {
+      font-size: clamp(38px, 6vw, 52px);
+    }
+    .moya-tab-slider__text {
+      font-size: 16px;
+    }
+    .moya-tab-slider__visual {
+      width: calc(100% - 16px);
+      margin-inline-end: 16px;
+    }
   }
 
   @media (max-width: 749px) {
-    .moya-tab-slider { --moya-tab-card-width: calc(100vw - 32px); }
-    .moya-tab-slider__track { gap: 16px; }
+    .moya-tab-slider {
+      --moya-tab-card-width: calc(100vw - 32px);
+    }
+    .moya-tab-slider__track {
+      gap: 16px;
+    }
     .moya-tab-slider__card {
       grid-template-columns: 1fr;
       height: auto;
       min-height: 620px;
       padding-block: 48px 28px;
     }
-    .moya-tab-slider__content { width: auto; margin: 0 24px; }
-    .moya-tab-slider__heading { max-width: 320px; margin-bottom: 14px; font-size: 40px; }
-    .moya-tab-slider__text { max-width: 340px; }
-    .moya-tab-slider__visual { width: calc(100% - 32px); height: 290px; margin: 12px auto 0; }
-    .moya-tab-slider__bubble { font-size: 13px; }
-    .moya-tab-slider__controls { align-items: flex-start; width: calc(100% - 32px); margin-top: 16px; }
-    .moya-tab-slider__tabs { flex: 1 1 auto; min-width: 0; }
-    .moya-tab-slider__tab { min-width: 96px; min-height: 44px; padding: 10px 20px; font-size: 14px; }
-    .moya-tab-slider__arrows { gap: 8px; }
-    .moya-tab-slider__arrow { width: 44px; height: 44px; }
+    .moya-tab-slider__content {
+      width: auto;
+      margin: 0 24px;
+    }
+    .moya-tab-slider__heading {
+      max-width: 320px;
+      margin-bottom: 14px;
+      font-size: 40px;
+    }
+    .moya-tab-slider__text {
+      max-width: 340px;
+    }
+    .moya-tab-slider__visual {
+      width: calc(100% - 32px);
+      height: 290px;
+      margin: 12px auto 0;
+    }
+    .moya-tab-slider__bubble {
+      font-size: 13px;
+    }
+    .moya-tab-slider__controls {
+      align-items: flex-start;
+      width: calc(100% - 32px);
+      margin-top: 16px;
+    }
+    .moya-tab-slider__tabs {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .moya-tab-slider__tab {
+      min-width: 96px;
+      min-height: 44px;
+      padding: 10px 20px;
+      font-size: 14px;
+    }
+    .moya-tab-slider__arrows {
+      gap: 8px;
+    }
+    .moya-tab-slider__arrow {
+      width: 44px;
+      height: 44px;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -516,7 +606,9 @@
     .moya-tab-slider__slide,
     .moya-tab-slider__tab-indicator,
     .moya-tab-slider__tab,
-    .moya-tab-slider__arrow { transition: none; }
+    .moya-tab-slider__arrow {
+      transition: none;
+    }
   }
 {% endstylesheet %}
 
@@ -526,14 +618,42 @@
   "tag": "section",
   "settings": [
     { "type": "image_picker", "id": "background_image", "label": "Background image" },
-    { "type": "range", "id": "background_opacity", "min": 0, "max": 100, "step": 5, "unit": "%", "label": "Background opacity", "default": 60 },
-    { "type": "color", "id": "background_color", "label": "Fallback background color", "default": "#f0f2f2" },
+    {
+      "type": "range",
+      "id": "background_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Background opacity",
+      "default": 60
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Fallback background color",
+      "default": "#f0f2f2"
+    },
     { "type": "color", "id": "heading_color", "label": "Heading color", "default": "#385950" },
     { "type": "color", "id": "text_color", "label": "Text color", "default": "#4a5565" },
     { "type": "color", "id": "tab_color", "label": "Tab label color", "default": "#003521" },
-    { "type": "text", "id": "accessibility_label", "label": "Accessibility label", "default": "Product features" },
+    {
+      "type": "text",
+      "id": "accessibility_label",
+      "label": "Accessibility label",
+      "default": "Product features"
+    },
     { "type": "checkbox", "id": "autoplay", "label": "Enable autoplay", "default": false },
-    { "type": "range", "id": "autoplay_interval", "min": 2, "max": 15, "step": 1, "unit": "s", "label": "Autoplay interval", "default": 5 }
+    {
+      "type": "range",
+      "id": "autoplay_interval",
+      "min": 2,
+      "max": 15,
+      "step": 1,
+      "unit": "s",
+      "label": "Autoplay interval",
+      "default": 5
+    }
   ],
   "blocks": [
     {
@@ -542,10 +662,25 @@
       "settings": [
         { "type": "text", "id": "tab_label", "label": "Tab label", "default": "Touch" },
         { "type": "image_picker", "id": "image", "label": "Slide illustration" },
-        { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Every hug is unique. MoYa learns yours." },
-        { "type": "inline_richtext", "id": "text", "label": "Text", "default": "Gentle, sustained physical contact can help the body slow down, feel safer, and return to calm." },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Every hug is unique. MoYa learns yours."
+        },
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "Gentle, sustained physical contact can help the body slow down, feel safer, and return to calm."
+        },
         { "type": "header", "content": "Illustration fallback" },
-        { "type": "text", "id": "bubble_1", "label": "Bubble 1", "default": "You are more important" },
+        {
+          "type": "text",
+          "id": "bubble_1",
+          "label": "Bubble 1",
+          "default": "You are more important"
+        },
         { "type": "text", "id": "bubble_2", "label": "Bubble 2", "default": "Do you love" },
         { "type": "text", "id": "bubble_3", "label": "Bubble 3", "default": "Time to sleep" },
         { "type": "text", "id": "bubble_4", "label": "Bubble 4", "default": "I worried ..." },
@@ -555,6 +690,11 @@
     }
   ],
   "max_blocks": 3,
-  "presets": [{ "name": "Moya Tab Slider", "blocks": [{ "type": "slide" }, { "type": "slide" }, { "type": "slide" }] }]
+  "presets": [
+    {
+      "name": "Moya Tab Slider",
+      "blocks": [{ "type": "slide" }, { "type": "slide" }, { "type": "slide" }]
+    }
+  ]
 }
 {% endschema %}

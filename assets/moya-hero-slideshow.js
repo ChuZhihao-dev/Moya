@@ -29,9 +29,13 @@ class MoyaHeroSlideshow extends HTMLElement {
     if (!this.#track || !this.#slides.length) return;
     this.addEventListener('click', this.#click, { signal });
     this.querySelectorAll('[data-moya-hero-previous], [data-moya-hero-next]').forEach((arrow) => {
-      arrow.addEventListener('click', () => {
-        this.#select(this.#index + (arrow.hasAttribute('data-moya-hero-next') ? 1 : -1));
-      }, { signal });
+      arrow.addEventListener(
+        'click',
+        () => {
+          this.#select(this.#index + (arrow.hasAttribute('data-moya-hero-next') ? 1 : -1));
+        },
+        { signal },
+      );
     });
     this.addEventListener('keydown', this.#keydown, { signal });
     this.addEventListener('pointerdown', this.#pointerDown, { signal });
@@ -44,7 +48,14 @@ class MoyaHeroSlideshow extends HTMLElement {
     this.addEventListener('focusout', this.#restart, { signal });
     this.addEventListener('dragstart', (event) => event.preventDefault(), { signal });
     this.addEventListener('shopify:block:select', this.#selectEditorBlock, { signal });
-    this.addEventListener('shopify:block:deselect', () => { this.#editorSelected = false; this.#restart(); }, { signal });
+    this.addEventListener(
+      'shopify:block:deselect',
+      () => {
+        this.#editorSelected = false;
+        this.#restart();
+      },
+      { signal },
+    );
     document.addEventListener('visibilitychange', this.#restart, { signal });
     this.#motion.addEventListener('change', this.#restart, { signal });
     this.#motion.addEventListener('change', this.#syncMedia, { signal });
@@ -54,10 +65,13 @@ class MoyaHeroSlideshow extends HTMLElement {
     this.#inView = false;
     if (this.#videos.length) {
       if (typeof IntersectionObserver === 'function') {
-        this.#observer = new IntersectionObserver(([entry]) => {
-          this.#inView = entry.isIntersecting;
-          this.#syncMedia();
-        }, { threshold: 0.01 });
+        this.#observer = new IntersectionObserver(
+          ([entry]) => {
+            this.#inView = entry.isIntersecting;
+            this.#syncMedia();
+          },
+          { threshold: 0.01 },
+        );
         this.#observer.observe(this);
       } else {
         this.#inView = true;
@@ -98,7 +112,12 @@ class MoyaHeroSlideshow extends HTMLElement {
   }
 
   #syncMedia = () => {
-    const canPlay = this.isConnected && this.#mobile.matches && this.#inView && !document.hidden && !this.#motion.matches;
+    const canPlay =
+      this.isConnected &&
+      this.#mobile.matches &&
+      this.#inView &&
+      !document.hidden &&
+      !this.#motion.matches;
     this.#videos.forEach((video) => {
       if (canPlay && video.closest('[data-moya-hero-slide]') === this.#slides[this.#index]) {
         if (video.paused) {
@@ -111,12 +130,23 @@ class MoyaHeroSlideshow extends HTMLElement {
     });
   };
 
-  #stop = () => { clearInterval(this.#timer); this.#timer = undefined; };
+  #stop = () => {
+    clearInterval(this.#timer);
+    this.#timer = undefined;
+  };
 
   #restart = () => {
     this.#stop();
     if (!this.isConnected || this.dataset.autoplay !== 'true' || this.#slides.length < 2) return;
-    if (this.#motion.matches || document.hidden || this.matches(':hover') || this.contains(document.activeElement) || this.#pointer !== undefined || this.#editorSelected) return;
+    if (
+      this.#motion.matches ||
+      document.hidden ||
+      this.matches(':hover') ||
+      this.contains(document.activeElement) ||
+      this.#pointer !== undefined ||
+      this.#editorSelected
+    )
+      return;
     const interval = Number(this.dataset.autoplayInterval) || 5000;
     this.#timer = setInterval(() => this.#select(this.#index + 1), interval);
   };
@@ -128,7 +158,8 @@ class MoyaHeroSlideshow extends HTMLElement {
   };
 
   #keydown = (event) => {
-    if (event.target instanceof Element && event.target.closest('input, textarea, select, a')) return;
+    if (event.target instanceof Element && event.target.closest('input, textarea, select, a'))
+      return;
     let next = this.#index;
     if (event.key === 'ArrowLeft') next -= 1;
     else if (event.key === 'ArrowRight') next += 1;
@@ -141,7 +172,12 @@ class MoyaHeroSlideshow extends HTMLElement {
   };
 
   #pointerDown = (event) => {
-    if (!event.isPrimary || event.button > 0 || event.target.closest('button, a, input, textarea, select')) return;
+    if (
+      !event.isPrimary ||
+      event.button > 0 ||
+      event.target.closest('button, a, input, textarea, select')
+    )
+      return;
     this.#pointer = event.pointerId;
     this.#startX = event.clientX;
     this.#startY = event.clientY;
@@ -169,7 +205,10 @@ class MoyaHeroSlideshow extends HTMLElement {
     if (this.hasPointerCapture(event.pointerId)) this.releasePointerCapture(event.pointerId);
     this.#pointer = undefined;
     const moved = this.#offset;
-    const change = this.#dragging && event.type !== 'pointercancel' && Math.abs(moved) > Math.min(80, this.clientWidth * 0.15);
+    const change =
+      this.#dragging &&
+      event.type !== 'pointercancel' &&
+      Math.abs(moved) > Math.min(80, this.clientWidth * 0.15);
     this.#dragging = false;
     this.#offset = 0;
     this.classList.remove('is-dragging');
@@ -186,4 +225,5 @@ class MoyaHeroSlideshow extends HTMLElement {
   };
 }
 
-if (!customElements.get('moya-hero-component')) customElements.define('moya-hero-component', MoyaHeroSlideshow);
+if (!customElements.get('moya-hero-component'))
+  customElements.define('moya-hero-component', MoyaHeroSlideshow);

@@ -1,0 +1,26 @@
+<svg
+  preserveAspectRatio="none"
+  overflow="visible"
+  style="display: block"
+  width="20"
+  height="20"
+  viewBox="0 0 20 20"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <g id="Group 1597884473">
+    <path
+      id="Rectangle 193225"
+      d="M4 0.5H16C17.933 0.5 19.5 2.067 19.5 4V16C19.5 17.933 17.933 19.5 16 19.5H4C2.067 19.5 0.5 17.933 0.5 16V4C0.5 2.067 2.067 0.5 4 0.5Z"
+      stroke="#ADDBCE"
+    />
+    <path
+      id="Vector 1190"
+      d="M5 9.72727L8.63636 13.3636L15 7"
+      stroke-width="1.81818"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke="#ADDBCE"
+    />
+  </g>
+</svg>

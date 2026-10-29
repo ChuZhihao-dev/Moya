@@ -1,0 +1,345 @@
+.moya-selling {
+  display: block;
+  overflow: hidden;
+  padding: var(--moya-selling-padding, 120px) 0
+    max(40px, calc(var(--moya-selling-padding, 120px) - 32px));
+  background: var(--moya-selling-background, #f0f2f2);
+  color: var(--moya-selling-ink, #003521);
+  font-family: var(--text-font-family);
+}
+.moya-selling [hidden] {
+  display: none !important;
+}
+.moya-selling--single {
+  padding-bottom: var(--moya-selling-padding, 120px);
+}
+.moya-selling__heading {
+  margin: 0 24px 64px;
+  font-family: var(--heading-font-family);
+  font-size: 48px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  text-align: center;
+}
+.moya-selling__shell {
+  position: relative;
+  width: calc(100% - 80px);
+  max-width: 1360px;
+  margin-inline: auto;
+  padding-inline: 71px;
+}
+.moya-selling__viewport {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  touch-action: pan-y pinch-zoom;
+  border-radius: 24px;
+  box-shadow: 0 12px 40px rgb(0 53 33 / 4%);
+  cursor: grab;
+}
+.moya-selling__viewport::-webkit-scrollbar {
+  display: none;
+}
+.moya-selling[data-enhanced] .moya-selling__viewport {
+  scroll-snap-type: none;
+}
+.moya-selling__track {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+}
+.moya-selling__slide {
+  display: grid;
+  grid-template-columns: minmax(0, 714fr) minmax(0, 504fr);
+  flex: 0 0 100%;
+  min-width: 0;
+  min-height: var(--moya-selling-height, 520px);
+  scroll-snap-align: start;
+  overflow: hidden;
+  border-radius: 24px;
+  background: var(--moya-selling-card, #fff);
+}
+.moya-selling__media {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+.moya-selling__media > img,
+.moya-selling__placeholder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.moya-selling__media > img {
+  object-fit: cover;
+}
+.moya-selling[data-enhanced] .moya-selling__media > :is(img, .moya-selling__placeholder) {
+  transform: translate3d(var(--selling-media-shift, 0%), 0, 0)
+    scale(var(--selling-media-scale, 1.08));
+  transform-origin: center;
+}
+.moya-selling[data-enhanced] .moya-selling__content {
+  transform: translate3d(var(--selling-copy-shift, 0px), 0, 0);
+  opacity: var(--selling-copy-opacity, 1);
+}
+.moya-selling[data-animating] .moya-selling__media > :is(img, .moya-selling__placeholder),
+.moya-selling[data-dragging] .moya-selling__media > :is(img, .moya-selling__placeholder) {
+  will-change: transform;
+}
+.moya-selling__placeholder {
+  background: #e4e9e7;
+}
+.moya-selling__placeholder > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  fill: #b5c3bd;
+}
+.moya-selling__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 64px 68px;
+}
+.moya-selling__icon {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
+  margin-bottom: 28px;
+}
+.moya-selling__icon > img {
+  display: block;
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+}
+.moya-selling__icon-mark {
+  position: absolute;
+  left: 7.79px;
+  top: 6.61px;
+  width: 38.59px;
+  height: 38.479px;
+  background: #fff;
+  mask-image: var(--moya-selling-icon-mask);
+  mask-position: -3.568px -3.234px;
+  mask-size: 45.729px 42.271px;
+  mask-repeat: no-repeat;
+}
+.moya-selling__title {
+  margin: 0 0 20px;
+  font-family: var(--heading-font-family);
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+.moya-selling__text {
+  color: color-mix(in srgb, var(--moya-selling-ink) 80%, transparent);
+  font-size: 18px;
+  line-height: 1.65;
+}
+.moya-selling__text > :first-child {
+  margin-top: 0;
+}
+.moya-selling__text > :last-child {
+  margin-bottom: 0;
+}
+.moya-selling__arrow {
+  position: absolute;
+  top: calc(50% - 25px);
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    background-color 200ms ease,
+    transform 200ms ease,
+    opacity 200ms ease;
+}
+.moya-selling__arrow--previous {
+  left: 0;
+}
+.moya-selling__arrow--next {
+  right: 0;
+}
+.moya-selling__arrow--next > img {
+  transform: scaleX(-1);
+}
+.moya-selling__arrow:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.moya-selling__arrow:not(:disabled):active {
+  transform: scale(0.92);
+}
+.moya-selling__dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 32px;
+  margin-top: 28px;
+}
+.moya-selling__dot {
+  position: relative;
+  flex: 0 0 8px;
+  width: 8px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    flex-basis 240ms ease,
+    width 240ms ease;
+}
+.moya-selling__dot::after {
+  content: '';
+  position: absolute;
+  inset: 12px 0;
+  border-radius: 20px;
+  background: var(--moya-selling-ink);
+  opacity: 0.18;
+  transition: opacity 240ms ease;
+}
+.moya-selling__dot[aria-current='true'] {
+  flex-basis: 36px;
+  width: 36px;
+}
+.moya-selling__dot[aria-current='true']::after {
+  opacity: 1;
+}
+.moya-selling :is(button, [tabindex]):focus-visible {
+  outline: 2px solid var(--moya-selling-ink);
+  outline-offset: 4px;
+}
+.moya-selling[data-dragging] .moya-selling__viewport {
+  cursor: grabbing;
+}
+.moya-selling:is([data-dragging], [data-animating]) .moya-selling__viewport {
+  scroll-snap-type: none;
+  user-select: none;
+}
+.moya-selling--image-right .moya-selling__slide {
+  grid-template-columns: minmax(0, 504fr) minmax(0, 714fr);
+}
+.moya-selling--image-right .moya-selling__media {
+  order: 2;
+}
+.moya-selling--image-right .moya-selling__content {
+  padding-inline: 68px;
+}
+@media (hover: hover) {
+  .moya-selling__arrow:not(:disabled):hover {
+    background: var(--moya-selling-card, #fff);
+    transform: translateY(-2px);
+  }
+  .moya-selling__dot:not([aria-current='true']):hover::after {
+    opacity: 0.5;
+  }
+}
+@media (min-width: 750px) and (max-width: 1199px) {
+  .moya-selling__shell {
+    width: calc(100% - 40px);
+    padding-inline: 58px;
+  }
+  .moya-selling__content,
+  .moya-selling--image-right .moya-selling__content {
+    padding: 64px 32px;
+  }
+  .moya-selling__text {
+    font-size: 18px;
+  }
+}
+@media (max-width: 749px) {
+  .moya-selling {
+    padding-top: min(var(--moya-selling-padding), 64px);
+    padding-bottom: min(var(--moya-selling-padding), 48px);
+  }
+  .moya-selling--single {
+    padding-bottom: min(var(--moya-selling-padding), 64px);
+  }
+  .moya-selling__heading {
+    margin-bottom: 36px;
+    font-size: 32px;
+    line-height: 1.15;
+  }
+  .moya-selling__shell {
+    width: calc(100% - 40px);
+    padding: 0;
+  }
+  .moya-selling__viewport,
+  .moya-selling__slide {
+    border-radius: 20px;
+  }
+  .moya-selling__dots {
+    margin-top: 16px;
+  }
+  .moya-selling__slide,
+  .moya-selling--image-right .moya-selling__slide {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    min-height: 0;
+  }
+  .moya-selling__media,
+  .moya-selling--image-right .moya-selling__media {
+    order: 0;
+    aspect-ratio: 714 / 520;
+  }
+  .moya-selling__content,
+  .moya-selling--image-right .moya-selling__content {
+    padding: 32px 28px 40px;
+  }
+  .moya-selling__icon {
+    margin-bottom: 18px;
+  }
+  .moya-selling__title {
+    font-size: 26px;
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+  .moya-selling__text {
+    font-size: 16px;
+    line-height: 1.65;
+  }
+  .moya-selling__arrow {
+    top: calc((100vw - 40px) * 520 / 714 / 2 - 25px);
+  }
+  .moya-selling__arrow--previous {
+    left: -16px;
+  }
+  .moya-selling__arrow--next {
+    right: -16px;
+  }
+  .moya-selling--mobile-image-last .moya-selling__media {
+    order: 2;
+  }
+  .moya-selling--mobile-image-last .moya-selling__arrow {
+    top: auto;
+    bottom: calc((100vw - 40px) * 520 / 714 / 2 - 25px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .moya-selling[data-enhanced] .moya-selling__media > :is(img, .moya-selling__placeholder),
+  .moya-selling[data-enhanced] .moya-selling__content {
+    transform: none;
+    opacity: 1;
+  }
+  .moya-selling__dot,
+  .moya-selling__dot::after,
+  .moya-selling__arrow {
+    transition: none;
+  }
+}

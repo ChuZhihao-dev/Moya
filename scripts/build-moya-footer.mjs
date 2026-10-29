@@ -3,13 +3,17 @@ import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
 const require = createRequire(import.meta.url);
 let esbuild;
-try { esbuild = require('esbuild'); }
-catch {
+try {
+  esbuild = require('esbuild');
+} catch {
   const root = execFileSync('npm', ['root', '-g'], { encoding: 'utf8' }).trim();
   esbuild = require(join(root, '@shopify/cli/node_modules/esbuild'));
 }
 await esbuild.build({
   entryPoints: ['assets/moya-footer.js', 'assets/moya-footer.css'],
-  outdir: 'assets', outExtension: { '.js': '.min.js', '.css': '.min.css' },
-  minify: true, target: ['es2022'], logLevel: 'info',
+  outdir: 'assets',
+  outExtension: { '.js': '.min.js', '.css': '.min.css' },
+  minify: true,
+  target: ['es2022'],
+  logLevel: 'info',
 });

@@ -1,0 +1,44 @@
+<svg
+  preserveAspectRatio="none"
+  overflow="visible"
+  style="display: block"
+  width="20"
+  height="20"
+  viewBox="0 0 20 20"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <g id="shopping-cart" clip-path="url(#clip0_0_4)">
+    <path
+      id="Vector"
+      d="M7.5013 18.3346C7.96154 18.3346 8.33464 17.9615 8.33464 17.5013C8.33464 17.0411 7.96154 16.668 7.5013 16.668C7.04106 16.668 6.66797 17.0411 6.66797 17.5013C6.66797 17.9615 7.04106 18.3346 7.5013 18.3346Z"
+      fill="#003521"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke="#003521"
+    />
+    <path
+      id="Vector_2"
+      d="M16.6654 18.3346C17.1256 18.3346 17.4987 17.9615 17.4987 17.5013C17.4987 17.0411 17.1256 16.668 16.6654 16.668C16.2051 16.668 15.832 17.0411 15.832 17.5013C15.832 17.9615 16.2051 18.3346 16.6654 18.3346Z"
+      fill="#003521"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke="#003521"
+    />
+    <path
+      id="Vector_3"
+      d="M1 1H4L6.39967 11.9913C6.47588 12.375 6.6846 12.7196 6.9893 12.9649C7.29399 13.2102 7.67526 13.3405 8.06634 13.333H16.1663C16.5574 13.3405 16.9387 13.2102 17.2434 12.9649C17.5481 12.7196 17.7568 12.375 17.833 11.9913L19 4.99967L4.99967 4.99967"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke="#003521"
+    />
+  </g>
+  <defs>
+    <clipPath id="clip0_0_4">
+      <rect width="20" height="20" fill="white" />
+    </clipPath>
+  </defs>
+</svg>

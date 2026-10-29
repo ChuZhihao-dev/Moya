@@ -1,0 +1,595 @@
+{{ 'moya-product-details.min.css' | asset_url | stylesheet_tag }}
+<script src='{{ 'moya-product-details.min.js' | asset_url }}' defer></script>
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign product_form_id = 'product-form-' | append: product.id | append: '-' | append: section.id
+  assign picker = section.blocks | where: 'type', 'variant_picker' | first
+-%}
+<moya-product-details
+  class='moya-pdp'
+  style='--moya-pdp-ink: {{ section.settings.text_color }}; --moya-pdp-mint: {{ section.settings.accent_color }}; --moya-pdp-bg: {{ section.settings.background }};'
+>
+  <nav class='moya-pdp__breadcrumb' aria-label='Breadcrumb'>
+    <a href='{{ routes.root_url }}'>Home</a><span aria-hidden='true'>/</span
+    ><span>{{ product.title | escape }}</span>
+  </nav>
+  <div class='moya-pdp__layout'>
+    {%- render 'moya-product-mosaic', product: product, section: section -%}
+    <div class='moya-pdp__info'>
+      {%- if section.settings.eyebrow != blank -%}
+        <p class='moya-pdp__eyebrow'>{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h1 class='moya-pdp__title'>{{ product.title | escape }}</h1>
+      {%- if section.settings.subtitle != blank -%}
+        <p class='moya-pdp__subtitle'>{{ section.settings.subtitle | escape }}</p>
+      {%- endif -%}
+      {%- if product.metafields.reviews.rating.value != blank -%}
+        <div class='moya-pdp__rating'>
+          {%- render 'product-rating', product: product, show_empty: false -%}
+          <span>{{ product.metafields.reviews.rating_count.value }} Reviews</span>
+        </div>
+      {%- endif -%}
+      <product-rerender
+        id='moya-pdp-{{ section.id }}'
+        observe-form='{{ product_form_id }}'
+        allow-partial-rerender
+      >
+        <div class='moya-pdp__price' data-block-type='price' data-block-id='price'>
+          {%- render 'price-list', variant: variant, size: 'lg' -%}
+          {%- if variant.compare_at_price > variant.price -%}
+            <span class='moya-pdp__saving'
+              >Save
+              {{ variant.compare_at_price | minus: variant.price | money_without_trailing_zeros -}}
+            </span>
+          {%- endif -%}
+        </div>
+        {%- if section.settings.coupon_code != blank -%}
+          <div class='moya-pdp__coupon'>
+            <div class='moya-pdp__coupon-background' aria-hidden='true'>
+              {%- if section.settings.coupon_background_image != blank -%}
+                {{
+                  section.settings.coupon_background_image
+                  | image_url: width: 1200
+                  | image_tag:
+                    loading: 'lazy',
+                    widths: '400,800,1200',
+                    sizes: '(max-width: 749px) calc(100vw - 40px), 420px',
+                    alt: ''
+                }}
+              {%- else -%}
+                <img
+                  src='{{ 'moya-pdp-coupon-background.jpg' | asset_url }}'
+                  alt=''
+                  width='397'
+                  height='120'
+                  loading='eager'
+                >
+              {%- endif -%}
+            </div>
+            {%- if section.settings.coupon_end != blank -%}
+              <div
+                class='moya-pdp__countdown'
+                data-countdown='{{ section.settings.coupon_end | escape }}'
+                hidden
+                aria-label='Offer ends in'
+              >
+                <span><b data-days>00</b><small>Days</small></span
+                ><i aria-hidden='true'>：</i><span><b data-hours>00</b><small>hours</small></span
+                ><i aria-hidden='true'>：</i
+                ><span><b data-minutes>00</b><small>Minutes</small></span
+                ><i aria-hidden='true'>：</i
+                ><span><b data-seconds>00</b><small>Seconds</small></span>
+              </div>
+            {%- endif -%}
+            <div class='moya-pdp__coupon-body'>
+              <div class='moya-pdp__coupon-offer'>
+                <strong>{{ section.settings.coupon_title | escape }}</strong
+                ><small>{{ section.settings.coupon_description | escape }}</small>
+              </div>
+              <img
+                class='moya-pdp__coupon-divider'
+                src='{{ 'moya-pdp-coupon-divider.svg' | asset_url }}'
+                alt=''
+                width='0.690476'
+                height='25.2024'
+              >
+              <div class='moya-pdp__coupon-code'>
+                <small>Code</small><strong>{{ section.settings.coupon_code | escape }}</strong>
+              </div>
+              <button type='button' data-copy-code='{{ section.settings.coupon_code | escape }}'>
+                COPY CODE
+              </button>
+            </div>
+            <p class='sr-only' data-copy-status role='status'></p>
+          </div>
+        {%- endif -%}
+        {%- if picker != blank -%}
+          <div
+            class='moya-pdp__variants'
+            data-block-type='variant-picker'
+            data-block-id='{{ picker.id }}'
+            {{ picker.shopify_attributes }}
+          >
+            {%- render 'variant-picker',
+              product: product,
+              form_id: product_form_id,
+              block: picker,
+              update_url: true,
+              hide_sold_out_variants: false
+            -%}
+          </div>
+        {%- endif -%}
+        {%- assign accessories = section.settings.accessories -%}
+        {%- render 'moya-product-accessories',
+          accessories: accessories,
+          product: product,
+          section: section
+        -%}
+        <div class='moya-pdp__purchase'>
+          <quantity-selector class='quantity-selector moya-pdp__quantity'>
+            <button type='button' class='quantity-selector__button' aria-label='Decrease quantity'>
+              <img src='{{ 'moya-pdp-minus.svg' | asset_url }}' alt='' width='16' height='16'>
+            </button>
+            <input
+              id='{{ product_form_id }}-quantity'
+              type='number'
+              is='quantity-input'
+              class='quantity-selector__input'
+              name='quantity'
+              form='{{ product_form_id }}'
+              min='{{ variant.quantity_rule.min | default: 1 }}'
+              step='{{ variant.quantity_rule.increment | default: 1 }}'
+              {% if variant.quantity_rule.max %}
+                max='{{ variant.quantity_rule.max }}'
+              {% endif %}
+              value='{{ variant.quantity_rule.min | default: 1 }}'
+              aria-label='Quantity'
+            >
+            <button type='button' class='quantity-selector__button' aria-label='Increase quantity'>
+              <img src='{{ 'moya-pdp-plus.svg' | asset_url }}' alt='' width='16' height='16'>
+            </button>
+          </quantity-selector>
+          {%- form 'product',
+            product,
+            is: 'product-form',
+            id: product_form_id,
+            class: 'moya-pdp__form'
+          -%}
+            <input type='hidden' name='id' value='{{ variant.id }}'>
+            <div data-block-type='buy-buttons' data-block-id='purchase'>
+              <buy-buttons class='moya-pdp__buttons' form='{{ product_form_id }}'>
+                <button
+                  class='button moya-pdp__add'
+                  type='submit'
+                  {% unless variant.available %}
+                    disabled
+                  {% endunless %}
+                >
+                  <img src='{{ 'moya-pdp-cart.svg' | asset_url }}' alt='' width='20' height='20'>
+                  {%- if variant == blank -%}
+                    Unavailable
+                  {%- elsif variant.available -%}
+                    {{ 'product.general.add_to_cart_button' | t }}
+                  {%- else -%}
+                    {{ 'product.general.sold_out_button' | t }}
+                  {%- endif -%}
+                </button>
+                {%- if section.settings.show_payment_button and variant.available -%}
+                  <button
+                    class='button moya-pdp__checkout'
+                    type='submit'
+                    name='checkout'
+                    value='true'
+                  >
+                    Buy it now
+                  </button>
+                {%- endif -%}
+              </buy-buttons>
+            </div>
+          {%- endform -%}
+        </div>
+      </product-rerender>
+      <div class='moya-pdp__accordions'>
+        <details class='moya-pdp__accordion moya-pdp__general' open>
+          <summary>
+            General Information<img
+              class='moya-pdp__accordion-chevron'
+              src='{{ 'moya-pdp-chevron.svg' | asset_url }}'
+              alt=''
+              width='20'
+              height='20'
+            >
+          </summary>
+          <div class='moya-pdp__accordion-content'>
+            {%- assign general_information_content = product.description
+              | default: section.settings.general_information
+            -%}
+            <div class='prose moya-pdp__general-description'>
+              {{ general_information_content }}
+            </div>
+            {%- assign parameters = section.blocks | where: 'type', 'parameter' -%}
+            {%- assign general_information_markup = general_information_content | downcase -%}
+            {%- if parameters.size > 0 -%}
+              {%- unless general_information_markup contains '<table' -%}
+                <dl class='moya-pdp__parameters'>
+                  {%- for block in parameters -%}
+                    {%- if block.settings.label == blank and block.settings.value == blank -%}
+                      {%- continue -%}
+                    {%- endif -%}
+                    <div {{ block.shopify_attributes }}>
+                      <dt>{{ block.settings.label | escape }}</dt>
+                      <dd>{{ block.settings.value | escape }}</dd>
+                    </div>
+                  {%- endfor -%}
+                </dl>
+              {%- endunless -%}
+            {%- endif -%}
+          </div>
+        </details>
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'accordion' -%}
+            <details
+              class='moya-pdp__accordion'
+              {{ block.shopify_attributes }}
+              {% if block.settings.open %}
+                open
+              {% endif %}
+            >
+              <summary>
+                {{ block.settings.title | escape -}}
+                <img
+                  class='moya-pdp__accordion-chevron'
+                  src='{{ 'moya-pdp-chevron.svg' | asset_url }}'
+                  alt=''
+                  width='20'
+                  height='20'
+                >
+              </summary>
+              <div class='moya-pdp__accordion-content'>
+                <div class='prose'>
+                  {{ block.settings.page.content | default: block.settings.content }}
+                </div>
+              </div>
+            </details>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'service' -%}
+          {%- assign icon_width = 24 -%}
+          {%- assign icon_height = 24 -%}
+          {%- if block.settings.icon == 'warranty' -%}
+            {%- assign icon_width = 16.0014 -%}
+            {%- assign icon_height = 16.7788 -%}
+          {%- endif -%}
+          <details class='moya-pdp__service' {{ block.shopify_attributes }}>
+            <summary>
+              <span class='moya-pdp__service-icon'
+                ><img
+                  src='{{ 'moya-pdp-' | append: block.settings.icon | append: '.svg' | asset_url }}'
+                  alt=''
+                  width='{{ icon_width }}'
+                  height='{{ icon_height }}'></span
+              ><span>{{ block.settings.title | escape }}</span
+              ><img src='{{ 'moya-pdp-info.svg' | asset_url }}' alt='' width='16' height='16'>
+            </summary>
+            <div class='moya-pdp__accordion-content'>
+              <div class='prose'>
+                {{ block.settings.page.content | default: block.settings.content }}
+              </div>
+            </div>
+          </details>
+        {%- elsif block.type == '@app' -%}
+          {% render block %}
+        {%- endif -%}
+      {%- endfor -%}
+      {%- if section.settings.show_payment_security -%}
+        <div class='moya-pdp__security'>
+          <h2>Payment &amp; Security</h2>
+          {%- if shop.enabled_payment_types.size > 0 -%}
+            <ul class='moya-pdp__payment-icons' role='list'>
+              {%- for type in shop.enabled_payment_types -%}
+                <li>{{ type | payment_type_svg_tag }}</li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+          <p>
+            Your payment information is processed securely. We do not store credit card details nor
+            have access to your credit card information.
+          </p>
+        </div>
+      {%- endif -%}
+      {%- if section.settings.show_share -%}
+        {%- assign share_url = canonical_url | url_encode -%}
+        <div class='moya-pdp__share'>
+          <span>Share:</span>
+          <a
+            href='https://www.facebook.com/sharer/sharer.php?u={{ share_url }}'
+            target='_blank'
+            rel='noopener'
+            aria-label='Share on Facebook'
+            ><img
+              src='{{ 'moya-pdp-share-facebook.svg' | asset_url }}'
+              alt=''
+              width='32.0001'
+              height='32'
+          ></a>
+          <a
+            href='https://twitter.com/intent/tweet?url={{ share_url }}&text={{ product.title | url_encode }}'
+            target='_blank'
+            rel='noopener'
+            aria-label='Share on X'
+            ><img src='{{ 'moya-pdp-share-x.svg' | asset_url }}' alt='' width='32' height='32'
+          ></a>
+          <a
+            href='https://pinterest.com/pin/create/button/?url={{ share_url }}&media={{ product.featured_image | image_url: width: 1200 | prepend: 'https:' | url_encode }}&description={{ product.title | url_encode }}'
+            target='_blank'
+            rel='noopener'
+            aria-label='Share on Pinterest'
+            ><img
+              src='{{ 'moya-pdp-share-pinterest.svg' | asset_url }}'
+              alt=''
+              width='32'
+              height='32'
+          ></a>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</moya-product-details>
+
+{% schema %}
+{
+  "name": "Moya product details",
+  "tag": "section",
+  "class": "shopify-section--moya-product-details",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#003521"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#addbce"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "New Arrival"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Be the first to experience a new kind of companion."
+    },
+    {
+      "type": "richtext",
+      "id": "general_information",
+      "label": "General information fallback",
+      "default": "<p>Today's families don't lack love — but in busy, fragmented daily life, care often stops at a greeting. MoYa was born to change that.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Offer"
+    },
+    {
+      "type": "image_picker",
+      "id": "coupon_background_image",
+      "label": "Offer background image",
+      "info": "Optional replacement for the original design background. Leave empty to use the included MoYa background."
+    },
+    {
+      "type": "text",
+      "id": "coupon_code",
+      "label": "Discount code",
+      "info": "Only add an active Shopify discount code. This section does not create discounts."
+    },
+    {
+      "type": "text",
+      "id": "coupon_title",
+      "label": "Offer heading"
+    },
+    {
+      "type": "text",
+      "id": "coupon_description",
+      "label": "Offer description"
+    },
+    {
+      "type": "text",
+      "id": "coupon_end",
+      "label": "Offer ends at",
+      "info": "ISO date with timezone, e.g. 2026-12-01T23:59:00+08:00. Invalid or expired dates hide the offer."
+    },
+    {
+      "type": "product_list",
+      "id": "accessories",
+      "label": "Accessories",
+      "limit": 3,
+      "info": "Optional accessories. Customers can select accessories to add together with the main product."
+    },
+    {
+      "type": "collection",
+      "id": "accessories_collection",
+      "label": "More accessories collection"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_button",
+      "label": "Show Buy it now",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_security",
+      "label": "Show payment security",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_share",
+      "label": "Show sharing links",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "variant_picker",
+      "name": "Variant picker",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "selector_style",
+          "label": "Selector style",
+          "default": "block",
+          "options": [
+            {
+              "value": "block",
+              "label": "Blocks"
+            },
+            {
+              "value": "dropdown",
+              "label": "Dropdown"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "swatch_selector_style",
+          "label": "Color selector",
+          "default": "swatch",
+          "options": [
+            {
+              "value": "swatch",
+              "label": "Swatches"
+            },
+            {
+              "value": "block_swatch",
+              "label": "Blocks"
+            },
+            {
+              "value": "none",
+              "label": "No swatches"
+            }
+          ]
+        },
+        {
+          "type": "checkbox",
+          "id": "stack_blocks",
+          "label": "Wrap options",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "variant_image_options",
+          "label": "Image option names"
+        },
+        {
+          "type": "page",
+          "id": "size_chart_page",
+          "label": "Size chart"
+        }
+      ]
+    },
+    {
+      "type": "parameter",
+      "name": "Parameter",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value"
+        }
+      ]
+    },
+    {
+      "type": "accordion",
+      "name": "Information accordion",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content"
+        },
+        {
+          "type": "page",
+          "id": "page",
+          "label": "Page content"
+        },
+        {
+          "type": "checkbox",
+          "id": "open",
+          "label": "Open by default",
+          "default": false
+        }
+      ]
+    },
+    {
+      "type": "service",
+      "name": "Service information",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "shipping",
+          "options": [
+            {
+              "value": "shipping",
+              "label": "Shipping"
+            },
+            {
+              "value": "warranty",
+              "label": "Warranty"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content"
+        },
+        {
+          "type": "page",
+          "id": "page",
+          "label": "Page content"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

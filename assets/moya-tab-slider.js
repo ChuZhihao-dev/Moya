@@ -41,13 +41,22 @@ class MoyaTabSlider extends HTMLElement {
     this.addEventListener('focusout', this.#restart, { signal });
     this.addEventListener('dragstart', (event) => event.preventDefault(), { signal });
     this.addEventListener('shopify:block:select', this.#selectEditorBlock, { signal });
-    this.addEventListener('shopify:block:deselect', () => { this.#editorSelected = false; this.#restart(); }, { signal });
+    this.addEventListener(
+      'shopify:block:deselect',
+      () => {
+        this.#editorSelected = false;
+        this.#restart();
+      },
+      { signal },
+    );
     document.addEventListener('visibilitychange', this.#restart, { signal });
     this.#motion.addEventListener('change', this.#restart, { signal });
     this.#resizeObserver = new ResizeObserver(this.#resize);
     this.#resizeObserver.observe(this);
     this.#resize();
-    document.fonts?.ready.then(() => { if (this.isConnected) this.#resize(); });
+    document.fonts?.ready.then(() => {
+      if (this.isConnected) this.#resize();
+    });
   }
 
   disconnectedCallback() {
@@ -83,7 +92,10 @@ class MoyaTabSlider extends HTMLElement {
       const container = tab.parentElement;
       const bounds = container.getBoundingClientRect();
       const tabBounds = tab.getBoundingClientRect();
-      const delta = tabBounds.left < bounds.left ? tabBounds.left - bounds.left : Math.max(tabBounds.right - bounds.right, 0);
+      const delta =
+        tabBounds.left < bounds.left
+          ? tabBounds.left - bounds.left
+          : Math.max(tabBounds.right - bounds.right, 0);
       if (delta) container.scrollBy({ left: delta, behavior: 'instant' });
     }
     this.#renderTrack();
@@ -110,13 +122,27 @@ class MoyaTabSlider extends HTMLElement {
     });
   };
 
-  #stop = () => { clearInterval(this.#timer); this.#timer = undefined; };
+  #stop = () => {
+    clearInterval(this.#timer);
+    this.#timer = undefined;
+  };
 
   #restart = () => {
     this.#stop();
     if (!this.isConnected || this.dataset.autoplay !== 'true' || this.#slides.length < 2) return;
-    if (this.#motion.matches || document.hidden || this.matches(':hover') || this.contains(document.activeElement) || this.#pointer !== undefined || this.#editorSelected) return;
-    this.#timer = setInterval(() => this.#select(this.#index + 1), Number(this.dataset.autoplayInterval) || 5000);
+    if (
+      this.#motion.matches ||
+      document.hidden ||
+      this.matches(':hover') ||
+      this.contains(document.activeElement) ||
+      this.#pointer !== undefined ||
+      this.#editorSelected
+    )
+      return;
+    this.#timer = setInterval(
+      () => this.#select(this.#index + 1),
+      Number(this.dataset.autoplayInterval) || 5000,
+    );
   };
 
   #click = (event) => {
@@ -144,7 +170,13 @@ class MoyaTabSlider extends HTMLElement {
   };
 
   #pointerDown = (event) => {
-    if (!event.isPrimary || event.button > 0 || !this.#viewport.contains(event.target) || event.target.closest('button, a, input, textarea, select')) return;
+    if (
+      !event.isPrimary ||
+      event.button > 0 ||
+      !this.#viewport.contains(event.target) ||
+      event.target.closest('button, a, input, textarea, select')
+    )
+      return;
     this.#pointer = event.pointerId;
     this.#startX = event.clientX;
     this.#startY = event.clientY;
@@ -171,10 +203,14 @@ class MoyaTabSlider extends HTMLElement {
 
   #pointerUp = (event) => {
     if (this.#pointer !== event.pointerId) return;
-    if (this.#viewport.hasPointerCapture(event.pointerId)) this.#viewport.releasePointerCapture(event.pointerId);
+    if (this.#viewport.hasPointerCapture(event.pointerId))
+      this.#viewport.releasePointerCapture(event.pointerId);
     this.#pointer = undefined;
     const moved = this.#offset;
-    const change = this.#dragging && event.type !== 'pointercancel' && Math.abs(moved) > Math.min(120, this.#viewport.clientWidth * 0.15);
+    const change =
+      this.#dragging &&
+      event.type !== 'pointercancel' &&
+      Math.abs(moved) > Math.min(120, this.#viewport.clientWidth * 0.15);
     this.#dragging = false;
     this.#offset = 0;
     this.removeAttribute('data-dragging');
@@ -191,4 +227,5 @@ class MoyaTabSlider extends HTMLElement {
   };
 }
 
-if (!customElements.get('moya-tab-slider-component')) customElements.define('moya-tab-slider-component', MoyaTabSlider);
+if (!customElements.get('moya-tab-slider-component'))
+  customElements.define('moya-tab-slider-component', MoyaTabSlider);

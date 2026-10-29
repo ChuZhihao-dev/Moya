@@ -247,35 +247,51 @@
   {%- assign cv_default_name = section.blocks.first.settings.blogger_name -%}
 {%- endif -%}
 
-<moya-customer-voices-component id="Moya-Customer-Voices-{{ section.id }}" class="moya-cv-{{ section.id }}" data-cv-intro="{{ section.settings.intro_animation }}">
-  <div class="moya-cv-{{ section.id }}__header">
+<moya-customer-voices-component
+  id='Moya-Customer-Voices-{{ section.id }}'
+  class='moya-cv-{{ section.id }}'
+  data-cv-intro='{{ section.settings.intro_animation }}'
+>
+  <div class='moya-cv-{{ section.id }}__header'>
     {%- if section.settings.heading != blank -%}
-      <h2 class="moya-cv-{{ section.id }}__title">{{ section.settings.heading | escape }}</h2>
+      <h2 class='moya-cv-{{ section.id }}__title'>{{ section.settings.heading | escape }}</h2>
     {%- endif -%}
     {%- if section.settings.subheading != blank -%}
-      <p class="moya-cv-{{ section.id }}__subtitle">{{ section.settings.subheading | escape }}</p>
+      <p class='moya-cv-{{ section.id }}__subtitle'>{{ section.settings.subheading | escape }}</p>
     {%- endif -%}
   </div>
 
-  <div class="moya-cv-{{ section.id }}__collage" data-cv-collage>
-    <div class="moya-cv-{{ section.id }}__collage-inner" data-cv-collage-inner>
+  <div class='moya-cv-{{ section.id }}__collage' data-cv-collage>
+    <div class='moya-cv-{{ section.id }}__collage-inner' data-cv-collage-inner>
       {%- for block in section.blocks -%}
         {%- if forloop.index0 >= 6 -%}{%- break -%}{%- endif -%}
         {%- assign cv_i = forloop.index0 -%}
         <button
-          type="button"
-          class="moya-cv-{{ section.id }}__card"
-          style="left:{{ cv_x[cv_i] }}px; top:{{ cv_y[cv_i] }}px; width:{{ cv_bw[cv_i] }}px; height:{{ cv_bh[cv_i] }}px;"
+          type='button'
+          class='moya-cv-{{ section.id }}__card'
+          style='left:{{ cv_x[cv_i] }}px; top:{{ cv_y[cv_i] }}px; width:{{ cv_bw[cv_i] }}px; height:{{ cv_bh[cv_i] }}px;'
           data-cv-card
-          data-cv-quote="{{ block.settings.quote | strip_html | escape }}"
-          data-cv-name="{{ block.settings.blogger_name | escape }}"
-          aria-label="{{ block.settings.blogger_name | escape }}"
+          data-cv-quote='{{ block.settings.quote | strip_html | escape }}'
+          data-cv-name='{{ block.settings.blogger_name | escape }}'
+          aria-label='{{ block.settings.blogger_name | escape }}'
           {{ block.shopify_attributes }}
         >
-          <span class="moya-cv-{{ section.id }}__card-inner" style="transform: rotate({{ cv_rot[cv_i] }}deg);">
-            <span class="moya-cv-{{ section.id }}__media{% if cv_i == 3 %} moya-cv-{{ section.id }}__media--zoom{% endif %}">
+          <span
+            class='moya-cv-{{ section.id }}__card-inner'
+            style='transform: rotate({{ cv_rot[cv_i] }}deg);'
+          >
+            <span class='moya-cv-{{ section.id }}__media{% if cv_i == 3 %} moya-cv-{{ section.id }}__media--zoom{% endif %}'>
               {%- if block.settings.image != blank -%}
-                {{ block.settings.image | image_url: width: 800 | image_tag: loading: 'lazy', widths: '240,360,480,720,800', sizes: '218px', alt: block.settings.blogger_name, class: 'moya-cv-media-img' }}
+                {{
+                  block.settings.image
+                  | image_url: width: 800
+                  | image_tag:
+                    loading: 'lazy',
+                    widths: '240,360,480,720,800',
+                    sizes: '218px',
+                    alt: block.settings.blogger_name,
+                    class: 'moya-cv-media-img'
+                }}
               {%- endif -%}
             </span>
           </span>
@@ -284,35 +300,50 @@
             {%- assign cv_tag_ok = false -%}
             {%- case cv_i -%}
               {%- when 0 -%}
-                {%- assign cv_tag_ok = true -%}{%- assign cv_tag_dx = -121.31 -%}{%- assign cv_tag_dy = -219.366 -%}{%- assign cv_tag_rot = -10 -%}{%- assign cv_tag_flip = false -%}
+                {%- assign cv_tag_ok = true -%}
+                {%- assign cv_tag_dx = -121.31 -%}
+                {%- assign cv_tag_dy = -219.366 -%}
+                {%- assign cv_tag_rot = -10 -%}
+                {%- assign cv_tag_flip = false -%}
               {%- when 2 -%}
-                {%- assign cv_tag_ok = true -%}{%- assign cv_tag_dx = -93.908 -%}{%- assign cv_tag_dy = 166.262 -%}{%- assign cv_tag_rot = 5 -%}{%- assign cv_tag_flip = true -%}
+                {%- assign cv_tag_ok = true -%}
+                {%- assign cv_tag_dx = -93.908 -%}
+                {%- assign cv_tag_dy = 166.262 -%}
+                {%- assign cv_tag_rot = 5 -%}
+                {%- assign cv_tag_flip = true -%}
               {%- when 5 -%}
-                {%- assign cv_tag_ok = true -%}{%- assign cv_tag_dx = -47.488 -%}{%- assign cv_tag_dy = -212.738 -%}{%- assign cv_tag_rot = 5 -%}{%- assign cv_tag_flip = false -%}
+                {%- assign cv_tag_ok = true -%}
+                {%- assign cv_tag_dx = -47.488 -%}
+                {%- assign cv_tag_dy = -212.738 -%}
+                {%- assign cv_tag_rot = 5 -%}
+                {%- assign cv_tag_flip = false -%}
             {%- endcase -%}
             {%- if cv_tag_ok -%}
               <span
-                class="moya-cv-{{ section.id }}__tag{% if cv_tag_flip %} moya-cv-{{ section.id }}__tag--flip{% endif %}"
-                style="left: calc(50% + {{ cv_tag_dx }}px); top: calc(50% + {{ cv_tag_dy }}px); --cv-rot: {{ cv_tag_rot }}deg;"
+                class='moya-cv-{{ section.id }}__tag{% if cv_tag_flip %} moya-cv-{{ section.id }}__tag--flip{% endif %}'
+                style='left: calc(50% + {{ cv_tag_dx }}px); top: calc(50% + {{ cv_tag_dy }}px); --cv-rot: {{ cv_tag_rot }}deg;'
               >
-                <span class="moya-cv-{{ section.id }}__tag-bg" aria-hidden="true"></span>
-                <span class="moya-cv-{{ section.id }}__tag-label">{{ block.settings.blogger_name | escape }}</span>
+                <span class='moya-cv-{{ section.id }}__tag-bg' aria-hidden='true'></span>
+                <span class='moya-cv-{{ section.id }}__tag-label'>
+                  {{- block.settings.blogger_name | escape -}}
+                </span>
               </span>
             {%- endif -%}
           {%- endif -%}
         </button>
-
       {%- endfor -%}
     </div>
   </div>
 
-  <div class="moya-cv-{{ section.id }}__quote">
-    <p class="moya-cv-{{ section.id }}__quote-text" data-cv-quote-text aria-live="polite">“{{ cv_default_quote }}”</p>
-    <p class="moya-cv-{{ section.id }}__quote-name" data-cv-quote-name>- {{ cv_default_name }}</p>
+  <div class='moya-cv-{{ section.id }}__quote'>
+    <p class='moya-cv-{{ section.id }}__quote-text' data-cv-quote-text aria-live='polite'>
+      “{{ cv_default_quote }}”
+    </p>
+    <p class='moya-cv-{{ section.id }}__quote-name' data-cv-quote-name>- {{ cv_default_name }}</p>
   </div>
 </moya-customer-voices-component>
 
-<script type="module" src="{{ 'moya-customer-voices.js' | asset_url }}"></script>
+<script type='module' src='{{ 'moya-customer-voices.js' | asset_url }}'></script>
 
 {% schema %}
 {

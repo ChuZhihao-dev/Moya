@@ -195,44 +195,59 @@
   }
 </style>
 
-<div id="Moya-Innovation-Research-{{ section.id }}" class="moya-ir">
-  <div class="moya-ir__inner">
-    <div class="moya-ir__header">
+<div id='Moya-Innovation-Research-{{ section.id }}' class='moya-ir'>
+  <div class='moya-ir__inner'>
+    <div class='moya-ir__header'>
       {%- if section.settings.eyebrow != blank -%}
-        <p class="moya-ir__eyebrow{% if section.settings.mobile_eyebrow != blank %} moya-ir__eyebrow--desktop{% endif %}">{{ section.settings.eyebrow | escape }}</p>
+        <p class='moya-ir__eyebrow{% if section.settings.mobile_eyebrow != blank %} moya-ir__eyebrow--desktop{% endif %}'>
+          {{ section.settings.eyebrow | escape }}
+        </p>
       {%- endif -%}
       {%- if section.settings.mobile_eyebrow != blank -%}
-        <p class="moya-ir__eyebrow moya-ir__eyebrow--mobile">{{ section.settings.mobile_eyebrow | escape }}</p>
+        <p class='moya-ir__eyebrow moya-ir__eyebrow--mobile'>
+          {{ section.settings.mobile_eyebrow | escape }}
+        </p>
       {%- endif -%}
       {%- if section.settings.heading != blank -%}
-        <h2 class="moya-ir__title">{{ section.settings.heading | escape }}</h2>
+        <h2 class='moya-ir__title'>{{ section.settings.heading | escape }}</h2>
       {%- endif -%}
       {%- if section.settings.subheading != blank -%}
-        <div class="moya-ir__subtitle">{{ section.settings.subheading }}</div>
+        <div class='moya-ir__subtitle'>{{ section.settings.subheading }}</div>
       {%- endif -%}
     </div>
 
     {%- if section.blocks.size > 0 -%}
-      <div class="moya-ir__grid" role="list">
+      <div class='moya-ir__grid' role='list'>
         {%- for block in section.blocks -%}
           {%- assign card_tag = 'div' -%}
           {%- if block.settings.link != blank -%}
             {%- assign card_tag = 'a' -%}
           {%- endif -%}
           <{{ card_tag }}
-            class="moya-ir__card"
-            role="listitem"
-            {% if card_tag == 'a' %}href="{{ block.settings.link | escape }}"{% endif %}
-            {% if block.settings.logo == blank and block.settings.title != blank %}aria-label="{{ block.settings.title | escape }}"{% endif %}
+            class='moya-ir__card'
+            role='listitem'
+            {% if card_tag == 'a' %}
+              href='{{ block.settings.link | escape }}'
+            {% endif %}
+            {% if block.settings.logo == blank and block.settings.title != blank %}
+              aria-label='{{ block.settings.title | escape }}'
+            {% endif %}
             {{ block.shopify_attributes }}
           >
             {%- if block.settings.logo != blank -%}
               {%- assign alt_text = block.settings.title | default: 'Award logo' -%}
-              {{ block.settings.logo
-                 | image_url: width: 400
-                 | image_tag: loading: 'lazy', widths: '160,240,320,400', sizes: '(min-width: 750px) 96px, 57px', alt: alt_text, class: 'moya-ir__logo' }}
+              {{
+                block.settings.logo
+                | image_url: width: 400
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '160,240,320,400',
+                  sizes: '(min-width: 750px) 96px, 57px',
+                  alt: alt_text,
+                  class: 'moya-ir__logo'
+              }}
             {%- elsif block.settings.title != blank -%}
-              <span class="moya-ir__placeholder">{{ block.settings.title | escape }}</span>
+              <span class='moya-ir__placeholder'>{{ block.settings.title | escape }}</span>
             {%- endif -%}
           </{{ card_tag }}>
         {%- endfor -%}

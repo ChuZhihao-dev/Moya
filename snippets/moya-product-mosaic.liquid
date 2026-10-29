@@ -1,0 +1,34 @@
+<div
+  class='moya-pdp__gallery {% unless product.media.size == 6 %}moya-pdp__gallery--product{% endunless %}'
+  aria-label='{{ product.title | escape }} gallery'
+>
+  {%- for media in product.media -%}
+    {%- assign preload = false -%}
+    {%- if forloop.first -%}{%- assign preload = true -%}{%- endif -%}
+    <div
+      class='moya-pdp__tile {% if product.media.size == 6 %}moya-pdp__tile--{{ forloop.index }}{% else %}moya-pdp__tile--dynamic{% endif %}'
+      data-media-id='{{ media.id }}'
+    >
+      {%- if media.media_type == 'image' -%}
+        <button
+          type='button'
+          class='moya-pdp__zoom'
+          data-zoom
+          aria-label='Enlarge {{ product.title | escape }} image {{ forloop.index }}'
+        >
+      {%- endif -%}
+      {%- render 'media',
+        media: media,
+        sizes: '(max-width: 749px) 100vw, 64vw',
+        preload: preload
+      -%}
+      {%- if media.media_type == 'image' -%}</button>{%- endif -%}
+    </div>
+  {%- endfor -%}
+  <dialog class='moya-pdp__lightbox' aria-label='Product image'>
+    <button class='moya-pdp__close' type='button' data-close aria-label='Close enlarged image'>
+      ×
+    </button>
+    <div data-zoom-content></div>
+  </dialog>
+</div>

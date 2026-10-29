@@ -410,21 +410,23 @@
 </style>
 
 <moya-hero-component
-  id="Moya-Hero-Slideshow-{{ section.id }}"
-  class="moya-hero"
-  role="region"
-  aria-roledescription="carousel"
-  aria-label="{{ section.settings.slideshow_label | escape }}"
-  tabindex="0"
+  id='Moya-Hero-Slideshow-{{ section.id }}'
+  class='moya-hero'
+  role='region'
+  aria-roledescription='carousel'
+  aria-label='{{ section.settings.slideshow_label | escape }}'
+  tabindex='0'
   data-moya-hero
-  data-mobile-height-mode="{{ section.settings.mobile_height_mode | default: 'design' }}"
-  {% if section.settings.allow_transparent_header %}allow-transparent-header{% endif %}
-  data-navigation-tone="{{ section.blocks.first.settings.navigation_tone | default: 'dark' }}"
-  data-autoplay="{{ section.settings.autoplay }}"
-  data-autoplay-interval="{{ section.settings.autoplay_interval | times: 1000 }}"
+  data-mobile-height-mode='{{ section.settings.mobile_height_mode | default: 'design' }}'
+  {% if section.settings.allow_transparent_header %}
+    allow-transparent-header
+  {% endif %}
+  data-navigation-tone='{{ section.blocks.first.settings.navigation_tone | default: 'dark' }}'
+  data-autoplay='{{ section.settings.autoplay }}'
+  data-autoplay-interval='{{ section.settings.autoplay_interval | times: 1000 }}'
 >
-  <div class="moya-hero__viewport">
-    <div class="moya-hero__track" dir="ltr" data-moya-hero-track>
+  <div class='moya-hero__viewport'>
+    <div class='moya-hero__track' dir='ltr' data-moya-hero-track>
       {%- for block in section.blocks -%}
         {%- liquid
           assign moya_hero_mobile_poster = block.settings.mobile_image | default: block.settings.mobile_video.preview_image
@@ -438,20 +440,26 @@
           endcase
         -%}
         <div
-          class="moya-hero__slide{% if moya_hero_mobile_centered %} moya-hero__slide--mobile-centered{% endif %}{% if forloop.first %} is-active{% endif %}{% if block.settings.image == blank and block.settings.use_design_image %} moya-hero__slide--design{% endif %}{% if block.settings.mobile_image != blank or block.settings.mobile_video != blank %} moya-hero__slide--mobile-media{% endif %}"
-          id="MoyaHeroSlide-{{ section.id }}-{{ block.id }}"
-          dir="{% render 'direction' %}"
+          class='moya-hero__slide{% if moya_hero_mobile_centered %} moya-hero__slide--mobile-centered{% endif %}{% if forloop.first %} is-active{% endif %}{% if block.settings.image == blank and block.settings.use_design_image %} moya-hero__slide--design{% endif %}{% if block.settings.mobile_image != blank or block.settings.mobile_video != blank %} moya-hero__slide--mobile-media{% endif %}'
+          id='MoyaHeroSlide-{{ section.id }}-{{ block.id }}'
+          dir='{% render 'direction' %}'
           data-moya-hero-slide
-          data-navigation-tone="{{ block.settings.navigation_tone | default: 'dark' }}"
-          style="{% if block.settings.heading_color != blank %}--moya-hero-heading: {{ block.settings.heading_color }};{% endif %}{% if block.settings.subheading_color != blank %}--moya-hero-subheading: {{ block.settings.subheading_color }};{% endif %}"
-          role="group"
-          aria-roledescription="slide"
-          aria-label="{{ forloop.index }} / {{ forloop.length }}"
-          aria-hidden="{% if forloop.first %}false{% else %}true{% endif %}"
-          {% unless forloop.first %}inert{% endunless %}
+          data-navigation-tone='{{ block.settings.navigation_tone | default: 'dark' }}'
+          style='{% if block.settings.heading_color != blank %}--moya-hero-heading: {{ block.settings.heading_color }};{% endif %}{% if block.settings.subheading_color != blank %}--moya-hero-subheading: {{ block.settings.subheading_color }};{% endif %}'
+          role='group'
+          aria-roledescription='slide'
+          aria-label='{{ forloop.index }} / {{ forloop.length }}'
+          aria-hidden='{% if forloop.first %}false{% else %}true{% endif %}'
+          {% unless forloop.first %}
+            inert
+          {% endunless %}
           {{ block.shopify_attributes }}
         >
-          {%- if block.settings.image != blank or block.settings.use_design_image or moya_hero_mobile_poster != blank or block.settings.mobile_video != blank -%}
+          {%- if block.settings.image != blank
+            or block.settings.use_design_image
+            or moya_hero_mobile_poster != blank
+            or block.settings.mobile_video != blank
+          -%}
             {%- if forloop.first -%}
               {%- assign moya_hero_loading = 'eager' -%}
               {%- assign moya_hero_priority = 'high' -%}
@@ -460,74 +468,101 @@
               {%- assign moya_hero_priority = 'auto' -%}
             {%- endif -%}
             {%- assign moya_hero_alt = block.settings.heading | strip_html -%}
-            <div class="moya-hero__media{% if block.settings.image == blank and block.settings.use_design_image %} moya-hero__media--design{% elsif block.settings.image == blank %} moya-hero__media--mobile-only{% endif %}">
+            <div class='moya-hero__media{% if block.settings.image == blank and block.settings.use_design_image %} moya-hero__media--design{% elsif block.settings.image == blank %} moya-hero__media--mobile-only{% endif %}'>
               <picture>
                 {%- if moya_hero_mobile_poster != blank -%}
                   <source
-                    media="(max-width: 749px)"
-                    srcset="{{ moya_hero_mobile_poster | image_url: width: 375 }} 375w, {{ moya_hero_mobile_poster | image_url: width: 550 }} 550w, {{ moya_hero_mobile_poster | image_url: width: 750 }} 750w, {{ moya_hero_mobile_poster | image_url: width: 1100 }} 1100w, {{ moya_hero_mobile_poster | image_url: width: 1500 }} 1500w"
-                    sizes="100vw"
-                    width="{{ moya_hero_mobile_poster.width }}"
-                    height="{{ moya_hero_mobile_poster.height }}"
+                    media='(max-width: 749px)'
+                    srcset='{{ moya_hero_mobile_poster | image_url: width: 375 }} 375w, {{ moya_hero_mobile_poster | image_url: width: 550 }} 550w, {{ moya_hero_mobile_poster | image_url: width: 750 }} 750w, {{ moya_hero_mobile_poster | image_url: width: 1100 }} 1100w, {{ moya_hero_mobile_poster | image_url: width: 1500 }} 1500w'
+                    sizes='100vw'
+                    width='{{ moya_hero_mobile_poster.width }}'
+                    height='{{ moya_hero_mobile_poster.height }}'
                   >
                 {%- endif -%}
-              {%- if block.settings.image != blank -%}
-                {{
-                block.settings.image
-                | image_url: width: 3840
-                | image_tag:
-                  loading: moya_hero_loading,
-                  widths: '750,1100,1500,1780,2000,2500,3000,3840',
-                  sizes: '100vw',
-                  fetchpriority: moya_hero_priority,
-                  alt: moya_hero_alt
-                }}
-              {%- elsif block.settings.use_design_image -%}
-                <img
-                  src="{{ 'moya-hero-companion.png' | asset_url }}"
-                  width="3200"
-                  height="1838"
-                  loading="{{ moya_hero_loading }}"
-                  fetchpriority="{{ moya_hero_priority }}"
-                  alt="{{ moya_hero_alt | escape }}"
-                >
-              {%- elsif moya_hero_mobile_poster != blank -%}
-                {{ moya_hero_mobile_poster | image_url: width: 1500 | image_tag: loading: moya_hero_loading, sizes: '100vw', widths: '375,550,750,1100,1500', alt: moya_hero_alt }}
-              {%- endif -%}
+                {%- if block.settings.image != blank -%}
+                  {{
+                    block.settings.image
+                    | image_url: width: 3840
+                    | image_tag:
+                      loading: moya_hero_loading,
+                      widths: '750,1100,1500,1780,2000,2500,3000,3840',
+                      sizes: '100vw',
+                      fetchpriority: moya_hero_priority,
+                      alt: moya_hero_alt
+                  }}
+                {%- elsif block.settings.use_design_image -%}
+                  <img
+                    src='{{ 'moya-hero-companion.png' | asset_url }}'
+                    width='3200'
+                    height='1838'
+                    loading='{{ moya_hero_loading }}'
+                    fetchpriority='{{ moya_hero_priority }}'
+                    alt='{{ moya_hero_alt | escape }}'
+                  >
+                {%- elsif moya_hero_mobile_poster != blank -%}
+                  {{
+                    moya_hero_mobile_poster
+                    | image_url: width: 1500
+                    | image_tag:
+                      loading: moya_hero_loading,
+                      sizes: '100vw',
+                      widths: '375,550,750,1100,1500',
+                      alt: moya_hero_alt
+                  }}
+                {%- endif -%}
               </picture>
               {%- if block.settings.mobile_video != blank -%}
-                {%- assign moya_hero_mobile_poster_url = moya_hero_mobile_poster | image_url: width: 1100 -%}
-                {{ block.settings.mobile_video | video_tag: class: 'moya-hero__mobile-video', autoplay: false, controls: false, playsinline: true, muted: true, loop: true, preload: 'none', poster: moya_hero_mobile_poster_url }}
+                {%- assign moya_hero_mobile_poster_url = moya_hero_mobile_poster
+                  | image_url: width: 1100
+                -%}
+                {{
+                  block.settings.mobile_video
+                  | video_tag:
+                    class: 'moya-hero__mobile-video',
+                    autoplay: false,
+                    controls: false,
+                    playsinline: true,
+                    muted: true,
+                    loop: true,
+                    preload: 'none',
+                    poster: moya_hero_mobile_poster_url
+                }}
               {%- endif -%}
             </div>
           {%- endif -%}
-          <div class="moya-hero__overlay" aria-hidden="true"></div>
+          <div class='moya-hero__overlay' aria-hidden='true'></div>
           {%- if section.settings.show_bottom_fade -%}
-            <div class="moya-hero__fade" aria-hidden="true"></div>
+            <div class='moya-hero__fade' aria-hidden='true'></div>
           {%- endif -%}
 
           <div
-            class="
+            class='
               moya-hero__content
               moya-hero__content--{{ block.settings.content_position }}
               moya-hero__content--{{ block.settings.vertical_position }}
-            "
+            '
           >
-            <div class="moya-hero__inner">
+            <div class='moya-hero__inner'>
               {%- if block.settings.label != blank -%}
-                <span class="moya-hero__label">{{ block.settings.label | escape }}</span>
+                <span class='moya-hero__label'>{{ block.settings.label | escape }}</span>
               {%- endif -%}
               {%- if block.settings.heading != blank -%}
-                <h2 class="moya-hero__heading">{{ block.settings.heading }}</h2>
+                <h2 class='moya-hero__heading'>{{ block.settings.heading }}</h2>
               {%- endif -%}
               {%- if block.settings.subheading != blank -%}
-                <p class="moya-hero__subheading">{{ block.settings.subheading | escape }}</p>
+                <p class='moya-hero__subheading'>{{ block.settings.subheading | escape }}</p>
               {%- endif -%}
             </div>
             {%- if block.settings.button_label != blank and block.settings.button_link != blank -%}
-              <div class="moya-hero__action">
+              <div class='moya-hero__action'>
                 {%- assign moya_hero_button_label = block.settings.button_label | escape -%}
-                {%- render 'button', content: moya_hero_button_label, href: block.settings.button_link, background: section.settings.button_background, text_color: section.settings.button_text_color, style: 'fill' -%}
+                {%- render 'button',
+                  content: moya_hero_button_label,
+                  href: block.settings.button_link,
+                  background: section.settings.button_background,
+                  text_color: section.settings.button_text_color,
+                  style: 'fill'
+                -%}
               </div>
             {%- endif -%}
           </div>
@@ -537,48 +572,64 @@
   </div>
 
   {%- if section.settings.show_arrows and section.blocks.size > 1 -%}
-    <div class="moya-hero__arrows">
-      <button class="moya-hero__arrow" type="button" data-moya-hero-previous aria-label="{{ 'general.accessibility.previous' | t | escape }}">
-        <picture class="moya-hero__arrow-default">
-          <source media="(max-width: 749px)" srcset="{{ 'moya-hero-mobile-previous.svg' | asset_url }}">
-          <img src="{{ 'moya-hero-previous.svg' | asset_url }}" width="50" height="50" alt="">
+    <div class='moya-hero__arrows'>
+      <button
+        class='moya-hero__arrow'
+        type='button'
+        data-moya-hero-previous
+        aria-label='{{ 'general.accessibility.previous' | t | escape }}'
+      >
+        <picture class='moya-hero__arrow-default'>
+          <source
+            media='(max-width: 749px)'
+            srcset='{{ 'moya-hero-mobile-previous.svg' | asset_url }}'
+          >
+          <img src='{{ 'moya-hero-previous.svg' | asset_url }}' width='50' height='50' alt=''>
         </picture>
-        <picture class="moya-hero__arrow-hover">
-          <source media="(max-width: 749px)" srcset="{{ 'moya-hero-mobile-next.svg' | asset_url }}">
-          <img src="{{ 'moya-hero-next.svg' | asset_url }}" width="50" height="50" alt="">
+        <picture class='moya-hero__arrow-hover'>
+          <source media='(max-width: 749px)' srcset='{{ 'moya-hero-mobile-next.svg' | asset_url }}'>
+          <img src='{{ 'moya-hero-next.svg' | asset_url }}' width='50' height='50' alt=''>
         </picture>
       </button>
-      <button class="moya-hero__arrow moya-hero__arrow--next" type="button" data-moya-hero-next aria-label="{{ 'general.accessibility.next' | t | escape }}">
-        <picture class="moya-hero__arrow-default">
-          <source media="(max-width: 749px)" srcset="{{ 'moya-hero-mobile-previous.svg' | asset_url }}">
-          <img src="{{ 'moya-hero-previous.svg' | asset_url }}" width="50" height="50" alt="">
+      <button
+        class='moya-hero__arrow moya-hero__arrow--next'
+        type='button'
+        data-moya-hero-next
+        aria-label='{{ 'general.accessibility.next' | t | escape }}'
+      >
+        <picture class='moya-hero__arrow-default'>
+          <source
+            media='(max-width: 749px)'
+            srcset='{{ 'moya-hero-mobile-previous.svg' | asset_url }}'
+          >
+          <img src='{{ 'moya-hero-previous.svg' | asset_url }}' width='50' height='50' alt=''>
         </picture>
-        <picture class="moya-hero__arrow-hover">
-          <source media="(max-width: 749px)" srcset="{{ 'moya-hero-mobile-next.svg' | asset_url }}">
-          <img src="{{ 'moya-hero-next.svg' | asset_url }}" width="50" height="50" alt="">
+        <picture class='moya-hero__arrow-hover'>
+          <source media='(max-width: 749px)' srcset='{{ 'moya-hero-mobile-next.svg' | asset_url }}'>
+          <img src='{{ 'moya-hero-next.svg' | asset_url }}' width='50' height='50' alt=''>
         </picture>
       </button>
     </div>
   {%- endif -%}
 
   {%- if section.settings.show_dots and section.blocks.size > 1 -%}
-    <div class="moya-hero__dots" aria-label="{{ section.settings.slideshow_label | escape }}">
+    <div class='moya-hero__dots' aria-label='{{ section.settings.slideshow_label | escape }}'>
       {%- for block in section.blocks -%}
         <button
-          type="button"
-          class="moya-hero__dot{% if forloop.first %} is-active{% endif %}"
-          aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
-          aria-controls="MoyaHeroSlide-{{ section.id }}-{{ block.id }}"
-          aria-label="{{ 'general.accessibility.go_to_item' | t: index: forloop.index | escape }}"
+          type='button'
+          class='moya-hero__dot{% if forloop.first %} is-active{% endif %}'
+          aria-current='{% if forloop.first %}true{% else %}false{% endif %}'
+          aria-controls='MoyaHeroSlide-{{ section.id }}-{{ block.id }}'
+          aria-label='{{ 'general.accessibility.go_to_item' | t: index: forloop.index | escape }}'
           data-moya-hero-dot
-          data-index="{{ forloop.index0 }}"
+          data-index='{{ forloop.index0 }}'
         ></button>
       {%- endfor -%}
     </div>
   {%- endif -%}
 </moya-hero-component>
 
-<script type="module" src="{{ 'moya-hero-slideshow.js' | asset_url }}"></script>
+<script type='module' src='{{ 'moya-hero-slideshow.js' | asset_url }}'></script>
 
 {% schema %}
 {

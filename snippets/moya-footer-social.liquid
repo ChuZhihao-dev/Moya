@@ -20,4 +20,8 @@
     <li><a href="{{ social_url | escape }}" target="_blank" rel="noopener" aria-label="TikTok"><picture><source media="(max-width: 749px)" srcset="{{ 'moya-footer-tiktok-mobile.svg' | asset_url }}"><img src="{{ 'moya-footer-tiktok.svg' | asset_url }}" alt="" width="18" height="21" loading="lazy"></picture></a></li>
   {%- endif -%}
 {%- endcapture -%}
-{%- if social_items != blank -%}<ul class="moya-footer__social" role="list">{{ social_items }}</ul>{%- endif -%}
+{%- if social_items != blank -%}
+  <ul class='moya-footer__social' role='list'>
+    {{ social_items }}
+  </ul>
+{%- endif -%}

@@ -1,0 +1,369 @@
+{{ 'moya-selling-points.min.css' | asset_url | stylesheet_tag }}
+<script type='module' src='{{ 'moya-selling-points.min.js' | asset_url }}'></script>
+{%- assign slide_count = section.blocks.size -%}
+<moya-selling-points
+  id='MoyaSellingPoints-{{ section.id }}'
+  class='moya-selling{% if slide_count < 2 %} moya-selling--single{% endif %}{% if section.settings.image_position == 'right' %} moya-selling--image-right{% endif %}{% if section.settings.mobile_image_position == 'bottom' %} moya-selling--mobile-image-last{% endif %}'
+  data-motion='{{ section.settings.enable_motion }}'
+  data-duration='{{ section.settings.transition_duration }}'
+  data-inertia='{{ section.settings.enable_inertia }}'
+  data-inertia-strength='{{ section.settings.inertia_strength }}'
+  data-autoplay='{{ section.settings.autoplay }}'
+  data-autoplay-delay='{{ section.settings.autoplay_interval | times: 1000 }}'
+  role='region'
+  aria-roledescription='carousel'
+  aria-label='{{ section.settings.heading | default: "Key selling points" | escape }}'
+  style='
+    --moya-selling-background: {{ section.settings.background }};
+    --moya-selling-card: {{ section.settings.card_background }};
+    --moya-selling-ink: {{ section.settings.text_color }};
+    --moya-selling-padding: {{ section.settings.padding_block }}px;
+    --moya-selling-height: {{ section.settings.card_height }}px;
+  '
+>
+  {%- if section.settings.heading != blank -%}
+    <h2 class='moya-selling__heading'>{{ section.settings.heading | escape }}</h2>
+  {%- endif -%}
+  <div class='moya-selling__shell'>
+    <div
+      class='moya-selling__viewport'
+      data-selling-viewport
+      tabindex='0'
+      aria-label='Slides. Use left and right arrow keys.'
+      dir='ltr'
+    >
+      <div class='moya-selling__track'>
+        {%- for block in section.blocks -%}
+          <article
+            id='MoyaSellingSlide-{{ section.id }}-{{ block.id }}'
+            class='moya-selling__slide'
+            data-selling-slide
+            role='group'
+            aria-roledescription='slide'
+            aria-label='{{ forloop.index }} of {{ slide_count }}'
+            dir='{% render 'direction' %}'
+            {{ block.shopify_attributes }}
+          >
+            <div class='moya-selling__media'>
+              {%- if block.settings.image != blank -%}
+                {%- assign image_alt = block.settings.image.alt
+                  | default: block.settings.heading
+                -%}
+                {{
+                  block.settings.image
+                  | image_url: width: 1800
+                  | image_tag:
+                    loading: 'lazy',
+                    widths: '400,600,800,1100,1400,1800',
+                    sizes: '(max-width: 749px) 100vw, 714px',
+                    alt: image_alt,
+                    draggable: false
+                }}
+              {%- else -%}
+                <div class='moya-selling__placeholder' role='img' aria-label='Image placeholder'>
+                  {{ 'lifestyle-1' | placeholder_svg_tag }}
+                </div>
+              {%- endif -%}
+            </div>
+            <div class='moya-selling__content'>
+              {%- if block.settings.show_icon -%}
+                <div class='moya-selling__icon' aria-hidden='true'>
+                  {%- if block.settings.icon != blank -%}
+                    {{
+                      block.settings.icon
+                      | image_url: width: 162
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '54,108,162',
+                        sizes: '54px',
+                        alt: '',
+                        draggable: false
+                    }}
+                  {%- else -%}
+                    <img
+                      src='{{ 'moya-selling-icon-disc.svg' | asset_url }}'
+                      alt=''
+                      width='54'
+                      height='54'
+                      loading='lazy'
+                      draggable='false'
+                    >
+                    <span
+                      class='moya-selling__icon-mark'
+                      style='--moya-selling-icon-mask: url({{ 'moya-selling-embrace-mask.png' | asset_url }});'
+                    ></span>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+              {%- if block.settings.heading != blank -%}
+                <h3 class='moya-selling__title'>{{ block.settings.heading | escape }}</h3>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <div class='moya-selling__text prose'>{{ block.settings.text }}</div>
+              {%- endif -%}
+            </div>
+          </article>
+        {%- endfor -%}
+      </div>
+    </div>
+    {%- if slide_count > 1 -%}
+      <button
+        type='button'
+        class='moya-selling__arrow moya-selling__arrow--previous'
+        data-selling-previous
+        aria-label='Previous slide'
+        aria-controls='MoyaSellingPoints-{{ section.id }}'
+        disabled
+        hidden
+      >
+        <img
+          src='{{ 'moya-selling-previous.svg' | asset_url }}'
+          alt=''
+          width='50'
+          height='50'
+          loading='lazy'
+          draggable='false'
+        >
+      </button>
+      <button
+        type='button'
+        class='moya-selling__arrow moya-selling__arrow--next'
+        data-selling-next
+        aria-label='Next slide'
+        aria-controls='MoyaSellingPoints-{{ section.id }}'
+        hidden
+      >
+        <img
+          src='{{ 'moya-selling-next.svg' | asset_url }}'
+          alt=''
+          width='50'
+          height='50'
+          loading='lazy'
+          draggable='false'
+        >
+      </button>
+    {%- endif -%}
+  </div>
+  {%- if slide_count > 1 -%}
+    <div class='moya-selling__dots' role='group' aria-label='Slide navigation'>
+      {%- for block in section.blocks -%}
+        <button
+          type='button'
+          class='moya-selling__dot'
+          data-selling-dot='{{ forloop.index0 }}'
+          aria-label='Go to slide {{ forloop.index }}{% if block.settings.heading != blank %}: {{ block.settings.heading | escape }}{% endif %}'
+          aria-controls='MoyaSellingSlide-{{ section.id }}-{{ block.id }}'
+          {% if forloop.first %}
+            aria-current='true'
+          {% endif %}
+        ></button>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+  <p class='sr-only' data-selling-status aria-live='polite' aria-atomic='true'></p>
+</moya-selling-points>
+
+{% schema %}
+{
+  "name": "Moya selling points",
+  "tag": "section",
+  "class": "shopify-section--moya-selling-points",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Key Selling Points"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Desktop image position",
+      "default": "left",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left — design layout"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "mobile_image_position",
+      "label": "Mobile image position",
+      "default": "top",
+      "options": [
+        {
+          "value": "top",
+          "label": "Above text"
+        },
+        {
+          "value": "bottom",
+          "label": "Below text"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "card_height",
+      "label": "Desktop minimum card height",
+      "min": 360,
+      "max": 680,
+      "step": 20,
+      "unit": "px",
+      "default": 520
+    },
+    {
+      "type": "range",
+      "id": "padding_block",
+      "label": "Section vertical spacing",
+      "min": 40,
+      "max": 160,
+      "step": 10,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Section background",
+      "default": "#f0f2f2"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#003521"
+    },
+    {
+      "type": "header",
+      "content": "Motion"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_motion",
+      "label": "Animate slide changes",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "transition_duration",
+      "label": "Slide settling time",
+      "min": 200,
+      "max": 1000,
+      "step": 20,
+      "unit": "ms",
+      "default": 520
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_inertia",
+      "label": "Enable drag inertia",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "inertia_strength",
+      "label": "Inertia strength",
+      "min": 0,
+      "max": 150,
+      "step": 10,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Auto-advance slides",
+      "default": false,
+      "info": "Pauses on hover and keyboard focus. Stops at the last slide."
+    },
+    {
+      "type": "range",
+      "id": "autoplay_interval",
+      "label": "Auto-advance delay",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "unit": "s",
+      "default": 6
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_icon",
+          "label": "Show icon",
+          "default": true
+        },
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon",
+          "info": "Leave empty to use the design's embrace icon."
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Selling point"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Description",
+          "default": "<p>Feature description.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Moya selling points",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "heading": "Responsive Embrace",
+            "text": "<p>Chest and abdomen sensors detect your touch the moment you lean in. Flexible airbag arms, wrapped in a soft cushion layer, hold you firmly yet gently — adapting to how you want to be held.</p>"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "heading": "Selling point 02",
+            "text": "<p>Feature description.</p>"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "heading": "Selling point 03",
+            "text": "<p>Feature description.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

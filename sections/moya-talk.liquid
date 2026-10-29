@@ -1,19 +1,66 @@
 {% render 'moya-fonts' %}
 {{ 'moya-talk.min.css' | asset_url | stylesheet_tag }}
-<moya-talk id="Moya-Talk-{{ section.id }}" class="moya-talk" role="region" aria-labelledby="Moya-Talk-Heading-{{ section.id }}"
-  data-motion="{{ section.settings.enable_motion }}" data-reveal="{{ section.settings.enable_reveal }}" data-start="{{ section.settings.start_node | escape }}"
-  data-speed="{{ section.settings.text_speed }}" data-delay="{{ section.settings.option_delay }}" data-editor="{{ request.design_mode }}"
-  style="--talk-bg:{{ section.settings.background }};--talk-ink:{{ section.settings.text_color }};--talk-distance:{{ section.settings.scroll_distance }};--talk-desktop-scale:{{ section.settings.desktop_scale | divided_by: 100.0 }};--talk-mobile-scale:{{ section.settings.mobile_scale | divided_by: 100.0 }};--talk-desktop-position:{{ section.settings.desktop_position }}%;--talk-mobile-position:{{ section.settings.mobile_position }}%;--talk-avatar-mask:url('{{ 'moya-talk-avatar-mask.svg' | asset_url }}');">
-  <span class="moya-talk__viewport" data-viewport-probe aria-hidden="true"></span>
-  <div class="moya-talk__stage" data-stage>
-    <div class="moya-talk__media" aria-hidden="true">
-      <picture class="moya-talk__poster" data-poster="intro">
-        {% if section.settings.mobile_intro_image != blank %}<source media="(max-width:749px)" srcset="{{ section.settings.mobile_intro_image | image_url: width: 1500 }}">{% endif %}
-        {% if section.settings.intro_image != blank %}{{ section.settings.intro_image | image_url: width: 2400 | image_tag: loading: 'lazy', widths: '750,1500,1920,2400', sizes: '100vw', alt: '' }}{% else %}<img src="{{ 'moya-talk-intro-frame.jpg' | asset_img_url: '2400x' }}" width="5000" height="2500" alt="" loading="lazy">{% endif %}
+<moya-talk
+  id='Moya-Talk-{{ section.id }}'
+  class='moya-talk'
+  role='region'
+  aria-labelledby='Moya-Talk-Heading-{{ section.id }}'
+  data-motion='{{ section.settings.enable_motion }}'
+  data-reveal='{{ section.settings.enable_reveal }}'
+  data-start='{{ section.settings.start_node | escape }}'
+  data-speed='{{ section.settings.text_speed }}'
+  data-delay='{{ section.settings.option_delay }}'
+  data-editor='{{ request.design_mode }}'
+  style="--talk-bg:{{ section.settings.background }};--talk-ink:{{ section.settings.text_color }};--talk-distance:{{ section.settings.scroll_distance }};--talk-desktop-scale:{{ section.settings.desktop_scale | divided_by: 100.0 }};--talk-mobile-scale:{{ section.settings.mobile_scale | divided_by: 100.0 }};--talk-desktop-position:{{ section.settings.desktop_position }}%;--talk-mobile-position:{{ section.settings.mobile_position }}%;--talk-avatar-mask:url('{{ 'moya-talk-avatar-mask.svg' | asset_url }}');"
+>
+  <span class='moya-talk__viewport' data-viewport-probe aria-hidden='true'></span>
+  <div class='moya-talk__stage' data-stage>
+    <div class='moya-talk__media' aria-hidden='true'>
+      <picture class='moya-talk__poster' data-poster='intro'>
+        {% if section.settings.mobile_intro_image != blank %}
+          <source
+            media='(max-width:749px)'
+            srcset='{{ section.settings.mobile_intro_image | image_url: width: 1500 }}'
+          >
+        {% endif %}
+        {% if section.settings.intro_image != blank -%}
+          {{-
+            section.settings.intro_image
+            | image_url: width: 2400
+            | image_tag: loading: 'lazy', widths: '750,1500,1920,2400', sizes: '100vw', alt: ''
+          -}}
+        {%- else -%}
+          <img
+            src='{{ 'moya-talk-intro-frame.jpg' | asset_img_url: '2400x' }}'
+            width='5000'
+            height='2500'
+            alt=''
+            loading='lazy'
+          >
+        {%- endif %}
       </picture>
-      <picture class="moya-talk__poster" data-poster="full" hidden>
-        {% if section.settings.mobile_full_image != blank %}<source media="(max-width:749px)" srcset="{{ section.settings.mobile_full_image | image_url: width: 1500 }}">{% endif %}
-        {% if section.settings.full_image != blank %}{{ section.settings.full_image | image_url: width: 2400 | image_tag: loading: 'lazy', widths: '750,1500,1920,2400', sizes: '100vw', alt: '' }}{% else %}<img src="{{ 'moya-talk-scene.webp' | asset_url }}" width="4096" height="2048" alt="" loading="lazy">{% endif %}
+      <picture class='moya-talk__poster' data-poster='full' hidden>
+        {% if section.settings.mobile_full_image != blank %}
+          <source
+            media='(max-width:749px)'
+            srcset='{{ section.settings.mobile_full_image | image_url: width: 1500 }}'
+          >
+        {% endif %}
+        {% if section.settings.full_image != blank -%}
+          {{-
+            section.settings.full_image
+            | image_url: width: 2400
+            | image_tag: loading: 'lazy', widths: '750,1500,1920,2400', sizes: '100vw', alt: ''
+          -}}
+        {%- else -%}
+          <img
+            src='{{ 'moya-talk-scene.webp' | asset_url }}'
+            width='4096'
+            height='2048'
+            alt=''
+            loading='lazy'
+          >
+        {%- endif %}
       </picture>
       {%- liquid
         assign desktop_video = section.settings.intro_video
@@ -40,7 +87,17 @@
           endfor
         endif
       -%}
-      <video class="moya-talk__video" data-clip="intro" data-desktop="{{ desktop_src | escape }}" data-mobile="{{ mobile_src | escape }}" muted playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+      <video
+        class='moya-talk__video'
+        data-clip='intro'
+        data-desktop='{{ desktop_src | escape }}'
+        data-mobile='{{ mobile_src | escape }}'
+        muted
+        playsinline
+        preload='none'
+        aria-hidden='true'
+        tabindex='-1'
+      ></video>
       {%- liquid
         assign desktop_video = section.settings.breathe_video
         assign mobile_video = section.settings.mobile_breathe_video
@@ -66,7 +123,17 @@
           endfor
         endif
       -%}
-      <video class="moya-talk__video" data-clip="breathe" data-desktop="{{ desktop_src | escape }}" data-mobile="{{ mobile_src | escape }}" muted playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+      <video
+        class='moya-talk__video'
+        data-clip='breathe'
+        data-desktop='{{ desktop_src | escape }}'
+        data-mobile='{{ mobile_src | escape }}'
+        muted
+        playsinline
+        preload='none'
+        aria-hidden='true'
+        tabindex='-1'
+      ></video>
       {%- liquid
         assign desktop_video = section.settings.hug_video
         assign mobile_video = section.settings.mobile_hug_video
@@ -92,7 +159,17 @@
           endfor
         endif
       -%}
-      <video class="moya-talk__video" data-clip="hug" data-desktop="{{ desktop_src | escape }}" data-mobile="{{ mobile_src | escape }}" muted playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+      <video
+        class='moya-talk__video'
+        data-clip='hug'
+        data-desktop='{{ desktop_src | escape }}'
+        data-mobile='{{ mobile_src | escape }}'
+        muted
+        playsinline
+        preload='none'
+        aria-hidden='true'
+        tabindex='-1'
+      ></video>
       {%- liquid
         assign desktop_video = section.settings.return_video
         assign mobile_video = section.settings.mobile_return_video
@@ -118,7 +195,17 @@
           endfor
         endif
       -%}
-      <video class="moya-talk__video" data-clip="return" data-desktop="{{ desktop_src | escape }}" data-mobile="{{ mobile_src | escape }}" muted playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+      <video
+        class='moya-talk__video'
+        data-clip='return'
+        data-desktop='{{ desktop_src | escape }}'
+        data-mobile='{{ mobile_src | escape }}'
+        muted
+        playsinline
+        preload='none'
+        aria-hidden='true'
+        tabindex='-1'
+      ></video>
       {%- liquid
         assign desktop_video = section.settings.look_up_video
         assign mobile_video = section.settings.mobile_look_up_video
@@ -144,7 +231,17 @@
           endfor
         endif
       -%}
-      <video class="moya-talk__video" data-clip="look-up" data-desktop="{{ desktop_src | escape }}" data-mobile="{{ mobile_src | escape }}" muted playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+      <video
+        class='moya-talk__video'
+        data-clip='look-up'
+        data-desktop='{{ desktop_src | escape }}'
+        data-mobile='{{ mobile_src | escape }}'
+        muted
+        playsinline
+        preload='none'
+        aria-hidden='true'
+        tabindex='-1'
+      ></video>
       {%- liquid
         assign desktop_video = section.settings.look_down_video
         assign mobile_video = section.settings.mobile_look_down_video
@@ -170,33 +267,110 @@
           endfor
         endif
       -%}
-      <video class="moya-talk__video" data-clip="look-down" data-desktop="{{ desktop_src | escape }}" data-mobile="{{ mobile_src | escape }}" muted playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+      <video
+        class='moya-talk__video'
+        data-clip='look-down'
+        data-desktop='{{ desktop_src | escape }}'
+        data-mobile='{{ mobile_src | escape }}'
+        muted
+        playsinline
+        preload='none'
+        aria-hidden='true'
+        tabindex='-1'
+      ></video>
     </div>
-    <h2 id="Moya-Talk-Heading-{{ section.id }}" class="moya-talk__title">{{ section.settings.heading | escape }}</h2>
-    <div class="moya-talk__interface" data-interface hidden>
-      <div class="moya-talk__listening" data-listening>
-        <span class="moya-talk__avatar" data-avatar aria-hidden="true"><img class="moya-talk__avatar-bg" src="{{ 'moya-talk-avatar-bg.svg' | asset_url }}" width="44.8" height="44.8" alt="" loading="lazy"><span><img src="{{ 'moya-talk-avatar.png' | asset_img_url: '256x' }}" width="128" height="96" alt="" loading="lazy"></span></span>
+    <h2 id='Moya-Talk-Heading-{{ section.id }}' class='moya-talk__title'>
+      {{ section.settings.heading | escape }}
+    </h2>
+    <div class='moya-talk__interface' data-interface hidden>
+      <div class='moya-talk__listening' data-listening>
+        <span class='moya-talk__avatar' data-avatar aria-hidden='true'
+          ><img
+            class='moya-talk__avatar-bg'
+            src='{{ 'moya-talk-avatar-bg.svg' | asset_url }}'
+            width='44.8'
+            height='44.8'
+            alt=''
+            loading='lazy'
+          ><span
+            ><img
+              src='{{ 'moya-talk-avatar.png' | asset_img_url: '256x' }}'
+              width='128'
+              height='96'
+              alt=''
+              loading='lazy'></span
+        ></span>
         <span>{{ section.settings.listening_label | escape }}</span>
       </div>
-      <img class="moya-talk__dots" data-dots src="{{ 'moya-talk-dots.svg' | asset_url }}" width="82" height="10" alt="" aria-hidden="true" loading="lazy">
-      <article class="moya-talk__answer" data-answer hidden>
-        <p class="moya-talk__label" data-answer-label>MoYa</p>
-        <p class="moya-talk__reply" data-reply></p>
+      <img
+        class='moya-talk__dots'
+        data-dots
+        src='{{ 'moya-talk-dots.svg' | asset_url }}'
+        width='82'
+        height='10'
+        alt=''
+        aria-hidden='true'
+        loading='lazy'
+      >
+      <article class='moya-talk__answer' data-answer hidden>
+        <p class='moya-talk__label' data-answer-label>MoYa</p>
+        <p class='moya-talk__reply' data-reply></p>
       </article>
-      <article class="moya-talk__asked" data-asked hidden><p class="moya-talk__label">{{ section.settings.asked_label | escape }}</p><p data-question></p></article>
-      <div class="moya-talk__options" data-options role="group" aria-label="{{ section.settings.options_label | escape }}"></div>
-      <p class="moya-talk__sr" data-live role="status" aria-live="polite" aria-atomic="true"></p>
+      <article class='moya-talk__asked' data-asked hidden>
+        <p class='moya-talk__label'>{{ section.settings.asked_label | escape }}</p>
+        <p data-question></p>
+      </article>
+      <div
+        class='moya-talk__options'
+        data-options
+        role='group'
+        aria-label='{{ section.settings.options_label | escape }}'
+      ></div>
+      <p class='moya-talk__sr' data-live role='status' aria-live='polite' aria-atomic='true'></p>
     </div>
-    <p class="moya-talk__config" data-config hidden></p>
-    <noscript><div class="moya-talk__fallback"><p>{{ section.settings.introduction | escape }}</p>{% for block in section.blocks %}<details><summary>{{ block.settings.prompt | escape }}</summary><p>{{ block.settings.option_1_label | escape }} — {{ block.settings.option_1_reply | escape }}</p><p>{{ block.settings.option_2_label | escape }} — {{ block.settings.option_2_reply | escape }}</p></details>{% endfor %}</div></noscript>
+    <p class='moya-talk__config' data-config hidden></p>
+    <noscript>
+      <div class='moya-talk__fallback'>
+        <p>{{ section.settings.introduction | escape }}</p>
+        {% for block in section.blocks %}
+          <details>
+            <summary>{{ block.settings.prompt | escape }}</summary>
+            <p>
+              {{ block.settings.option_1_label | escape }} —
+              {{ block.settings.option_1_reply | escape }}
+            </p>
+            <p>
+              {{ block.settings.option_2_label | escape }} —
+              {{ block.settings.option_2_reply | escape }}
+            </p>
+          </details>
+        {% endfor %}
+      </div>
+    </noscript>
   </div>
-  <div class="moya-talk__editor-nodes" hidden>{% for block in section.blocks %}<span data-editor-node="{{ block.settings.key | escape }}" {{ block.shopify_attributes }}></span>{% endfor %}</div>
-  <script type="application/json" data-nodes>[
-    {% for block in section.blocks %}{"key":{{ block.settings.key | json }},"prompt":{{ block.settings.prompt | json }},"start":{{ block.settings.text_start | json }},"end":{{ block.settings.text_end | json }},"options":[{% for slot in (1..2) %}{% assign prefix = 'option_' | append: slot %}{% assign label_key = prefix | append: '_label' %}{% assign reply_key = prefix | append: '_reply' %}{% assign next_key = prefix | append: '_next' %}{% assign motion_key = prefix | append: '_motion' %}{% assign action_key = prefix | append: '_action' %}{% assign link_key = prefix | append: '_link' %}{"label":{{ block.settings[label_key] | json }},"reply":{{ block.settings[reply_key] | json }},"next":{{ block.settings[next_key] | json }},"motion":{{ block.settings[motion_key] | json }},"action":{{ block.settings[action_key] | json }},"href":{{ block.settings[link_key] | json }}}{% unless forloop.last %},{% endunless %}{% endfor %}]}{% unless forloop.last %},{% endunless %}{% endfor %}
-  ]</script>
-  <template data-arrow><img src="{{ 'moya-talk-arrow.svg' | asset_url }}" width="13" height="13" alt="" aria-hidden="true"></template>
+  <div class='moya-talk__editor-nodes' hidden>
+    {% for block in section.blocks -%}
+      <span
+        data-editor-node='{{ block.settings.key | escape }}'
+        {{ block.shopify_attributes }}
+      ></span>
+    {%- endfor %}
+  </div>
+  <script type='application/json' data-nodes>
+    [
+      {% for block in section.blocks %}{"key":{{ block.settings.key | json }},"prompt":{{ block.settings.prompt | json }},"start":{{ block.settings.text_start | json }},"end":{{ block.settings.text_end | json }},"options":[{% for slot in (1..2) %}{% assign prefix = 'option_' | append: slot %}{% assign label_key = prefix | append: '_label' %}{% assign reply_key = prefix | append: '_reply' %}{% assign next_key = prefix | append: '_next' %}{% assign motion_key = prefix | append: '_motion' %}{% assign action_key = prefix | append: '_action' %}{% assign link_key = prefix | append: '_link' %}{"label":{{ block.settings[label_key] | json }},"reply":{{ block.settings[reply_key] | json }},"next":{{ block.settings[next_key] | json }},"motion":{{ block.settings[motion_key] | json }},"action":{{ block.settings[action_key] | json }},"href":{{ block.settings[link_key] | json }}}{% unless forloop.last %},{% endunless %}{% endfor %}]}{% unless forloop.last %},{% endunless %}{% endfor %}
+    ]
+  </script>
+  <template data-arrow
+    ><img
+      src='{{ 'moya-talk-arrow.svg' | asset_url }}'
+      width='13'
+      height='13'
+      alt=''
+      aria-hidden='true'
+  ></template>
 </moya-talk>
-<script type="module" src="{{ 'moya-talk.min.js' | asset_url }}"></script>
+<script type='module' src='{{ 'moya-talk.min.js' | asset_url }}'></script>
 
 {% schema %}
 {
@@ -205,11 +379,7 @@
   "class": "moya-talk-section",
   "max_blocks": 30,
   "disabled_on": {
-    "groups": [
-      "header",
-      "footer",
-      "aside"
-    ]
+    "groups": ["header", "footer", "aside"]
   },
   "settings": [
     {

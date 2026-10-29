@@ -37,7 +37,11 @@ class MoyaMeet extends HTMLElement {
     this.#motion.addEventListener('change', this.#configure, { signal });
     this.#mobile.addEventListener('change', this.#syncMedia, { signal });
     document.addEventListener('visibilitychange', this.#syncMedia, { signal });
-    for (const event of ['shopify:section:load', 'shopify:section:unload', 'shopify:section:reorder']) {
+    for (const event of [
+      'shopify:section:load',
+      'shopify:section:unload',
+      'shopify:section:reorder',
+    ]) {
       document.addEventListener(event, this.#schedule, { signal });
     }
     this.addEventListener('shopify:block:select', this.#selectEditorScene, { signal });
@@ -45,21 +49,28 @@ class MoyaMeet extends HTMLElement {
     this.#visibleScenes.clear();
     if (this.#videos.length) {
       for (const video of this.#videos) {
-        video.addEventListener('playing', () => {
-          if (this.#shouldPlay(video)) video.classList.add('is-playing');
-          else video.pause();
-        }, { signal });
+        video.addEventListener(
+          'playing',
+          () => {
+            if (this.#shouldPlay(video)) video.classList.add('is-playing');
+            else video.pause();
+          },
+          { signal },
+        );
         for (const event of ['pause', 'error', 'emptied']) {
           video.addEventListener(event, () => video.classList.remove('is-playing'), { signal });
         }
       }
-      this.#observer = new IntersectionObserver((entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) this.#visibleScenes.add(entry.target);
-          else this.#visibleScenes.delete(entry.target);
-        }
-        this.#syncMedia();
-      }, { threshold: 0.01 });
+      this.#observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) this.#visibleScenes.add(entry.target);
+            else this.#visibleScenes.delete(entry.target);
+          }
+          this.#syncMedia();
+        },
+        { threshold: 0.01 },
+      );
       for (const scene of this.#scenes) this.#observer.observe(scene);
     }
     this.#configure();
@@ -107,8 +118,11 @@ class MoyaMeet extends HTMLElement {
   #updateHandoff() {
     const section = this.closest('.shopify-section');
     const next = section?.nextElementSibling;
-    const eligible = this.dataset.coverNextScience !== 'false' && !this.#motion.matches
-      && next?.matches('.moya-science-intro-section') && next.querySelector('moya-science-intro');
+    const eligible =
+      this.dataset.coverNextScience !== 'false' &&
+      !this.#motion.matches &&
+      next?.matches('.moya-science-intro-section') &&
+      next.querySelector('moya-science-intro');
     if (!eligible) {
       const wasCovered = this.#handoffCovered;
       this.#clearHandoff();
@@ -122,7 +136,10 @@ class MoyaMeet extends HTMLElement {
     const changed = covered !== this.#handoffCovered;
     this.#handoffCovered = covered;
     const viewport = this.#sticky.offsetHeight || window.innerHeight;
-    section.style.setProperty('--moya-meet-pin-top', `${Math.min(0, viewport - section.offsetHeight)}px`);
+    section.style.setProperty(
+      '--moya-meet-pin-top',
+      `${Math.min(0, viewport - section.offsetHeight)}px`,
+    );
     // Release the underlay only after the next opaque page has completely covered it.
     section.classList.toggle('moya-meet-section--page-underlay', !covered);
     next.classList.add('moya-science-intro-section--page-overlay');
@@ -131,10 +148,15 @@ class MoyaMeet extends HTMLElement {
 
   #shouldPlay(video) {
     const scene = video.closest('[data-moya-ref="scenes[]"]');
-    return this.isConnected && !document.hidden && !this.#motion.matches && !this.#handoffCovered
-      && this.#visibleScenes.has(scene)
-      && (!this.classList.contains('is-enhanced') || scene === this.#scenes[this.#activeIndex])
-      && video.dataset.moyaVideoDevice === (this.#mobile.matches ? 'mobile' : 'desktop');
+    return (
+      this.isConnected &&
+      !document.hidden &&
+      !this.#motion.matches &&
+      !this.#handoffCovered &&
+      this.#visibleScenes.has(scene) &&
+      (!this.classList.contains('is-enhanced') || scene === this.#scenes[this.#activeIndex]) &&
+      video.dataset.moyaVideoDevice === (this.#mobile.matches ? 'mobile' : 'desktop')
+    );
   }
 
   #syncMedia = () => {
@@ -155,16 +177,21 @@ class MoyaMeet extends HTMLElement {
       if (loaded) video.load();
       video.muted = true;
       this.#pendingVideos.add(video);
-      video.play()?.then(() => {
-        // A breakpoint or scene may change while playback is starting.
-        if (!this.#shouldPlay(video)) video.pause();
-      }).catch(() => {
-        video.classList.remove('is-playing');
-      }).finally(() => {
-        this.#pendingVideos.delete(video);
-        // Retry an interrupted start only when scene/device/visibility changed meanwhile.
-        if (version !== this.#mediaVersion && video.paused && this.#shouldPlay(video)) this.#syncMedia();
-      });
+      video
+        .play()
+        ?.then(() => {
+          // A breakpoint or scene may change while playback is starting.
+          if (!this.#shouldPlay(video)) video.pause();
+        })
+        .catch(() => {
+          video.classList.remove('is-playing');
+        })
+        .finally(() => {
+          this.#pendingVideos.delete(video);
+          // Retry an interrupted start only when scene/device/visibility changed meanwhile.
+          if (version !== this.#mediaVersion && video.paused && this.#shouldPlay(video))
+            this.#syncMedia();
+        });
     }
   };
 
@@ -197,7 +224,10 @@ class MoyaMeet extends HTMLElement {
       this.#progress.style.setProperty('--moya-meet-marker-size', `${markerSize}px`);
     }
     // Equal scroll intervals keep every scene fully visible until its next milestone.
-    const activeIndex = Math.min(Math.floor(progress * this.#scenes.length), this.#scenes.length - 1);
+    const activeIndex = Math.min(
+      Math.floor(progress * this.#scenes.length),
+      this.#scenes.length - 1,
+    );
     if (activeIndex === this.#activeIndex) return;
     const previous = this.#scenes[this.#activeIndex];
     const duration = Math.max(0, Number(this.dataset.transitionDuration ?? 400));
@@ -227,9 +257,13 @@ class MoyaMeet extends HTMLElement {
     const distance = this.offsetHeight - this.#sticky.offsetHeight;
     // Select the middle of the scene's interval, away from a switch boundary.
     const progress = (index + 0.5) / this.#scenes.length;
-    window.scrollTo({ top: window.scrollY + this.getBoundingClientRect().top + distance * progress, behavior: 'instant' });
+    window.scrollTo({
+      top: window.scrollY + this.getBoundingClientRect().top + distance * progress,
+      behavior: 'instant',
+    });
     this.#update();
   };
 }
 
-if (!customElements.get('moya-meet-component')) customElements.define('moya-meet-component', MoyaMeet);
+if (!customElements.get('moya-meet-component'))
+  customElements.define('moya-meet-component', MoyaMeet);
