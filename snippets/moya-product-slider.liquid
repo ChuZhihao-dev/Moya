@@ -1,0 +1,86 @@
+{%- liquid
+  assign initial_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media
+  assign media_group = 'moya-slider-' | append: section.id
+-%}
+<div
+  class='moya-pdp__gallery moya-pdp__gallery--slider'
+  data-product-slider
+  data-initial-media='{{ initial_media.id }}'
+  role='region'
+  aria-roledescription='carousel'
+  aria-label='{{ product.title | escape }} gallery'
+>
+  {%- if product.media.size > 1 -%}
+    <div class='moya-pdp__slider-sidebar'>
+      <div class='moya-pdp__thumbnails' data-slider-thumbnails aria-label='Product media thumbnails'>
+        {%- for media in product.media -%}
+          <button
+            type='button'
+            class='moya-pdp__thumbnail'
+            data-slider-thumbnail='{{ forloop.index0 }}'
+            aria-label='Show {{ media.media_type | replace: '_', ' ' }} {{ forloop.index }}'
+            aria-controls='MoyaSlide-{{ section.id }}-{{ media.id }}'
+            aria-current='{% if media.id == initial_media.id %}true{% else %}false{% endif %}'
+          >
+            {{ media.preview_image | image_url: width: 300 | image_tag: loading: 'lazy', widths: '100,148,200,300', sizes: '(max-width: 749px) 72px, 148px', alt: '' }}
+            {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
+              <img class='moya-pdp__thumbnail-play' src='{{ 'moya-pdp-slider-play.svg' | asset_url }}' width='24' height='24' alt=''>
+            {%- elsif media.media_type == 'model' -%}
+              <span class='moya-pdp__thumbnail-model' aria-hidden='true'>3D</span>
+            {%- endif -%}
+          </button>
+        {%- endfor -%}
+      </div>
+      <button type='button' class='moya-pdp__thumbnail-more' data-slider-more aria-label='Show more thumbnails'>
+        <img src='{{ 'moya-pdp-slider-more.svg' | asset_url }}' width='50' height='50' alt=''>
+      </button>
+    </div>
+  {%- endif -%}
+  <div class='moya-pdp__slider-stage'>
+    <div class='moya-pdp__slider-track' data-slider-track tabindex='0' aria-label='Product media. Use left and right arrow keys to navigate.'>
+      {%- for media in product.media -%}
+        {%- assign preload = false -%}
+        {%- if media.id == initial_media.id -%}{%- assign preload = true -%}{%- endif -%}
+        {%- assign image_loading = 'lazy' -%}
+        {%- assign image_priority = 'auto' -%}
+        {%- if preload -%}
+          {%- assign image_loading = 'eager' -%}
+          {%- assign image_priority = 'high' -%}
+        {%- endif -%}
+        {%- assign image_alt = media.alt | default: product.title -%}
+        <div
+          id='MoyaSlide-{{ section.id }}-{{ media.id }}'
+          class='moya-pdp__tile moya-pdp__slide'
+          data-slider-slide
+          data-media-id='{{ media.id }}'
+          role='group'
+          aria-roledescription='slide'
+          aria-label='{{ forloop.index }} of {{ product.media.size }}'
+        >
+          {%- if media.media_type == 'image' -%}
+            <button type='button' class='moya-pdp__zoom' data-zoom aria-label='Enlarge {{ product.title | escape }} image {{ forloop.index }}'>
+              {{ media | image_url: width: 2000 | image_tag: loading: image_loading, fetchpriority: image_priority, widths: '400,600,800,1000,1200,1600,2000', sizes: '(max-width: 749px) 100vw, 52vw', alt: image_alt }}
+            </button>
+          {%- else -%}
+            {%- render 'media', media: media, sizes: '(max-width: 749px) 100vw, 52vw', preload: preload, group: media_group -%}
+          {%- endif -%}
+        </div>
+      {%- else -%}
+        <div class='moya-pdp__tile moya-pdp__slide'>{{ 'product-1' | placeholder_svg_tag }}</div>
+      {%- endfor -%}
+    </div>
+    {%- if product.media.size > 1 -%}
+      <button class='moya-pdp__slider-arrow moya-pdp__slider-arrow--prev' type='button' data-slider-step='-1' aria-label='Previous media'>
+        <img src='{{ 'moya-pdp-slider-prev.svg' | asset_url }}' width='50' height='50' alt=''>
+      </button>
+      <button class='moya-pdp__slider-arrow moya-pdp__slider-arrow--next' type='button' data-slider-step='1' aria-label='Next media'>
+        <img src='{{ 'moya-pdp-slider-next.svg' | asset_url }}' width='50' height='50' alt=''>
+      </button>
+    {%- endif -%}
+  </div>
+  <p class='sr-only' data-slider-status role='status' aria-live='polite' aria-atomic='true'></p>
+  <dialog class='moya-pdp__lightbox' aria-label='Product image'>
+    <button class='moya-pdp__close' type='button' data-close aria-label='Close enlarged image'>×</button>
+    <div data-zoom-content></div>
+  </dialog>
+</div>

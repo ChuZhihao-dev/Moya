@@ -14,7 +14,11 @@
     ><span>{{ product.title | escape }}</span>
   </nav>
   <div class='moya-pdp__layout'>
-    {%- render 'moya-product-mosaic', product: product, section: section -%}
+    {%- if section.settings.media_layout == 'slider' -%}
+      {%- render 'moya-product-slider', product: product, section: section -%}
+    {%- else -%}
+      {%- render 'moya-product-mosaic', product: product, section: section -%}
+    {%- endif -%}
     <div class='moya-pdp__info'>
       {%- if section.settings.eyebrow != blank -%}
         <p class='moya-pdp__eyebrow'>{{ section.settings.eyebrow | escape }}</p>
@@ -344,6 +348,16 @@
   "tag": "section",
   "class": "shopify-section--moya-product-details",
   "settings": [
+    {
+      "type": "select",
+      "id": "media_layout",
+      "label": "Image display mode",
+      "default": "mosaic",
+      "options": [
+        { "value": "mosaic", "label": "Mosaic" },
+        { "value": "slider", "label": "Slider" }
+      ]
+    },
     {
       "type": "header",
       "content": "Appearance"

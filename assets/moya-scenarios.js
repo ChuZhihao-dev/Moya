@@ -3,6 +3,7 @@ class MoyaScenarios extends HTMLElement {
     if (this.controller) return;
     this.controller = new AbortController();
     this.items = [...this.querySelectorAll('[data-scenario]')];
+    this.backgrounds = [...this.querySelectorAll('[data-scenario-background]')];
     this.list = this.querySelector('[data-scenario-list]');
     this.animations = new Map();
     this.reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -75,8 +76,20 @@ class MoyaScenarios extends HTMLElement {
     if (index === this.activeIndex || !this.items[index]) return;
     const previous = this.activeIndex;
     this.activeIndex = index;
+    this.setBackground(index);
     this.setItem(this.items[previous], false);
     this.setItem(this.items[index], true);
+  }
+
+  setBackground(index) {
+    this.backgrounds.forEach((background, backgroundIndex) => {
+      const active = backgroundIndex === index;
+      if (active) {
+        const image = background.querySelector('img');
+        if (image) image.loading = 'eager';
+      }
+      background.classList.toggle('is-active', active);
+    });
   }
 
   settle() {

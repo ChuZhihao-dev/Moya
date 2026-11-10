@@ -3,6 +3,7 @@ if (!customElements.get('moya-product-details')) {
     'moya-product-details',
     class extends HTMLElement {
       connectedCallback() {
+        if (this.abort) return;
         this.abort = new AbortController();
         this.accordionAnimations = new Map();
         this.addEventListener('click', this.onClick.bind(this), { signal: this.abort.signal });
@@ -14,10 +15,14 @@ if (!customElements.get('moya-product-details')) {
           signal: this.abort.signal,
         });
         this.syncAccessories();
+        this.setupSlider();
         this.querySelectorAll('[data-countdown]').forEach((el) => this.startCountdown(el));
       }
       disconnectedCallback() {
         this.abort.abort();
+        this.abort = null;
+        this.sliderResize?.disconnect();
+        clearTimeout(this.sliderScrollTimer);
         clearInterval(this.timer);
         for (const [details, state] of this.accordionAnimations) {
           state.animation.cancel();
@@ -27,6 +32,26 @@ if (!customElements.get('moya-product-details')) {
         this.accordionAnimations.clear();
       }
       async onClick(event) {
+        const thumbnail = event.target.closest('[data-slider-thumbnail]');
+        const step = event.target.closest('[data-slider-step]');
+        if (thumbnail || step) {
+          this.selectSlide(
+            thumbnail
+              ? Number(thumbnail.dataset.sliderThumbnail)
+              : this.slideIndex + Number(step.dataset.sliderStep),
+          );
+          return;
+        }
+        if (event.target.closest('[data-slider-more]')) {
+          const list = this.querySelector('[data-slider-thumbnails]');
+          const mobile = window.matchMedia('(max-width: 749px)').matches;
+          const position = mobile ? list.scrollLeft : list.scrollTop;
+          const size = mobile ? list.clientWidth : list.clientHeight;
+          const total = mobile ? list.scrollWidth : list.scrollHeight;
+          const next = position + size >= total - 2 ? 0 : position + size * 0.8;
+          list.scrollTo({ [mobile ? 'left' : 'top']: next, behavior: this.sliderBehavior() });
+          return;
+        }
         const summary = event.target.closest('summary');
         const details = summary?.parentElement;
         if (
@@ -61,6 +86,105 @@ if (!customElements.get('moya-product-details')) {
             this.querySelector('[data-copy-status]').textContent =
               'Copy this code: ' + copy.dataset.copyCode;
           }
+        }
+      }
+      setupSlider() {
+        this.slider = this.querySelector('[data-product-slider]');
+        if (!this.slider) return;
+        this.track = this.slider.querySelector('[data-slider-track]');
+        this.slides = [...this.track.querySelectorAll('[data-slider-slide]')];
+        this.thumbnails = [...this.slider.querySelectorAll('[data-slider-thumbnail]')];
+        if (!this.slides.length) return;
+        this.slideIndex = Math.max(
+          0,
+          this.slides.findIndex((slide) => slide.dataset.mediaId === this.slider.dataset.initialMedia),
+        );
+        this.selectSlide(this.slideIndex, false);
+        this.track.addEventListener(
+          'scroll',
+          () => {
+            clearTimeout(this.sliderScrollTimer);
+            this.sliderScrollTimer = setTimeout(() => {
+              const index = Math.round(this.track.scrollLeft / this.track.clientWidth);
+              if (this.slides[index] && index !== this.slideIndex) this.updateSlide(index);
+            }, 100);
+          },
+          { signal: this.abort.signal },
+        );
+        this.track.addEventListener(
+          'keydown',
+          (event) => {
+            if (
+              !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key) ||
+              event.target.closest('video-media, model-media')
+            ) return;
+            event.preventDefault();
+            this.selectSlide(
+              event.key === 'Home'
+                ? 0
+                : event.key === 'End'
+                  ? this.slides.length - 1
+                  : this.slideIndex + (event.key === 'ArrowRight' ? 1 : -1),
+            );
+          },
+          { signal: this.abort.signal },
+        );
+        this.addEventListener(
+          'variant:change',
+          (event) => {
+            const mediaId = event.detail.variant?.featured_media?.id;
+            const index = this.slides.findIndex((slide) => slide.dataset.mediaId === String(mediaId));
+            if (index >= 0) this.selectSlide(index);
+          },
+          { signal: this.abort.signal },
+        );
+        this.sliderResize = new ResizeObserver(() => this.selectSlide(this.slideIndex, false));
+        this.sliderResize.observe(this.track);
+      }
+      sliderBehavior() {
+        return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth';
+      }
+      selectSlide(index, animate = true) {
+        if (!this.slides?.length) return;
+        index = (index + this.slides.length) % this.slides.length;
+        this.updateSlide(index, animate);
+        this.track.scrollTo({
+          left: index * this.track.clientWidth,
+          behavior: animate ? this.sliderBehavior() : 'instant',
+        });
+      }
+      updateSlide(index, announce = true) {
+        this.slideIndex = index;
+        this.slides.forEach((slide, current) => {
+          slide.inert = current !== index;
+          if (current === index) {
+            const image = slide.querySelector('img');
+            if (image) image.loading = 'eager';
+          } else {
+            slide.querySelectorAll('video-media, model-media').forEach((media) => media.pause?.());
+          }
+        });
+        this.thumbnails.forEach((thumbnail, current) =>
+          thumbnail.setAttribute('aria-current', String(current === index)),
+        );
+        const thumbnail = this.thumbnails[index];
+        const list = thumbnail?.parentElement;
+        if (list) {
+          const mobile = window.matchMedia('(max-width: 749px)').matches;
+          const start = mobile ? thumbnail.offsetLeft : thumbnail.offsetTop;
+          const size = mobile ? thumbnail.offsetWidth : thumbnail.offsetHeight;
+          const position = mobile ? list.scrollLeft : list.scrollTop;
+          const viewport = mobile ? list.clientWidth : list.clientHeight;
+          if (start < position || start + size > position + viewport) {
+            list.scrollTo({
+              [mobile ? 'left' : 'top']: start,
+              behavior: announce ? this.sliderBehavior() : 'instant',
+            });
+          }
+        }
+        if (announce) {
+          this.slider.querySelector('[data-slider-status]').textContent =
+            `Media ${index + 1} of ${this.slides.length}`;
         }
       }
       onAccessoryChange(event) {

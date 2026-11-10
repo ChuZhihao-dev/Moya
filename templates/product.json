@@ -86,6 +86,75 @@
         "show_share": true
       }
     },
+    "moya_product_nav": {
+      "type": "moya-product-nav",
+      "blocks": {
+        "anchor_1": {
+          "type": "anchor",
+          "settings": {
+            "label": "Key Selling Points",
+            "section_kind": "selling-points",
+            "target_id": "moya_selling_points"
+          }
+        },
+        "anchor_2": {
+          "type": "anchor",
+          "settings": {
+            "label": "Everyday Moments",
+            "section_kind": "scenarios",
+            "target_id": "moya_scenarios"
+          }
+        },
+        "anchor_3": {
+          "type": "anchor",
+          "settings": {
+            "label": "Materials & Care",
+            "section_kind": "materials",
+            "target_id": "moya_materials"
+          }
+        },
+        "anchor_4": {
+          "type": "anchor",
+          "settings": {
+            "label": "How It Works",
+            "section_kind": "how-carousel",
+            "target_id": "moya_how_carousel_V9HpEz"
+          }
+        },
+        "anchor_5": {
+          "type": "anchor",
+          "settings": {
+            "label": "Specifications",
+            "section_kind": "specifications",
+            "target_id": "moya_specifications"
+          }
+        },
+        "anchor_6": {
+          "type": "anchor",
+          "settings": {
+            "label": "FAQ",
+            "section_kind": "faq",
+            "target_id": "moya_faq_tCi7Pn"
+          }
+        }
+      },
+      "block_order": [
+        "anchor_1",
+        "anchor_2",
+        "anchor_3",
+        "anchor_4",
+        "anchor_5",
+        "anchor_6"
+      ],
+      "settings": {
+        "accessibility_label": "Product section navigation",
+        "text_color": "#003521",
+        "background": "#addbce",
+        "background_opacity": 6,
+        "enable_motion": true,
+        "duration": 600
+      }
+    },
     "moya_selling_points": {
       "type": "moya-selling-points",
       "blocks": {
@@ -151,35 +220,35 @@
           "type": "scenario",
           "settings": {
             "title": "Anxiety Relief",
-            "description": ""
+            "description": "<p>When the lights go out, hold MoYa against your chest. Turn on Calming Rhythm mode — its slow breathing guides yours, optional warmth keeps you cozy, and steady patting slows your heart rate. No screens, no blue light, just a steady presence until you drift off.</p>"
           }
         },
         "scenario_3": {
           "type": "scenario",
           "settings": {
             "title": "Work From Home",
-            "description": ""
+            "description": "<p>When the lights go out, hold MoYa against your chest. Turn on Calming Rhythm mode — its slow breathing guides yours, optional warmth keeps you cozy, and steady patting slows your heart rate. No screens, no blue light, just a steady presence until you drift off.</p>"
           }
         },
         "scenario_4": {
           "type": "scenario",
           "settings": {
             "title": "Evening Decompression",
-            "description": ""
+            "description": "<p>When the lights go out, hold MoYa against your chest. Turn on Calming Rhythm mode — its slow breathing guides yours, optional warmth keeps you cozy, and steady patting slows your heart rate. No screens, no blue light, just a steady presence until you drift off.</p>"
           }
         },
         "scenario_5": {
           "type": "scenario",
           "settings": {
             "title": "Solo Living",
-            "description": ""
+            "description": "<p>When the lights go out, hold MoYa against your chest. Turn on Calming Rhythm mode — its slow breathing guides yours, optional warmth keeps you cozy, and steady patting slows your heart rate. No screens, no blue light, just a steady presence until you drift off.</p>"
           }
         },
         "scenario_6": {
           "type": "scenario",
           "settings": {
             "title": "Travel & Hotel Stays",
-            "description": ""
+            "description": "<p>When the lights go out, hold MoYa against your chest. Turn on Calming Rhythm mode — its slow breathing guides yours, optional warmth keeps you cozy, and steady patting slows your heart rate. No screens, no blue light, just a steady presence until you drift off.</p>"
           }
         }
       },
@@ -784,68 +853,6 @@
         "section_preload": "false",
         "checksum": "7f30c8909833774e88b2b9f408a93f5551101a5a696edfdb8b27b3c51828a182_1"
       }
-    },
-    "moya_product_nav": {
-      "type": "moya-product-nav",
-      "blocks": {
-        "anchor_1": {
-          "type": "anchor",
-          "settings": {
-            "label": "Key Selling Points",
-            "section_kind": "selling-points",
-            "target_id": "moya_selling_points"
-          }
-        },
-        "anchor_2": {
-          "type": "anchor",
-          "settings": {
-            "label": "Everyday Moments",
-            "section_kind": "scenarios",
-            "target_id": "moya_scenarios"
-          }
-        },
-        "anchor_3": {
-          "type": "anchor",
-          "settings": {
-            "label": "Materials & Care",
-            "section_kind": "materials",
-            "target_id": "moya_materials"
-          }
-        },
-        "anchor_4": {
-          "type": "anchor",
-          "settings": {
-            "label": "How It Works",
-            "section_kind": "how-carousel",
-            "target_id": "moya_how_carousel_V9HpEz"
-          }
-        },
-        "anchor_5": {
-          "type": "anchor",
-          "settings": {
-            "label": "Specifications",
-            "section_kind": "specifications",
-            "target_id": "moya_specifications"
-          }
-        },
-        "anchor_6": {
-          "type": "anchor",
-          "settings": {
-            "label": "FAQ",
-            "section_kind": "faq",
-            "target_id": "moya_faq_tCi7Pn"
-          }
-        }
-      },
-      "block_order": [
-        "anchor_1",
-        "anchor_2",
-        "anchor_3",
-        "anchor_4",
-        "anchor_5",
-        "anchor_6"
-      ],
-      "settings": {}
     }
   },
   "order": [

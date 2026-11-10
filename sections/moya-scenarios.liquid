@@ -20,22 +20,33 @@
     --scenario-duration: {{ section.settings.duration }}ms;
   '
 >
-  {%- if section.settings.background != blank -%}
-    {{
-      section.settings.background
-      | image_url: width: 2400
-      | image_tag:
-        class: 'moya-scenarios__background',
-        widths: '480,750,1100,1440,1920,2400',
-        sizes: '100vw',
-        loading: 'lazy',
-        decoding: 'async',
-        alt: '',
-        style: 'object-position: var(--scenario-position);'
-    }}
+  {%- for block in section.blocks -%}
+    {%- assign background = block.settings.background | default: section.settings.background -%}
+    <div
+      class='moya-scenarios__background-layer{% if forloop.index0 == initial_index %} is-active{% endif %}'
+      data-scenario-background
+      aria-hidden='true'
+    >
+      {%- if background != blank -%}
+        {{
+          background
+          | image_url: width: 2400
+          | image_tag:
+            class: 'moya-scenarios__background',
+            widths: '480,750,1100,1440,1920,2400',
+            sizes: '100vw',
+            loading: 'lazy',
+            decoding: 'async',
+            alt: '',
+            style: 'object-position: var(--scenario-position);'
+        }}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'moya-scenarios__placeholder' }}
+      {%- endif -%}
+    </div>
   {%- else -%}
     {{ 'lifestyle-1' | placeholder_svg_tag: 'moya-scenarios__placeholder' }}
-  {%- endif -%}
+  {%- endfor -%}
   <div class='moya-scenarios__container'>
     <div class='moya-scenarios__list' data-scenario-list>
       {%- for block in section.blocks -%}
@@ -97,8 +108,8 @@
     {
       "type": "image_picker",
       "id": "background",
-      "label": "Section background image",
-      "info": "One fixed background for every scenario. Loaded through Shopify CDN."
+      "label": "Fallback background image",
+      "info": "Used when a scenario has no background image of its own."
     },
     {
       "type": "color",
@@ -209,6 +220,12 @@
       "type": "scenario",
       "name": "Scenario",
       "settings": [
+        {
+          "type": "image_picker",
+          "id": "background",
+          "label": "Background image",
+          "info": "Displayed when this scenario is expanded. Uses the section fallback image when empty."
+        },
         {
           "type": "text",
           "id": "title",
