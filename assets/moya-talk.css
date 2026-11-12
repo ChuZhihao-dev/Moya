@@ -1,4 +1,4 @@
-/* Talk to MoYa. Source file; deploy the generated .min.css. */
+/* Talk to MoYa. Loaded directly by sections/moya-talk.liquid. */
 moya-talk.moya-talk {
   --talk-ink: #37584d;
   --talk-bg: #f0f2f2;
@@ -325,20 +325,8 @@ moya-talk.moya-talk {
   }
 }
 @media (max-width: 749px) {
-  /* The scroll clock uses the stable svh probe; the picture fills the current viewport. */
-  @supports (height: 100dvh) {
-    moya-talk.moya-talk {
-      --talk-stage-height: calc(100dvh - var(--talk-top));
-    }
-    .moya-talk.is-enhanced:not(.is-flow) {
-      height: calc(
-        var(--talk-height) * (0.6 + var(--talk-distance, 100) / 100) + var(--talk-stage-height)
-      );
-    }
-    .moya-talk.is-enhanced:not(.is-flow) .moya-talk__stage {
-      height: var(--talk-stage-height);
-    }
-  }
+  /* Keep both the scroll track and its stage on the stable measured svh height.
+     Browser toolbar animation must not resize the document or the video crop. */
   .moya-talk__stage {
     min-height: 545px;
   }

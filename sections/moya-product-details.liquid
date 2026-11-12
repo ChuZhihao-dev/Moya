@@ -1,5 +1,5 @@
-{{ 'moya-product-details.min.css' | asset_url | stylesheet_tag }}
-<script src='{{ 'moya-product-details.min.js' | asset_url }}' defer></script>
+{{ 'moya-product-details.css' | asset_url | stylesheet_tag }}
+<script type="module" src='{{ 'moya-product-details.js' | asset_url }}'></script>
 {%- liquid
   assign variant = product.selected_or_first_available_variant
   assign product_form_id = 'product-form-' | append: product.id | append: '-' | append: section.id

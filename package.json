@@ -2,23 +2,7 @@
   "name": "moya-theme",
   "private": true,
   "scripts": {
-    "build:talk": "node scripts/build-moya-talk.mjs",
-    "test:talk": "node --test tests/moya-talk.test.cjs",
-    "build:pdp": "node scripts/build-moya-product-details.mjs",
-    "build:selling-points": "node scripts/build-moya-selling-points.mjs",
-    "test:selling-points": "node --test tests/moya-selling-physics.test.cjs",
-    "build:faq": "node scripts/build-moya-faq.mjs",
-    "build:how-carousel": "node scripts/build-moya-how-carousel.mjs",
-    "test:how-carousel": "node --test tests/moya-loop-geometry.test.cjs",
-    "build:materials": "node scripts/build-moya-materials.mjs",
-    "build:scenarios": "node scripts/build-moya-scenarios.mjs",
-    "build:specifications": "node scripts/build-moya-specifications.mjs",
-    "build:product-nav": "node scripts/build-moya-product-nav.mjs",
-    "build:text-motion": "node scripts/build-moya-text-motion.mjs",
-    "test:text-motion": "node --test tests/moya-text-motion.test.cjs"
-  },
-  "devDependencies": {
-    "esbuild": "0.28.1"
+    "test": "node --test tests/*.test.cjs"
   },
   "dependencies": {
     "gsap": "3.15.1"

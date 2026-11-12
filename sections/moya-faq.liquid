@@ -1,5 +1,5 @@
-{{ 'moya-faq.min.css' | asset_url | stylesheet_tag }}
-<script src='{{ 'moya-faq.min.js' | asset_url }}' defer></script>
+{{ 'moya-faq.css' | asset_url | stylesheet_tag }}
+<script type="module" src='{{ 'moya-faq.js' | asset_url }}'></script>
 
 <moya-faq
   class='moya-faq{% if section.settings.heading_alignment == 'center' %} moya-faq--center{% endif %}'

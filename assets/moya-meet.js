@@ -19,6 +19,9 @@ class MoyaMeet extends HTMLElement {
   #section;
   #nextScience;
   #handoffCovered = false;
+  #handoffHeight = 0;
+  #resizeObserver;
+  #lastProgress;
 
   connectedCallback() {
     this.#controller?.abort();
@@ -33,7 +36,7 @@ class MoyaMeet extends HTMLElement {
     if (!this.#sticky || !this.#scenes.length) return;
 
     document.addEventListener('scroll', this.#schedule, { capture: true, passive: true, signal });
-    window.addEventListener('resize', this.#schedule, { signal });
+    window.addEventListener('resize', this.#refresh, { signal });
     this.#motion.addEventListener('change', this.#configure, { signal });
     this.#mobile.addEventListener('change', this.#syncMedia, { signal });
     document.addEventListener('visibilitychange', this.#syncMedia, { signal });
@@ -42,7 +45,7 @@ class MoyaMeet extends HTMLElement {
       'shopify:section:unload',
       'shopify:section:reorder',
     ]) {
-      document.addEventListener(event, this.#schedule, { signal });
+      document.addEventListener(event, this.#refresh, { signal });
     }
     this.addEventListener('shopify:block:select', this.#selectEditorScene, { signal });
     this.#observer?.disconnect();
@@ -74,12 +77,16 @@ class MoyaMeet extends HTMLElement {
       for (const scene of this.#scenes) this.#observer.observe(scene);
     }
     this.#configure();
+    this.#resizeObserver?.disconnect();
+    this.#resizeObserver = new ResizeObserver(this.#refresh);
+    this.#resizeObserver.observe(this.#sticky);
   }
 
   disconnectedCallback() {
     this.#controller?.abort();
     this.#clearHandoff();
     this.#observer?.disconnect();
+    this.#resizeObserver?.disconnect();
     this.#visibleScenes.clear();
     for (const video of this.#videos) {
       video.pause();
@@ -92,6 +99,7 @@ class MoyaMeet extends HTMLElement {
   }
 
   #configure = () => {
+    this.#lastProgress = undefined;
     clearTimeout(this.#transitionTimer);
     const enhanced = !this.#motion.matches && this.#scenes.length > 1;
     this.classList.toggle('is-enhanced', enhanced);
@@ -109,10 +117,12 @@ class MoyaMeet extends HTMLElement {
 
   #clearHandoff() {
     this.#section?.classList.remove('moya-meet-section--page-underlay');
-    this.#section?.style.removeProperty('--moya-meet-pin-top');
+    this.#section?.style.removeProperty('--moya-meet-handoff-height');
     this.#nextScience?.classList.remove('moya-science-intro-section--page-overlay');
+    this.#nextScience?.style.removeProperty('--moya-meet-handoff-height');
     this.#section = this.#nextScience = undefined;
     this.#handoffCovered = false;
+    this.#handoffHeight = 0;
   }
 
   #updateHandoff() {
@@ -121,6 +131,7 @@ class MoyaMeet extends HTMLElement {
     const eligible =
       this.dataset.coverNextScience !== 'false' &&
       !this.#motion.matches &&
+      this.#scenes.length > 1 &&
       next?.matches('.moya-science-intro-section') &&
       next.querySelector('moya-science-intro');
     if (!eligible) {
@@ -132,19 +143,23 @@ class MoyaMeet extends HTMLElement {
     if (this.#section !== section || this.#nextScience !== next) this.#clearHandoff();
     this.#section = section;
     this.#nextScience = next;
-    const covered = next.getBoundingClientRect().top <= 0;
-    const changed = covered !== this.#handoffCovered;
-    this.#handoffCovered = covered;
     const viewport = this.#sticky.offsetHeight || window.innerHeight;
-    section.style.setProperty(
-      '--moya-meet-pin-top',
-      `${Math.min(0, viewport - section.offsetHeight)}px`,
-    );
-    // Release the underlay only after the next opaque page has completely covered it.
-    section.classList.toggle('moya-meet-section--page-underlay', !covered);
+    if (viewport !== this.#handoffHeight) {
+      this.#handoffHeight = viewport;
+      section.style.setProperty('--moya-meet-handoff-height', `${viewport}px`);
+      next.style.setProperty('--moya-meet-handoff-height', `${viewport}px`);
+    }
+    // Extend the inner sticky's runway and overlap the next page by the same amount.
+    // No outer sticky or scroll-time positioning changes are needed.
+    section.classList.add('moya-meet-section--page-underlay');
     next.classList.add('moya-science-intro-section--page-overlay');
-    if (changed) this.#syncMedia();
   }
+
+  #refresh = () => {
+    this.#lastProgress = undefined;
+    this.#updateHandoff();
+    this.#schedule();
+  };
 
   #shouldPlay(video) {
     const scene = video.closest('[data-moya-ref="scenes[]"]');
@@ -199,7 +214,6 @@ class MoyaMeet extends HTMLElement {
     if (this.#frame !== null) return;
     this.#frame = requestAnimationFrame(() => {
       this.#frame = null;
-      this.#updateHandoff();
       this.#update();
     });
   };
@@ -208,16 +222,27 @@ class MoyaMeet extends HTMLElement {
     if (!this.isConnected || !this.classList.contains('is-enhanced')) return;
     const rect = this.getBoundingClientRect();
     const viewport = this.#sticky.offsetHeight || window.innerHeight || 1;
-    const distance = rect.height - viewport;
+    const distance = rect.height - viewport - this.#handoffHeight;
     const progress = distance > 0 ? Math.min(Math.max(-rect.top / distance, 0), 1) : 0;
+    const covered = Boolean(this.#nextScience && this.#nextScience.getBoundingClientRect().top <= 0);
+    if (covered !== this.#handoffCovered) {
+      this.#handoffCovered = covered;
+      this.#syncMedia();
+    }
+    // Offscreen sections stay at 0/1; avoid rewriting their DOM on every scroll frame.
+    if (progress === this.#lastProgress) return;
+    this.#lastProgress = progress;
     const horizontal = this.#mobile.matches;
+    // Read geometry before changing fill dimensions or progress styles.
+    const markerSize = this.#icon
+      ? (horizontal ? this.#icon.offsetWidth : this.#icon.offsetHeight) : 0;
+    const trackSize = this.#progress
+      ? (horizontal ? this.#progress.offsetWidth : this.#progress.offsetHeight) : 0;
     if (this.#fill) {
       this.#fill.style.height = horizontal ? '100%' : `${progress * 100}%`;
       this.#fill.style.width = horizontal ? `${progress * 100}%` : '100%';
     }
     if (this.#icon && this.#progress) {
-      const markerSize = horizontal ? this.#icon.offsetWidth : this.#icon.offsetHeight;
-      const trackSize = horizontal ? this.#progress.offsetWidth : this.#progress.offsetHeight;
       const travel = Math.max(trackSize - markerSize, 0);
       // One offset drives both the marker and the cutout, so they stay in sync.
       this.#progress.style.setProperty('--moya-meet-marker-offset', `${progress * travel}px`);
@@ -254,7 +279,7 @@ class MoyaMeet extends HTMLElement {
     if (!this.classList.contains('is-enhanced') || !(event.target instanceof Element)) return;
     const index = this.#scenes.indexOf(event.target.closest('[data-moya-ref="scenes[]"]'));
     if (index < 0) return;
-    const distance = this.offsetHeight - this.#sticky.offsetHeight;
+    const distance = this.offsetHeight - this.#sticky.offsetHeight - this.#handoffHeight;
     // Select the middle of the scene's interval, away from a switch boundary.
     const progress = (index + 0.5) / this.#scenes.length;
     window.scrollTo({

@@ -9,8 +9,8 @@
   | round
 -%}
 {%- capture card_sizes -%}(max-width: 749px) {{ mobile_image_width }}px, {{ desktop_image_width }}px{%- endcapture -%}
-{{ 'moya-how-carousel.min.css' | asset_url | stylesheet_tag }}
-<script type='module' src='{{ 'moya-how-carousel.min.js' | asset_url }}'></script>
+{{ 'moya-how-carousel.css' | asset_url | stylesheet_tag }}
+<script type='module' src='{{ 'moya-how-carousel.js' | asset_url }}'></script>
 <moya-how-carousel
   id='MoyaHow-{{ section.id }}'
   class='moya-how{% if section.settings.heading_alignment == 'center' %} moya-how--center{% endif %}'

@@ -1,7 +1,7 @@
 {% comment %}
   Moya Innovation Research
   “Innovation & Research” 荣誉/奖项区:眉标 + 大标题 + 副标题 + 一排奖项 Logo 卡片。
-  每个 Logo 通过后台 image_picker 上传,可选跳转链接;非交互区块,无需 JS。
+  每个 Logo 通过后台 image_picker 上传,可选跳转链接;悬浮反馈使用 CSS,无需 JS。
 {% endcomment %}
 
 {% render 'moya-fonts' %}
@@ -13,6 +13,7 @@
     --moya-ir-body: {{ section.settings.body_color }};
     --moya-ir-eyebrow: {{ section.settings.eyebrow_color }};
     --moya-ir-card-bg: {{ section.settings.card_background }};
+    --moya-ir-hover-duration: {{ section.settings.hover_duration | default: 300 }}ms;
   }
   .moya-ir {
     background-color: var(--moya-ir-bg, #f0f2f2);
@@ -31,17 +32,19 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 720px;
+    width: 100%;
+    max-width: 860px;
     text-align: center;
   }
   .moya-ir__eyebrow {
-    margin: 0 0 21px;
+    margin: 0 0 6px;
     color: var(--moya-ir-eyebrow, #37584d);
+    opacity: 0.5;
     font-family: 'Outfit', var(--text-font-family, sans-serif);
     font-size: 12px;
     font-weight: 700;
     font-style: normal;
-    line-height: 100%;
+    line-height: 15px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
   }
@@ -52,7 +55,7 @@
     margin: 0 0 24px;
     color: var(--moya-ir-heading, #003521);
     font-family: 'Outfit', var(--heading-font-family, sans-serif);
-    font-size: clamp(38px, 4.44vw, 64px);
+    font-size: 64px;
     font-weight: 600;
     font-style: normal;
     line-height: 100%;
@@ -86,15 +89,26 @@
     justify-content: center;
     height: 136px;
     padding: 20px;
-    border-radius: 16px;
-    background-color: var(--moya-ir-card-bg, #ffffff);
+    border-radius: 10px;
+    background-color: color-mix(in srgb, var(--moya-ir-card-bg, #ffffff) 40%, transparent);
     text-decoration: none;
-    transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 300ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform var(--moya-ir-hover-duration) cubic-bezier(0.22, 1, 0.36, 1), box-shadow var(--moya-ir-hover-duration) cubic-bezier(0.22, 1, 0.36, 1);
   }
-  a.moya-ir__card:hover,
-  a.moya-ir__card:focus-visible {
+  .moya-ir--hover a.moya-ir__card:focus-visible {
     transform: translateY(-4px);
     box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  }
+  .moya-ir--hover a.moya-ir__card:focus-visible .moya-ir__logo {
+    transform: scale(1.06);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .moya-ir--hover .moya-ir__card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+    }
+    .moya-ir--hover .moya-ir__card:hover .moya-ir__logo {
+      transform: scale(1.06);
+    }
   }
   a.moya-ir__card:focus-visible {
     outline: 2px solid var(--moya-ir-heading, #003521);
@@ -109,6 +123,7 @@
     object-fit: contain;
     -webkit-user-drag: none;
     user-select: none;
+    transition: transform var(--moya-ir-hover-duration) cubic-bezier(0.22, 1, 0.36, 1);
   }
   .moya-ir__placeholder {
     color: var(--moya-ir-body, #4a5565);
@@ -118,12 +133,45 @@
     text-align: center;
   }
 
-  @media (max-width: 749px) {
+  @media (min-width: 750px) and (max-width: 1099px) {
     .moya-ir {
-      padding: 64px 25px 60px;
+      padding: 88px 40px;
     }
     .moya-ir__inner {
-      gap: 44.7px;
+      gap: 40px;
+    }
+    .moya-ir__header {
+      max-width: 660px;
+    }
+    .moya-ir__title {
+      margin-bottom: 20px;
+      font-size: 48px;
+      line-height: 1.1;
+    }
+    .moya-ir__subtitle {
+      font-size: 16px;
+    }
+    .moya-ir__grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 660px;
+    }
+    .moya-ir__card {
+      flex: 0 0 calc((100% - 40px) / 3);
+      min-width: 0;
+    }
+    .moya-ir__placeholder {
+      overflow-wrap: anywhere;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .moya-ir {
+      padding: 86.5px 25px 64.93px;
+    }
+    .moya-ir__inner {
+      gap: 64px;
     }
     .moya-ir__header {
       width: 100%;
@@ -132,7 +180,11 @@
     .moya-ir__eyebrow {
       margin-bottom: 3.42px;
       padding: 2px 4px;
+      border-radius: 3.42px;
+      -webkit-backdrop-filter: blur(5.7px);
+      backdrop-filter: blur(5.7px);
       color: var(--moya-ir-heading, #003521);
+      opacity: 1;
       font-size: 8px;
       font-weight: 400;
       line-height: 1.2;
@@ -145,10 +197,11 @@
       display: block;
     }
     .moya-ir__title {
-      max-width: 240px;
+      max-width: none;
       margin-bottom: 11.4px;
-      font-size: 36px;
+      font-size: 32px;
       line-height: 1.1;
+      white-space: nowrap;
     }
     .moya-ir__subtitle {
       max-width: 257px;
@@ -157,27 +210,24 @@
       font-size: 10px;
       letter-spacing: 0;
     }
-    .moya-ir__subtitle p:last-child br:last-child {
-      display: none;
-    }
     .moya-ir__grid {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 10.1px 15.5px;
-      max-width: 325.66px;
+      gap: 10.104px 15.483px;
+      max-width: 325.624px;
     }
     .moya-ir__card {
-      flex: 0 0 calc((100% - 31px) / 3);
+      flex: 0 0 calc((100% - 30.966px) / 3);
       min-width: 0;
-      height: 80.83px;
-      padding: 11.89px 8px;
-      border-radius: 5.94px;
+      height: 80.825px;
+      padding: 11.886px 8px;
+      border-radius: 5.943px;
       background-color: color-mix(in srgb, var(--moya-ir-card-bg, #ffffff) 40%, transparent);
     }
     .moya-ir__logo {
-      max-width: min(57.05px, 100%);
-      max-height: 57.05px;
+      max-width: min(57.053px, 100%);
+      max-height: 57.053px;
     }
     .moya-ir__placeholder {
       overflow-wrap: anywhere;
@@ -186,16 +236,18 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .moya-ir__card {
+    .moya-ir__card,
+    .moya-ir__logo {
       transition: none;
     }
-    a.moya-ir__card:hover {
+    .moya-ir--hover .moya-ir__card:is(:hover, :focus-visible),
+    .moya-ir--hover .moya-ir__card:is(:hover, :focus-visible) .moya-ir__logo {
       transform: none;
     }
   }
 </style>
 
-<div id='Moya-Innovation-Research-{{ section.id }}' class='moya-ir'>
+<div id='Moya-Innovation-Research-{{ section.id }}' class='moya-ir{% if section.settings.enable_hover %} moya-ir--hover{% endif %}'>
   <div class='moya-ir__inner'>
     <div class='moya-ir__header'>
       {%- if section.settings.eyebrow != blank -%}
@@ -263,6 +315,22 @@
   "class": "moya-innovation-research",
   "settings": [
     {
+      "type": "checkbox",
+      "id": "enable_hover",
+      "label": "Enable card hover effects",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "hover_duration",
+      "label": "Hover transition duration",
+      "min": 150,
+      "max": 600,
+      "step": 50,
+      "unit": "ms",
+      "default": 300
+    },
+    {
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow",
@@ -285,7 +353,7 @@
       "type": "richtext",
       "id": "subheading",
       "label": "Subheading",
-      "default": "<p>Years of research and innovation go into every embrace.<br/>Mo'ya is protected by a global portfolio of patents.</p>"
+      "default": "<p>Years of research and innovation go into every embrace.<br/>MoYa is protected by a global portfolio of patents.</p>"
     },
     {
       "type": "color",
@@ -351,7 +419,7 @@
         { "type": "logo", "settings": { "title": "Design Intelligence Award" } },
         { "type": "logo", "settings": { "title": "Beyond Expo" } },
         { "type": "logo", "settings": { "title": "Milano Design Week" } },
-        { "type": "logo", "settings": { "title": "iF Design Award" } }
+        { "type": "logo", "settings": { "title": "Tom's Guide" } }
       ]
     }
   ]

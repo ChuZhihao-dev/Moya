@@ -1,5 +1,5 @@
 {% render 'moya-fonts' %}
-{{ 'moya-talk.min.css' | asset_url | stylesheet_tag }}
+{{ 'moya-talk.css' | asset_url | stylesheet_tag }}
 <moya-talk
   id='Moya-Talk-{{ section.id }}'
   class='moya-talk'
@@ -370,7 +370,7 @@
       aria-hidden='true'
   ></template>
 </moya-talk>
-<script type='module' src='{{ 'moya-talk.min.js' | asset_url }}'></script>
+<script type='module' src='{{ 'moya-talk.js' | asset_url }}'></script>
 
 {% schema %}
 {

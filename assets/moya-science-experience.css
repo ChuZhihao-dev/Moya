@@ -439,13 +439,13 @@ moya-science-intro.moya-science {
   outline-offset: 5px;
 }
 @media (max-width: 749px) {
-  @supports (height: 100dvh) {
-    /* Match the pinned panel to the current screen without changing its scroll range. */
+  @supports (height: 100svh) {
+    /* Keep the panel and the following page sections stable as browser chrome moves. */
     .moya-science.is-enhanced {
-      height: calc(100dvh + 170svh);
+      height: 270svh;
     }
     .moya-science.is-enhanced .moya-science__stage {
-      height: 100dvh;
+      height: 100svh;
     }
   }
   .moya-science__content {

@@ -1,7 +1,7 @@
 {% comment %}Moya footer, desktop 20:375 and mobile 58:805. Menus and social URLs remain editable; payment methods come from Shopify.{% endcomment %}
 {% render 'moya-fonts' %}
-{{ 'moya-footer.min.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'moya-footer.min.js' | asset_url }}" defer></script>
+{{ 'moya-footer.css' | asset_url | stylesheet_tag }}
+<script type="module" src="{{ 'moya-footer.js' | asset_url }}"></script>
 <moya-footer class="moya-footer moya-footer--{{ section.settings.layout }}" style="--mf-background: {{ section.settings.background }}; --mf-mobile-background: {{ section.settings.mobile_background }}; --mf-text: {{ section.settings.text_color.rgb }}; --mf-opacity: {{ section.settings.text_opacity | divided_by: 100.0 }}; --mf-padding: {{ section.settings.padding_vertical }}px; --mf-mobile-side: {{ section.settings.mobile_padding }}px; --mf-size: {{ section.settings.font_size }}px; --mf-mobile-size: {{ section.settings.mobile_font_size }}px; --mf-logo-width: {{ section.settings.logo_width }}px; --mf-mobile-logo-mask: url('{{ 'moya-footer-logo-mask.svg' | asset_url }}');">
   <div class="moya-footer__outer">
     <div class="moya-footer__inner">

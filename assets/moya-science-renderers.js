@@ -13,6 +13,10 @@ export function createStudyRenderer(study) {
     previousBreathTime = 0,
     nextMetric = 0;
   const readouts = [...study.querySelectorAll('[data-value]')];
+  const metricElements = [...study.querySelectorAll('.moya-science__metric')];
+  const phaseButtons = [...study.querySelectorAll('[data-phase]')];
+  const restWord = study.querySelector('[data-rest-word]');
+  let lastPhase = -1;
   function metrics(values, t) {
     if (!motion.matches && t < nextMetric) return;
     nextMetric = t + 0.1;
@@ -22,14 +26,11 @@ export function createStudyRenderer(study) {
     });
   }
   function phase(index) {
-    study
-      .querySelectorAll('.moya-science__metric')
-      .forEach((item, i) => item.classList.toggle('is-active', i === index));
-    study
-      .querySelectorAll('[data-phase]')
-      .forEach((button, i) => button.setAttribute('aria-pressed', String(i === index)));
-    const word = study.querySelector('[data-rest-word]');
-    if (word) word.textContent = ['Let go.', 'Slow down.', 'Rest.'][index];
+    if (index === lastPhase) return;
+    lastPhase = index;
+    metricElements.forEach((item, i) => item.classList.toggle('is-active', i === index));
+    phaseButtons.forEach((button, i) => button.setAttribute('aria-pressed', String(i === index)));
+    if (restWord) restWord.textContent = ['Let go.', 'Slow down.', 'Rest.'][index];
   }
   function halo(ctx, x, y, radius, color, opacity) {
     const dpr = ctx.getTransform().a;
@@ -264,9 +265,11 @@ export function createStudyRenderer(study) {
     phase(phaseIndex);
   }
 
+  const draw = ({ touch, safety, sleep: rest })[kind] || touch;
   return {
     reset() {
       touchAt = helloAt = -0.6;
+      lastPhase = -1;
       touchU = touchV = restOffset = breathAngle = previousBreathTime = nextMetric = 0;
     },
     pulse(x, y, time) {
@@ -282,7 +285,7 @@ export function createStudyRenderer(study) {
     draw(ctx, w, h, time, reduced) {
       motion.matches = reduced;
       ctx.clearRect(0, 0, w, h);
-      (({ touch, safety, sleep: rest })[kind] || touch)(ctx, w, h, time);
+      draw(ctx, w, h, time);
     },
   };
 }
@@ -308,6 +311,10 @@ export function createTextileRenderer() {
       grain: random(),
     };
   });
+  // Reuse all projected points across frames; keep the same precision and density.
+  const surface = particles.map((p) => ({
+    x: 0, y: 0, size: 0, alpha: 0, light: 0, depth: 0, edge: p.edge,
+  }));
   const softDot = document.createElement('canvas');
   softDot.width = softDot.height = 32;
   const softCtx = softDot.getContext('2d');
@@ -332,8 +339,8 @@ export function createTextileRenderer() {
     haze.addColorStop(1, 'rgba(107,141,111,0)');
     ctx.fillStyle = haze;
     ctx.fillRect(0, 0, w, h);
-    const surface = [];
-    for (const p of particles) {
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
       // Broad traveling folds, with finer folds riding the same continuous sheet.
       const a = p.y * 7.4 + p.x * 1.5 - t;
       const b = p.y * 13 - p.x * 2.1 + t * 0.65;
@@ -373,7 +380,13 @@ export function createTextileRenderer() {
       const depth = Math.max(0, Math.min(1, (ry + 1.3) / 2.6));
       const alpha = p.edge * (0.22 + 0.2 * light + 0.08 * sheen) * (0.58 + depth * 0.42);
       const size = (0.55 + depth * 0.45) * perspective;
-      surface.push({ x: sx, y: sy, size, alpha, light, depth, edge: p.edge });
+      const projected = surface[i];
+      projected.x = sx;
+      projected.y = sy;
+      projected.size = size;
+      projected.alpha = alpha;
+      projected.light = light;
+      projected.depth = depth;
     }
     // A quiet continuous surface supports the points, without yarn or weave lines.
     for (let row = 0; row < rows - 1; row += 3) {

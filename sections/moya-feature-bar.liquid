@@ -1,7 +1,7 @@
 {% comment %}
   Moya Feature Bar
   信任/权益横条:桌面端一行 4 项;移动端两列两行,图标在文字左侧。
-  图标可在后台上传图片,未上传时回退到内置线性 SVG;尺寸后台可配置。
+  图标可在后台上传图片,未上传时使用设计稿图标;其他类型回退到内置 SVG。
   颜色/背景/分隔线均暴露为后台 settings。非交互区块,无需 JS。
 {% endcomment %}
 
@@ -107,6 +107,114 @@
     margin: 0;
   }
 
+  @media (min-width: 750px) {
+    .moya-fb__grid {
+      --moya-fb-column-gap: min(84px, 6vw);
+      max-width: 1055px;
+      margin-inline: auto;
+      grid-template-columns: minmax(0, 201fr) minmax(0, 199fr) minmax(0, 190fr) minmax(0, 213fr);
+      column-gap: var(--moya-fb-column-gap);
+      align-items: start;
+    }
+    .moya-fb__item {
+      min-width: 0;
+      padding-inline: 0;
+    }
+    .moya-fb__item:not(:first-child)::before {
+      left: calc(var(--moya-fb-column-gap) / -2);
+      top: 0;
+      transform: none;
+      background-color: var(--moya-fb-divider-color);
+      opacity: var(--moya-fb-divider-strength);
+      -webkit-mask: url('{{ 'moya-feature-divider-desktop.svg' | asset_url }}') center / 1px 134px no-repeat;
+      mask: url('{{ 'moya-feature-divider-desktop.svg' | asset_url }}') center / 1px 134px no-repeat;
+    }
+    .moya-fb__icon-wrap--design svg {
+      display: none;
+    }
+    .moya-fb__mobile-icon {
+      position: relative;
+      display: block;
+      width: var(--moya-fb-icon-size, 56px);
+      height: var(--moya-fb-icon-size, 56px);
+    }
+    .moya-fb__mobile-icon::before {
+      content: '';
+      position: absolute;
+      inset: 7.03% 8.03% 8.82% 7.58%;
+      background-color: currentColor;
+      -webkit-mask: var(--moya-fb-desktop-icon-mask) calc(var(--moya-fb-icon-size) * -0.0780535714) calc(var(--moya-fb-icon-size) * -0.0414642857) / var(--moya-fb-icon-size) calc(var(--moya-fb-icon-size) * 0.9243928571) no-repeat;
+      mask: var(--moya-fb-desktop-icon-mask) calc(var(--moya-fb-icon-size) * -0.0780535714) calc(var(--moya-fb-icon-size) * -0.0414642857) / var(--moya-fb-icon-size) calc(var(--moya-fb-icon-size) * 0.9243928571) no-repeat;
+    }
+    .moya-fb__title {
+      line-height: normal;
+    }
+    .moya-fb__text {
+      opacity: 0.6;
+    }
+  }
+
+  @media (min-width: 750px) and (max-width: 1099px) {
+    #Moya-Feature-Bar-{{ section.id }} {
+      --moya-fb-icon-size: 48px;
+    }
+    .moya-fb {
+      padding: 48px 40px 64px;
+    }
+    .moya-fb__grid {
+      --moya-fb-column-gap: 0px;
+      max-width: 720px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 40px;
+    }
+    .moya-fb__item {
+      min-height: 96px;
+      flex-direction: row;
+      gap: 16px;
+      padding-inline: 24px;
+      text-align: left;
+    }
+    .moya-fb__item:not(:first-child)::before {
+      top: 50%;
+      height: 88px;
+      transform: translateY(-50%);
+      background-color: var(--moya-fb-divider);
+      opacity: 1;
+      -webkit-mask: none;
+      mask: none;
+    }
+    .moya-fb__item:nth-child(odd)::before {
+      display: none;
+    }
+    .moya-fb__item:nth-child(n + 3)::after {
+      content: '';
+      position: absolute;
+      top: -20px;
+      left: 24px;
+      right: 24px;
+      height: 1px;
+      background-color: var(--moya-fb-divider);
+    }
+    .moya-fb__content {
+      min-width: 0;
+      align-items: flex-start;
+      gap: 8px;
+      overflow-wrap: anywhere;
+    }
+    .moya-fb__title {
+      font-family: 'Outfit', var(--text-font-family, sans-serif);
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+    .moya-fb__text {
+      font-family: 'Outfit', var(--text-font-family, sans-serif);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+  }
+
   @media (max-width: 749px) {
     .moya-fb {
       padding: 24px 6.5px;
@@ -126,9 +234,10 @@
       left: 50%;
       width: 1px;
       height: min(355px, calc(100vw - 20px));
-      transform: translate(-50%, -50%) rotate(90deg);
+      transform: translate(-50%, -50%) rotate(-90deg);
       background-color: var(--moya-fb-divider-color);
       opacity: var(--moya-fb-divider-strength);
+      -webkit-mask: url('{{ 'moya-feature-divider-horizontal.svg' | asset_url }}') center / 100% 100% no-repeat;
       mask: url('{{ 'moya-feature-divider-horizontal.svg' | asset_url }}') center / 100% 100% no-repeat;
     }
     .moya-fb__item {
@@ -139,10 +248,14 @@
       padding: 0 0 0 10px;
       text-align: left;
     }
+    .moya-fb__item:nth-child(4) {
+      padding-right: 10px;
+    }
     .moya-fb__item:not(:first-child)::before {
       height: 71px;
       background-color: var(--moya-fb-divider-color);
       opacity: var(--moya-fb-divider-strength);
+      -webkit-mask: url('{{ 'moya-feature-divider-vertical.svg' | asset_url }}') center / 100% 100% no-repeat;
       mask: url('{{ 'moya-feature-divider-vertical.svg' | asset_url }}') center / 100% 100% no-repeat;
     }
     .moya-fb__item:nth-child(odd)::before {
@@ -166,6 +279,7 @@
       position: absolute;
       inset: 7.03% 8.03% 8.82% 7.58%;
       background-color: currentColor;
+      -webkit-mask: var(--moya-fb-icon-mask) -3.434px -1.825px / 44px 40.673px no-repeat;
       mask: var(--moya-fb-icon-mask) -3.434px -1.825px / 44px 40.673px no-repeat;
     }
     .moya-fb__content {
@@ -236,7 +350,7 @@
             {%- if mobile_icon != blank -%}
               <span
                 class='moya-fb__mobile-icon'
-                style="--moya-fb-icon-mask: url('{{ mobile_icon | asset_url }}');"
+                style="--moya-fb-icon-mask: url('{{ mobile_icon | asset_url }}'); --moya-fb-desktop-icon-mask: url('{{ mobile_icon | replace: '.png', '-desktop.png' | asset_url }}');"
                 aria-hidden='true'
               ></span>
             {%- endif -%}
@@ -320,7 +434,7 @@
       "type": "color",
       "id": "background_color",
       "label": "Background color",
-      "default": "#f4f6f4"
+      "default": "#f0f2f2"
     },
     {
       "type": "color",

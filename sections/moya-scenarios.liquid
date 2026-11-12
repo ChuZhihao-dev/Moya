@@ -1,5 +1,5 @@
-{{ 'moya-scenarios.min.css' | asset_url | stylesheet_tag }}
-<script type='module' src='{{ 'moya-scenarios.min.js' | asset_url }}'></script>
+{{ 'moya-scenarios.css' | asset_url | stylesheet_tag }}
+<script type='module' src='{{ 'moya-scenarios.js' | asset_url }}'></script>
 {%- assign initial_index = section.settings.initial_item | minus: 1 -%}
 {%- if initial_index >= section.blocks.size -%}{%- assign initial_index = 0 -%}{%- endif -%}
 <moya-scenarios

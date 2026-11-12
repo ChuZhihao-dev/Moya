@@ -1,5 +1,5 @@
-{{ 'moya-selling-points.min.css' | asset_url | stylesheet_tag }}
-<script type='module' src='{{ 'moya-selling-points.min.js' | asset_url }}'></script>
+{{ 'moya-selling-points.css' | asset_url | stylesheet_tag }}
+<script type='module' src='{{ 'moya-selling-points.js' | asset_url }}'></script>
 {%- assign slide_count = section.blocks.size -%}
 <moya-selling-points
   id='MoyaSellingPoints-{{ section.id }}'

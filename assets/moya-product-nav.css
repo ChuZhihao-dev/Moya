@@ -14,18 +14,10 @@ html.moya-product-nav-takeover [data-moya-header-replaced] {
 .moya-product-nav {
   display: block;
   color: var(--product-nav-ink, #003521);
-  background: rgb(var(--product-nav-surface, 173 219 206) / var(--product-nav-opacity, 0.06));
+  background: rgb(var(--product-nav-surface, 221 221 221) / var(--product-nav-opacity, 0.06));
   -webkit-backdrop-filter: blur(15px);
   backdrop-filter: blur(15px);
-  font-family: var(--text-font-family);
-}
-html.moya-product-nav-takeover .moya-product-nav {
-  background:
-    linear-gradient(
-      rgb(var(--product-nav-surface, 173 219 206) / var(--product-nav-opacity, 0.06)),
-      rgb(var(--product-nav-surface, 173 219 206) / var(--product-nav-opacity, 0.06))
-    ),
-    rgb(255 255 255 / 92%);
+  font-family: 'Outfit', var(--text-font-family, sans-serif);
 }
 .moya-product-nav[hidden] {
   display: none;
@@ -33,7 +25,7 @@ html.moya-product-nav-takeover .moya-product-nav {
 .moya-product-nav__container {
   max-width: 1296px;
   margin-inline: auto;
-  padding: 20px 32px;
+  padding: 29px 0;
 }
 .moya-product-nav__scroller {
   overflow-x: auto;
@@ -65,11 +57,11 @@ html.moya-product-nav-takeover .moya-product-nav {
   display: grid;
   align-items: center;
   justify-items: center;
-  min-height: 48px;
   color: inherit;
   font-size: 16px;
   line-height: 1.5;
   letter-spacing: -0.02em;
+  text-decoration: none;
   white-space: nowrap;
   text-align: center;
   -webkit-tap-highlight-color: transparent;
@@ -81,6 +73,7 @@ html.moya-product-nav-takeover .moya-product-nav {
 .moya-product-nav__reserve {
   visibility: hidden;
   font-weight: 700;
+  letter-spacing: 0;
   pointer-events: none;
 }
 .moya-product-nav__label {
@@ -90,6 +83,8 @@ html.moya-product-nav-takeover .moya-product-nav {
 }
 .moya-product-nav__link[aria-current='location'] .moya-product-nav__label {
   font-weight: 700;
+  line-height: normal;
+  letter-spacing: 0;
   opacity: 1;
 }
 .moya-product-nav__link:focus-visible {

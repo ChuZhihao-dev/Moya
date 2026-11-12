@@ -12,6 +12,7 @@ class MoyaScienceIntro extends HTMLElement {
     this.resizeObserver?.disconnect();
     cancelAnimationFrame(this.frame);
     cancelAnimationFrame(this.scrollFrame);
+    clearTimeout(this.scrollIdleTimer);
     this.controller = new AbortController();
     const { signal } = this.controller;
     this.stage = this.querySelector('.moya-science__stage');
@@ -26,8 +27,12 @@ class MoyaScienceIntro extends HTMLElement {
     this.visible = false;
     this.lastFrame = 0;
     this.scrollFrame = 0;
+    this.scrolling = false;
+    this.lastProgress = undefined;
     this.starts = this.studies.map(() => 0);
     this.renderers = this.studies.map(createStudyRenderer);
+    this.studyVisuals = this.studies.map((study) => study.querySelector('.moya-science__visual'));
+    this.studyNeedsDraw = false;
     this.textile = createTextileRenderer();
     this.previous = this.querySelector('[data-previous]');
     this.next = this.querySelector('[data-next]');
@@ -107,11 +112,18 @@ class MoyaScienceIntro extends HTMLElement {
       { signal },
     );
     this.motion.addEventListener('change', () => this.resize(), { signal });
-    window.addEventListener('scroll', () => this.queueUpdate(), { passive: true, signal });
+    window.addEventListener('scroll', () => {
+      if (!this.visible) return;
+      this.scrolling = true;
+      clearTimeout(this.scrollIdleTimer);
+      this.scrollIdleTimer = setTimeout(() => { this.scrolling = false; }, 140);
+      this.queueUpdate();
+    }, { passive: true, signal });
     window.addEventListener('resize', () => this.resize(), { passive: true, signal });
     document.addEventListener('visibilitychange', () => this.sync(), { signal });
     this.observer = new IntersectionObserver(([entry]) => {
       this.visible = entry.isIntersecting;
+      if (this.visible) this.queueUpdate();
       this.sync();
     });
     this.observer.observe(this.stage);
@@ -125,6 +137,7 @@ class MoyaScienceIntro extends HTMLElement {
     this.resizeObserver?.disconnect();
     cancelAnimationFrame(this.frame);
     cancelAnimationFrame(this.scrollFrame);
+    clearTimeout(this.scrollIdleTimer);
     this.frame = this.scrollFrame = 0;
   }
   resize() {
@@ -132,27 +145,36 @@ class MoyaScienceIntro extends HTMLElement {
     if (enhanced !== this.enhanced) this.active = -1;
     this.enhanced = enhanced;
     this.classList.toggle('is-enhanced', this.enhanced);
+    this.lastProgress = undefined;
     this.top = parseFloat(getComputedStyle(this.stage).top) || 0;
+    this.scrollDistance = Math.max(1, this.offsetHeight - this.stage.offsetHeight);
     const custom =
       this.dataset.backgroundImage === 'true' ||
       (innerWidth < 750 && this.dataset.mobileBackgroundImage === 'true');
+    const backgroundChanged = this.animateBackground !== (this.dataset.animation === 'true' && !custom) ||
+      this.lastReducedMotion !== this.motion.matches;
     this.animateBackground = this.dataset.animation === 'true' && !custom;
+    this.lastReducedMotion = this.motion.matches;
+    const previous = new Map(this.canvases?.map((field) => [field.canvas, field]));
+    // Measure all canvases first. Allocate/reset only when a canvas is actually drawn.
     this.canvases = [...this.querySelectorAll('canvas')].map((canvas) => {
-      const rect = canvas.getBoundingClientRect(),
-        ratio = Math.min(devicePixelRatio || 1, 1.5);
-      canvas.width = Math.max(1, Math.round(rect.width * ratio));
-      canvas.height = Math.max(1, Math.round(rect.height * ratio));
-      const ctx = canvas.getContext('2d');
-      ctx?.setTransform(ratio, 0, 0, ratio, 0, 0);
-      return { canvas, ctx, w: rect.width, h: rect.height };
+      const rect = canvas.getBoundingClientRect();
+      const ratio = Math.min(devicePixelRatio || 1, 1.5);
+      const field = previous.get(canvas) || { canvas, dirty: true };
+      if (field.w !== rect.width || field.h !== rect.height || field.ratio !== ratio)
+        field.dirty = true;
+      Object.assign(field, { w: rect.width, h: rect.height, ratio });
+      return field;
     });
+    this.update();
+    if (!this.enhanced) this.studies.forEach((_, i) => {
+      if (this.canvases[i + 1]?.dirty || backgroundChanged) this.drawStudy(i);
+    });
+    if (this.canvases[0]?.dirty || backgroundChanged) this.drawParticles();
     this.backdrop.classList.toggle(
       'is-live',
       this.animateBackground && Boolean(this.canvases[0]?.ctx),
     );
-    this.update();
-    this.studies.forEach((_, i) => this.drawStudy(i));
-    this.drawParticles();
     this.sync();
   }
   queueUpdate() {
@@ -179,8 +201,10 @@ class MoyaScienceIntro extends HTMLElement {
     }
     const rect = this.getBoundingClientRect();
     const progress = clamp(
-      (this.top - rect.top) / Math.max(1, this.offsetHeight - this.stage.offsetHeight),
+      (this.top - rect.top) / this.scrollDistance,
     );
+    if (progress === this.lastProgress) return;
+    this.lastProgress = progress;
     const state = scienceState(progress, this.studies.length);
     this.intro.style.opacity = state.intro;
     this.intro.inert = state.intro < 0.5;
@@ -193,6 +217,7 @@ class MoyaScienceIntro extends HTMLElement {
       this.active = state.index;
       this.starts[this.active] = this.clock;
       this.renderers[this.active].reset();
+      this.studyNeedsDraw = true;
       this.studies.forEach((study, i) => {
         study.classList.toggle('is-active', i === this.active);
         study.inert = i !== this.active;
@@ -203,8 +228,9 @@ class MoyaScienceIntro extends HTMLElement {
       );
       if (this.previous) this.previous.disabled = this.active === 0;
       if (this.next) this.next.disabled = this.active === this.studies.length - 1;
-      this.drawStudy(this.active);
     }
+    if (state.deck > 0 && (this.studyNeedsDraw || this.canvases?.[this.active + 1]?.dirty))
+      this.drawStudy(this.active);
   }
   go(index) {
     if (!this.studies.length) return;
@@ -237,7 +263,9 @@ class MoyaScienceIntro extends HTMLElement {
     if (elapsed >= 1000 / 30) {
       this.clock += Math.min(elapsed, 100) / 1000;
       this.lastFrame = time;
-      this.drawParticles();
+      // Keep the last particle frame while scrolling; 16k animated points must not
+      // compete with the full-screen sticky handoff on the main thread.
+      if (!this.scrolling) this.drawParticles();
       if (this.enhanced) {
         if (this.active >= 0 && !this.deck.inert) this.drawStudy(this.active);
       } else this.studies.forEach((_, i) => this.drawStudy(i));
@@ -246,7 +274,7 @@ class MoyaScienceIntro extends HTMLElement {
   }
   drawParticles() {
     const field = this.canvases?.[0];
-    if (!field?.ctx || !this.animateBackground) return;
+    if (!field || !this.animateBackground || !this.prepareCanvas(field)) return;
     this.textile(
       field.ctx,
       field.w,
@@ -257,7 +285,7 @@ class MoyaScienceIntro extends HTMLElement {
   }
   drawStudy(index) {
     const field = this.canvases?.[index + 1];
-    if (!field?.ctx) return;
+    if (!field || !this.prepareCanvas(field)) return;
     this.renderers[index].draw(
       field.ctx,
       field.w,
@@ -265,7 +293,25 @@ class MoyaScienceIntro extends HTMLElement {
       this.clock - this.starts[index],
       this.motion.matches,
     );
-    this.studies[index].querySelector('.moya-science__visual').classList.add('is-ready');
+    if (!field.ready) {
+      this.studyVisuals[index]?.classList.add('is-ready');
+      field.ready = true;
+    }
+    if (index === this.active) this.studyNeedsDraw = false;
+  }
+  prepareCanvas(field) {
+    if (!field.w || !field.h) return false;
+    if (!field.ctx || field.dirty) {
+      const width = Math.max(1, Math.round(field.w * field.ratio));
+      const height = Math.max(1, Math.round(field.h * field.ratio));
+      if (field.canvas.width !== width) field.canvas.width = width;
+      if (field.canvas.height !== height) field.canvas.height = height;
+      field.ctx ||= field.canvas.getContext('2d');
+      if (!field.ctx) return false;
+      field.ctx.setTransform(field.ratio, 0, 0, field.ratio, 0, 0);
+      field.dirty = false;
+    }
+    return true;
   }
 }
 if (!customElements.get('moya-science-intro'))

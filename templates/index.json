@@ -482,7 +482,7 @@
           "type": "logo",
           "settings": {
             "logo": "shopify://shop_images/Frame_1948755490.png",
-            "title": "iF Design Award",
+            "title": "Tom's Guide",
             "link": ""
           }
         }
@@ -499,7 +499,7 @@
         "eyebrow": "Recognition",
         "mobile_eyebrow": "Science behind MoYa",
         "heading": "Innovation & Research",
-        "subheading": "<p>Years of research and innovation go into every embrace.&nbsp;<br/>MoYa is protected by a global portfolio of patents.<br/></p>",
+        "subheading": "<p>Years of research and innovation go into every embrace.<br/>MoYa is protected by a global portfolio of patents.</p>",
         "background_color": "#f0f2f2",
         "eyebrow_color": "#37584d",
         "heading_color": "#003521",
@@ -514,16 +514,16 @@
           "type": "testimonial",
           "settings": {
             "image": "shopify://shop_images/blogger_2.webp",
-            "blogger_name": "@Blogger Name",
+            "blogger_name": "Blogger Name",
             "quote": "A calm presence when I need it most",
-            "show_tag": true
+            "show_tag": false
           }
         },
         "testimonial_FkbQir": {
           "type": "testimonial",
           "settings": {
             "image": "shopify://shop_images/blogger_5.webp",
-            "blogger_name": "@Blogger Name",
+            "blogger_name": "Blogger Name",
             "quote": "A calm presence when I need it most",
             "show_tag": false
           }
@@ -532,16 +532,16 @@
           "type": "testimonial",
           "settings": {
             "image": "shopify://shop_images/blogger_3.webp",
-            "blogger_name": "@Blogger Name",
+            "blogger_name": "Blogger Name",
             "quote": "A calm presence when I need it most",
-            "show_tag": true
+            "show_tag": false
           }
         },
         "testimonial_FmLEcG": {
           "type": "testimonial",
           "settings": {
             "image": "shopify://shop_images/blogger_1.webp",
-            "blogger_name": "@Blogger Name",
+            "blogger_name": "Blogger Name",
             "quote": "A calm presence when I need it most",
             "show_tag": false
           }
@@ -550,7 +550,7 @@
           "type": "testimonial",
           "settings": {
             "image": "shopify://shop_images/blogger_6.webp",
-            "blogger_name": "@Blogger Name",
+            "blogger_name": "Blogger Name",
             "quote": "A calm presence when I need it most",
             "show_tag": false
           }
@@ -559,9 +559,9 @@
           "type": "testimonial",
           "settings": {
             "image": "shopify://shop_images/blogger_4.webp",
-            "blogger_name": "@Blogger Name",
+            "blogger_name": "Blogger Name",
             "quote": "A calm presence when I need it most",
-            "show_tag": true
+            "show_tag": false
           }
         }
       },
@@ -575,6 +575,7 @@
       ],
       "name": "Customer Voices",
       "settings": {
+        "eyebrow": "Community",
         "heading": "Customer Voices",
         "subheading": "Real stories from people who found more comfort, calm, and connection with MoYa.",
         "background_color": "#f0f2f2",

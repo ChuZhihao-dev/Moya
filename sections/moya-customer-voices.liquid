@@ -2,7 +2,7 @@
   Moya Customer Voices
   “Customer Voices” 客户评价区:标题 + 旋转照片拼贴(带可选 @名称气泡标签) + 底部引文。
   悬停 / 聚焦卡片会切换底部引文;拼贴区整体等比缩放以适配不同屏幕宽度。
-  装饰标签形状来自 assets/cv-tag.svg;照片默认使用 assets/cv-photo-N.png 占位,可在后台替换。
+  装饰标签形状来自 assets/cv-tag.svg;照片由后台 image_picker 配置。
 {% endcomment %}
 
 {% render 'moya-fonts' %}
@@ -32,13 +32,30 @@
     align-items: center;
     gap: 24px;
     width: 100%;
-    max-width: 720px;
+    max-width: 860px;
     text-align: center;
+  }
+  .moya-cv-{{ section.id }}__heading-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .moya-cv-{{ section.id }}__eyebrow {
+    display: none;
+    margin: 0;
+    color: var(--cv-quote-color, #37584d);
+    opacity: 0.5;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 15px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
   .moya-cv-{{ section.id }}__title {
     margin: 0;
     color: var(--cv-heading-color, #003521);
-    font-size: clamp(38px, 4.44vw, 64px);
+    font-size: 64px;
     font-weight: 600;
     line-height: 1;
     letter-spacing: -0.02em;
@@ -49,7 +66,7 @@
     margin: 0;
     color: var(--cv-body-color, #4a5565);
     color: color-mix(in srgb, var(--cv-body-color, #4a5565) 80%, transparent);
-    font-size: clamp(16px, 1.25vw, 18px);
+    font-size: 18px;
     font-weight: 400;
     line-height: 1.5;
     letter-spacing: -0.02em;
@@ -88,9 +105,6 @@
     z-index: 1;
     transform-origin: center;
     transition: transform 360ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  .moya-cv-{{ section.id }}__card.is-active {
-    z-index: 3;
   }
   .moya-cv-{{ section.id }}__card:hover,
   .moya-cv-{{ section.id }}__card:focus-visible {
@@ -210,7 +224,7 @@
   .moya-cv-{{ section.id }}__quote-text {
     margin: 0;
     color: var(--cv-quote-color, #37584d);
-    font-size: clamp(20px, 1.67vw, 24px);
+    font-size: 24px;
     font-weight: 500;
     line-height: 1.5;
     letter-spacing: -0.02em;
@@ -224,8 +238,35 @@
     line-height: 1.5;
     letter-spacing: -0.02em;
   }
+  @media (min-width: 1100px) {
+    .moya-cv-{{ section.id }} {
+      padding-block: 120px;
+    }
+    .moya-cv-{{ section.id }}__eyebrow {
+      display: block;
+    }
+    .moya-cv-{{ section.id }}__subtitle {
+      font-family: 'Lexend Deca', var(--text-font-family, sans-serif);
+    }
+    .moya-cv-{{ section.id }}__media {
+      border-radius: 20px;
+    }
+    .moya-cv-{{ section.id }}__quote-text {
+      width: max-content;
+      max-width: calc(100vw - var(--moya-page-inset) * 2);
+      font-weight: 700;
+    }
+  }
+  @media (min-width: 750px) and (max-width: 1099px) {
+    .moya-cv-{{ section.id }}__title { font-size: 48px; }
+    .moya-cv-{{ section.id }}__subtitle { font-size: 16px; }
+    .moya-cv-{{ section.id }}__quote-text { font-size: 20px; }
+  }
   @media (max-width: 749px) {
     .moya-cv-{{ section.id }} { padding-inline: 20px; }
+    .moya-cv-{{ section.id }}__title { font-size: 38px; }
+    .moya-cv-{{ section.id }}__subtitle { font-size: 16px; }
+    .moya-cv-{{ section.id }}__quote-text { font-size: 20px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -253,8 +294,15 @@
   data-cv-intro='{{ section.settings.intro_animation }}'
 >
   <div class='moya-cv-{{ section.id }}__header'>
-    {%- if section.settings.heading != blank -%}
-      <h2 class='moya-cv-{{ section.id }}__title'>{{ section.settings.heading | escape }}</h2>
+    {%- if section.settings.heading != blank or section.settings.eyebrow != blank -%}
+      <div class='moya-cv-{{ section.id }}__heading-group'>
+        {%- if section.settings.eyebrow != blank -%}
+          <p class='moya-cv-{{ section.id }}__eyebrow'>{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class='moya-cv-{{ section.id }}__title'>{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+      </div>
     {%- endif -%}
     {%- if section.settings.subheading != blank -%}
       <p class='moya-cv-{{ section.id }}__subtitle'>{{ section.settings.subheading | escape }}</p>
@@ -353,6 +401,12 @@
   "settings": [
     {
       "type": "text",
+      "id": "eyebrow",
+      "label": "Desktop eyebrow",
+      "default": "Community"
+    },
+    {
+      "type": "text",
       "id": "heading",
       "label": "Heading",
       "default": "Customer Voices"
@@ -436,12 +490,12 @@
     {
       "name": "Customer Voices",
       "blocks": [
-        { "type": "testimonial", "settings": { "show_tag": true } },
-        { "type": "testimonial" },
-        { "type": "testimonial", "settings": { "show_tag": true } },
         { "type": "testimonial" },
         { "type": "testimonial" },
-        { "type": "testimonial", "settings": { "show_tag": true } }
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial" }
       ]
     }
   ]

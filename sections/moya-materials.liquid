@@ -1,5 +1,5 @@
-{{ 'moya-materials.min.css' | asset_url | stylesheet_tag }}
-<script type='module' src='{{ 'moya-materials.min.js' | asset_url }}'></script>
+{{ 'moya-materials.css' | asset_url | stylesheet_tag }}
+<script type='module' src='{{ 'moya-materials.js' | asset_url }}'></script>
 <moya-materials
   id='MoyaMaterials-{{ section.id }}'
   class='moya-materials{% if section.settings.image_position == 'right' %} moya-materials--reverse{% endif %}'

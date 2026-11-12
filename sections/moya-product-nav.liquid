@@ -1,5 +1,6 @@
-{{ 'moya-product-nav.min.css' | asset_url | stylesheet_tag }}
-<script src='{{ 'moya-product-nav.min.js' | asset_url }}' defer></script>
+{% render 'moya-fonts' %}
+{{ 'moya-product-nav.css' | asset_url | stylesheet_tag }}
+<script type="module" src='{{ 'moya-product-nav.js' | asset_url }}'></script>
 {% assign template_prefix = section.id | split: '__' | first %}
 <moya-product-nav
   class='moya-product-nav'
@@ -67,7 +68,7 @@
       "type": "color",
       "id": "background",
       "label": "Background tint",
-      "default": "#addbce"
+      "default": "#dddddd"
     },
     {
       "type": "range",

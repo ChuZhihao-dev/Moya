@@ -1,4 +1,4 @@
-/** Talk to MoYa: independent scroll, media and dialogue clocks. Build with scripts/build-moya-talk.mjs. */
+/** Talk to MoYa: independent scroll, media and dialogue clocks. */
 class MoyaTalk extends HTMLElement {
   #controller;
   #round;
@@ -28,6 +28,8 @@ class MoyaTalk extends HTMLElement {
   #short = false;
   #top = 0;
   #height = 0;
+  #layoutWidth = 0;
+  #overflowFlow = false;
   #introFailed = false;
   #introReady = false;
   #focusNext = false;
@@ -153,6 +155,8 @@ class MoyaTalk extends HTMLElement {
     this.#round = undefined;
     this.#active = null;
     this.#busy = this.#ready = this.#warming = this.#introReady = false;
+    this.#layoutWidth = 0;
+    this.#overflowFlow = false;
   }
 
   #safeHref(href) {
@@ -230,21 +234,33 @@ class MoyaTalk extends HTMLElement {
   #measure() {
     this.#geometryDirty = false;
     const header = document.querySelector('store-header[sticky]');
-    this.#top = header ? header.offsetHeight : 0;
+    let top = header ? header.offsetHeight : 0;
     // svh stays stable while mobile browser chrome expands/collapses.
     const probe = getComputedStyle(document.documentElement).getPropertyValue('--header-height');
-    if (header && parseFloat(probe)) this.#top = parseFloat(probe);
+    if (header && parseFloat(probe)) top = parseFloat(probe);
     const viewport =
       this.querySelector('[data-viewport-probe]')?.offsetHeight ||
       document.documentElement.clientHeight;
-    this.#height = Math.max(300, viewport - this.#top);
+    const height = Math.max(300, viewport - top);
+    const width = this.clientWidth;
+    // Dialogue updates must not switch a long conversation back into pinned layout.
+    // Reconsider the fallback only when the actual available layout changes.
+    if (width !== this.#layoutWidth || height !== this.#height || top !== this.#top)
+      this.#overflowFlow = false;
+    this.#layoutWidth = width;
+    this.#height = height;
+    this.#top = top;
     this.#short = this.#height < (this.#mobile.matches ? 545 : 560);
     this.style.setProperty('--talk-height', `${this.#height}px`);
     this.style.setProperty('--talk-top', `${this.#top}px`);
-    this.#flow = this.#short || !this.#motionEnabled();
+    this.#flow = this.#short || !this.#motionEnabled() || this.#overflowFlow;
     this.classList.toggle('is-flow', this.#flow);
     // Content overflow is measured separately after layout, never hidden by a fixed stage.
     if (!this.#flow) {
+      // Measure the initial options before the opening finishes, not one frame after
+      // revealing them and collapsing an already-visible scroll track.
+      const hidden = this.#ui.hidden;
+      this.#ui.hidden = false;
       const answer = this.querySelector('[data-answer]');
       const asked = this.querySelector('[data-asked]');
       const options = this.#options;
@@ -260,7 +276,9 @@ class MoyaTalk extends HTMLElement {
               : this.#stage.getBoundingClientRect().top + this.#height * 0.7) -
               12) ||
         options.getBoundingClientRect().bottom > this.#stage.getBoundingClientRect().bottom - 8;
+      this.#ui.hidden = hidden;
       if (overlaps) {
+        this.#overflowFlow = true;
         this.#flow = true;
         this.classList.add('is-flow');
       }

@@ -67,6 +67,7 @@
         "warranty"
       ],
       "settings": {
+        "media_layout": "mosaic",
         "background": "#ffffff",
         "text_color": "#003521",
         "accent_color": "#addbce",
@@ -149,7 +150,7 @@
       "settings": {
         "accessibility_label": "Product section navigation",
         "text_color": "#003521",
-        "background": "#addbce",
+        "background": "#dddddd",
         "background_opacity": 6,
         "enable_motion": true,
         "duration": 600
@@ -170,6 +171,7 @@
         "point_2": {
           "type": "slide",
           "settings": {
+            "image": "shopify://shop_images/7ebc1f9afc0c9bc09a47fd5c48b09e91d220438d.webp",
             "show_icon": true,
             "heading": "Selling point 02",
             "text": "<p>Feature description.</p>"
@@ -178,6 +180,7 @@
         "point_3": {
           "type": "slide",
           "settings": {
+            "image": "shopify://shop_images/pic1_3.webp",
             "show_icon": true,
             "heading": "Selling point 03",
             "text": "<p>Feature description.</p>"
@@ -212,6 +215,7 @@
         "scenario_1": {
           "type": "scenario",
           "settings": {
+            "background": "shopify://shop_images/c2212ad6634bf9f8c74ef89f4b886d672a9de62d.webp",
             "title": "Falling Asleep",
             "description": "<p>When the lights go out, hold MoYa against your chest. Turn on Calming Rhythm mode — its slow breathing guides yours, optional warmth keeps you cozy, and steady patting slows your heart rate. No screens, no blue light, just a steady presence until you drift off.</p>"
           }
@@ -219,6 +223,7 @@
         "scenario_2": {
           "type": "scenario",
           "settings": {
+            "background": "shopify://shop_images/pic1_1_01396bfa-a733-438b-81a0-9ff430e8c791.webp",
             "title": "Anxiety Relief",
             "description": "<p>When the lights go out, hold MoYa against your chest. Turn on Calming Rhythm mode — its slow breathing guides yours, optional warmth keeps you cozy, and steady patting slows your heart rate. No screens, no blue light, just a steady presence until you drift off.</p>"
           }
@@ -226,6 +231,7 @@
         "scenario_3": {
           "type": "scenario",
           "settings": {
+            "background": "shopify://shop_images/pic1_5ef50940-d149-4146-8499-e33c4a5e0325.webp",
             "title": "Work From Home",
             "description": "<p>When the lights go out, hold MoYa against your chest. Turn on Calming Rhythm mode — its slow breathing guides yours, optional warmth keeps you cozy, and steady patting slows your heart rate. No screens, no blue light, just a steady presence until you drift off.</p>"
           }
@@ -233,6 +239,7 @@
         "scenario_4": {
           "type": "scenario",
           "settings": {
+            "background": "shopify://shop_images/pic1_2_515b11d8-4391-4563-aa4f-cc329cb4c827.webp",
             "title": "Evening Decompression",
             "description": "<p>When the lights go out, hold MoYa against your chest. Turn on Calming Rhythm mode — its slow breathing guides yours, optional warmth keeps you cozy, and steady patting slows your heart rate. No screens, no blue light, just a steady presence until you drift off.</p>"
           }
@@ -240,6 +247,7 @@
         "scenario_5": {
           "type": "scenario",
           "settings": {
+            "background": "shopify://shop_images/pic1_3.webp",
             "title": "Solo Living",
             "description": "<p>When the lights go out, hold MoYa against your chest. Turn on Calming Rhythm mode — its slow breathing guides yours, optional warmth keeps you cozy, and steady patting slows your heart rate. No screens, no blue light, just a steady presence until you drift off.</p>"
           }
@@ -247,6 +255,7 @@
         "scenario_6": {
           "type": "scenario",
           "settings": {
+            "background": "shopify://shop_images/7ebc1f9afc0c9bc09a47fd5c48b09e91d220438d.webp",
             "title": "Travel & Hotel Stays",
             "description": "<p>When the lights go out, hold MoYa against your chest. Turn on Calming Rhythm mode — its slow breathing guides yours, optional warmth keeps you cozy, and steady patting slows your heart rate. No screens, no blue light, just a steady presence until you drift off.</p>"
           }
@@ -261,7 +270,6 @@
         "scenario_6"
       ],
       "settings": {
-        "background": "shopify://shop_images/pic1_5ef50940-d149-4146-8499-e33c4a5e0325.webp",
         "background_color": "#5b655e",
         "content_position": "left",
         "desktop_position": 50,
