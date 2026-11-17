@@ -29,3 +29,5 @@ npm test
 ```
 
 语法检查和逻辑测试不能替代浏览器中的布局、滚动及交互验证。
+
+Science 摄影叙事组件的配置、依赖及验证记录见 [组件说明](docs/moya-science-storytelling.md)。

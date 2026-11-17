@@ -1,0 +1,590 @@
+{% comment %}
+  A shared photographic journey. All chapter copy remains server-rendered.
+  GSAP and Lenis load only when a journey instance can use enhanced motion.
+{% endcomment %}
+{% render 'moya-fonts' %}
+{{ 'moya-science-storytelling.css' | asset_url | stylesheet_tag }}
+
+<moya-science-storytelling
+  id='Moya-Science-Story-{{ section.id }}'
+  class='moya-story'
+  role='region'
+  aria-labelledby='Moya-Story-Title-{{ section.id }}'
+  data-layout='{{ section.settings.layout }}'
+  data-motion='{{ section.settings.enable_motion }}'
+  data-lenis='{{ section.settings.enable_lenis }}'
+  data-scroll-distance='{{ section.settings.scroll_distance }}'
+  data-reading-hold='{{ section.settings.reading_hold }}'
+  data-intro-delay='{{ section.settings.intro_delay }}'
+  data-scrub='{{ section.settings.scrub }}'
+  style='--story-day: {{ section.settings.day_color }}; --story-dusk: {{ section.settings.dusk_color }}; --story-night: {{ section.settings.night_color }}; --story-ink: {{ section.settings.ink_color }}; --story-blur: {{ section.settings.glass_blur }}px'
+>
+  {% if section.settings.anchor_id != blank %}
+    <span class='moya-story__page-anchor' id='{{ section.settings.anchor_id | handleize }}' aria-hidden='true'></span>
+  {% endif %}
+  <div class='moya-story__stage'>
+    <div class='moya-story__atmosphere' aria-hidden='true'>
+      <div class='moya-story__dusk'></div>
+      <div class='moya-story__night'></div>
+    </div>
+    {% if section.settings.show_route %}
+      <svg class='moya-story__route' aria-hidden='true' focusable='false'>
+        <path stroke-width='0.8' opacity='0.3'></path>
+        <path stroke-width='1.5' opacity='0.5'></path>
+        <path stroke-width='2.4' opacity='0.65'></path>
+      </svg>
+    {% endif %}
+    <header class='moya-story__intro' id='Moya-Story-Intro-{{ section.id }}'>
+      {% if section.settings.eyebrow != blank %}<p class='moya-story__eyebrow'>{{ section.settings.eyebrow | escape }}</p>{% endif %}
+      <h2 id='Moya-Story-Title-{{ section.id }}'>{{ section.settings.heading | escape | newline_to_br }}</h2>
+      {% if section.blocks.size > 0 and section.settings.intro_link != blank %}
+        <a class='moya-story__link' href='#Moya-Story-Chapter-{{ section.id }}-{{ section.blocks.first.id }}' data-story-go='0'>{{ section.settings.intro_link | escape }} <span aria-hidden='true'>↓</span></a>
+      {% endif %}
+    </header>
+
+    {% for block in section.blocks %}
+      {%- liquid
+        assign topic = block.settings.effect
+        assign mood = block.settings.mood
+        case block.settings.default_photo
+          when 'care'
+            assign photo_asset = 'moya-science-evening.webp'
+            assign default_alt = 'A woman resting against MoYa in soft evening light.'
+          when 'touch'
+            assign photo_asset = 'moya-science-night.webp'
+            assign default_alt = 'A woman resting with MoYa’s soft arms around her.'
+          when 'warmth'
+            assign photo_asset = 'moya-science-warmth.webp'
+            assign default_alt = 'A woman resting inside MoYa’s embrace beside a warm bedside lamp.'
+          else
+            assign photo_asset = 'moya-science-daytime.webp'
+            assign default_alt = 'A woman sitting face to face with MoYa on a sofa.'
+        endcase
+        if block.settings.image != blank
+          assign default_alt = block.settings.photo_heading | strip_html | strip_newlines
+        endif
+        assign photo_alt = block.settings.image_alt | default: block.settings.image.alt | default: default_alt
+        assign chapter_number = forloop.index | prepend: '0' | slice: -2, 2
+      -%}
+      <article
+        class='moya-story__chapter'
+        id='Moya-Story-Chapter-{{ section.id }}-{{ block.id }}'
+        aria-labelledby='Moya-Story-Photo-{{ section.id }}-{{ block.id }}'
+        data-mood='{{ mood }}'
+        data-effect='{% if section.settings.enable_particles %}{{ topic }}{% else %}none{% endif %}'
+        data-particle-x='{{ block.settings.particle_x }}'
+        data-particle-y='{{ block.settings.particle_y }}'
+        data-particle-scale='{{ block.settings.particle_scale }}'
+        {{ block.shopify_attributes }}
+      >
+        <p class='moya-story__chapter-label'>{{ section.settings.eyebrow | escape }}<span>{{ chapter_number }} / {{ block.settings.moment | escape }}</span></p>
+        <figure class='moya-story__photo'>
+          <picture>
+            {% if block.settings.mobile_image != blank %}
+              <source media='(max-width: 749px)' srcset='{{ block.settings.mobile_image | image_url: width: 500 }} 500w, {{ block.settings.mobile_image | image_url: width: 1000 }} 1000w' sizes='96vw' width='{{ block.settings.mobile_image.width }}' height='{{ block.settings.mobile_image.height }}'>
+            {% endif %}
+            {% if block.settings.image != blank %}
+              {{ block.settings.image | image_url: width: 2400 | image_tag: loading: 'lazy', widths: '500,750,1100,1500,2000,2400', sizes: '(max-width: 749px) 96vw, 72vw', alt: photo_alt }}
+            {% else %}
+              <img src='{{ photo_asset | asset_url }}' alt='{{ photo_alt | escape }}' width='2560' height='1707' loading='lazy' decoding='async'>
+            {% endif %}
+          </picture>
+          {% if section.settings.enable_particles and topic != 'none' %}<canvas class='moya-story__particles' aria-hidden='true'></canvas>{% endif %}
+          <div class='moya-story__shade' aria-hidden='true'></div>
+          <figcaption>
+            <h3 id='Moya-Story-Photo-{{ section.id }}-{{ block.id }}'>{{ block.settings.photo_heading | escape | newline_to_br }}</h3>
+            <a class='moya-story__link' href='#Moya-Story-Detail-{{ section.id }}-{{ block.id }}' data-story-go='{{ forloop.index0 }}' data-story-detail>{{ block.settings.read_label | escape }} <span aria-hidden='true'>↓</span></a>
+          </figcaption>
+        </figure>
+        <p class='moya-story__marker' aria-hidden='true'>{{ block.settings.moment | escape }} · {{ block.settings.topic_label | escape }}</p>
+        <div class='moya-story__copy' id='Moya-Story-Detail-{{ section.id }}-{{ block.id }}'>
+          <p class='moya-story__topic'>{{ chapter_number }} / {{ block.settings.moment | escape }} · {{ block.settings.topic_label | escape }}</p>
+          <h4>{{ block.settings.heading | escape | newline_to_br }}</h4>
+          <p class='moya-story__teaser' aria-hidden='true'>{{ block.settings.teaser | default: block.settings.companion_text | escape }}</p>
+          <div class='moya-story__body'><div>
+            <div class='moya-story__why'>{{ block.settings.explanation }}</div>
+            {% if block.settings.companion_text != blank %}
+              <p class='moya-story__connection'><strong>{{ block.settings.companion_label | escape }}</strong>{{ block.settings.companion_text | escape }}</p>
+            {% endif %}
+            {% if block.settings.evidence_url != blank or block.settings.evidence_note != blank %}
+              <div class='moya-story__evidence'>
+                {% if block.settings.evidence_url != blank %}<a href='{{ block.settings.evidence_url }}' target='_blank' rel='noopener noreferrer'>{{ block.settings.evidence_label | escape }} <span aria-hidden='true'>↗</span></a>{% endif %}
+                {% if block.settings.evidence_note != blank %}<p>{{ block.settings.evidence_note | escape }}</p>{% endif %}
+              </div>
+            {% endif %}
+          </div></div>
+        </div>
+      </article>
+    {% endfor %}
+    <div class='moya-story__chrome' aria-hidden='true'><span>{{ section.settings.eyebrow | escape }}</span><span data-story-status>{{ section.settings.intro_nav | escape }}</span></div>
+    <nav class='moya-story__nav' aria-label='{{ section.settings.navigation_label | escape }}'>
+      <a href='#Moya-Story-Intro-{{ section.id }}' data-story-go='-1'>{{ section.settings.intro_nav | escape }}</a>
+      {% for block in section.blocks %}
+        <a href='#Moya-Story-Chapter-{{ section.id }}-{{ block.id }}' data-story-go='{{ forloop.index0 }}'>{{ forloop.index | prepend: '0' | slice: -2, 2 }} {{ block.settings.nav_label | escape }}</a>
+      {% endfor %}
+    </nav>
+  </div>
+</moya-science-storytelling>
+<script type='module' src='{{ 'moya-science-storytelling.js' | asset_url }}'></script>
+
+{% schema %}
+{
+  "name": "Moya Science Storytelling",
+  "class": "moya-story-section",
+  "tag": "section",
+  "disabled_on": {
+    "groups": [
+      "header",
+      "footer",
+      "aside"
+    ]
+  },
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Science behind MoYa"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The science\nof feeling held."
+    },
+    {
+      "type": "text",
+      "id": "intro_link",
+      "label": "Opening link label",
+      "default": "Follow the thread"
+    },
+    {
+      "type": "text",
+      "id": "intro_nav",
+      "label": "Introduction navigation label",
+      "default": "Introduction"
+    },
+    {
+      "type": "text",
+      "id": "navigation_label",
+      "label": "Navigation accessibility label",
+      "default": "Explore the science behind MoYa"
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "Optional page anchor",
+      "info": "Use a unique value on each instance. Leave blank if no external anchor is needed."
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "default": "journey",
+      "options": [
+        {
+          "value": "journey",
+          "label": "Scroll journey"
+        },
+        {
+          "value": "stacked",
+          "label": "Stacked chapters"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_motion",
+      "label": "Enable scroll animation",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_lenis",
+      "label": "Enable page smooth scrolling",
+      "default": true,
+      "info": "One shared Lenis instance on pages containing this section. Native touch scrolling is preserved. Disabled inside the theme editor."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_particles",
+      "label": "Enable photo particles",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_route",
+      "label": "Show the journey thread",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "scroll_distance",
+      "label": "Scroll distance",
+      "default": 100,
+      "min": 60,
+      "max": 160,
+      "step": 10,
+      "unit": "%"
+    },
+    {
+      "type": "range",
+      "id": "reading_hold",
+      "label": "Reading hold",
+      "default": 1.2,
+      "min": 1.2,
+      "max": 3,
+      "step": 0.1
+    },
+    {
+      "type": "range",
+      "id": "intro_delay",
+      "label": "Opening hold",
+      "default": 0,
+      "min": 0,
+      "max": 1.5,
+      "step": 0.1
+    },
+    {
+      "type": "range",
+      "id": "scrub",
+      "label": "Animation smoothing without Lenis",
+      "default": 0.2,
+      "min": 0,
+      "max": 0.6,
+      "step": 0.1,
+      "unit": "s"
+    },
+    {
+      "type": "range",
+      "id": "glass_blur",
+      "label": "Reading panel blur",
+      "default": 16,
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "day_color",
+      "label": "Day background",
+      "default": "#f2f2f2"
+    },
+    {
+      "type": "color",
+      "id": "dusk_color",
+      "label": "Evening background",
+      "default": "#dcd6ce"
+    },
+    {
+      "type": "color",
+      "id": "night_color",
+      "label": "Night background",
+      "default": "#242423"
+    },
+    {
+      "type": "color",
+      "id": "ink_color",
+      "label": "Day text",
+      "default": "#385950"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "chapter",
+      "name": "Science chapter",
+      "settings": [
+        {
+          "type": "text",
+          "id": "nav_label",
+          "label": "Navigation label",
+          "default": "Daytime"
+        },
+        {
+          "type": "text",
+          "id": "topic_label",
+          "label": "Topic label",
+          "default": "Being heard"
+        },
+        {
+          "type": "text",
+          "id": "moment",
+          "label": "Time of day",
+          "default": "Daytime"
+        },
+        {
+          "type": "select",
+          "id": "mood",
+          "label": "Atmosphere",
+          "default": "day",
+          "options": [
+            {
+              "value": "day",
+              "label": "Day"
+            },
+            {
+              "value": "dusk",
+              "label": "Evening"
+            },
+            {
+              "value": "night",
+              "label": "Night"
+            }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Mobile photo",
+          "info": "Use a matching composition to keep the particle calibration."
+        },
+        {
+          "type": "select",
+          "id": "default_photo",
+          "label": "Built-in photo",
+          "default": "conversation",
+          "options": [
+            {
+              "value": "conversation",
+              "label": "Daytime"
+            },
+            {
+              "value": "care",
+              "label": "Evening"
+            },
+            {
+              "value": "touch",
+              "label": "Night"
+            },
+            {
+              "value": "warmth",
+              "label": "Warmth"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Photo description"
+        },
+        {
+          "type": "textarea",
+          "id": "photo_heading",
+          "label": "Photo heading",
+          "default": "A little space.\nJust to be heard."
+        },
+        {
+          "type": "text",
+          "id": "read_label",
+          "label": "Photo link label",
+          "default": "Discover why"
+        },
+        {
+          "type": "textarea",
+          "id": "heading",
+          "label": "Explanation heading",
+          "default": "Listening makes\nroom for connection."
+        },
+        {
+          "type": "textarea",
+          "id": "teaser",
+          "label": "Short preview",
+          "info": "If empty, the MoYa connection text is used."
+        },
+        {
+          "type": "richtext",
+          "id": "explanation",
+          "label": "Explanation"
+        },
+        {
+          "type": "text",
+          "id": "companion_label",
+          "label": "Connection label",
+          "default": "With MoYa"
+        },
+        {
+          "type": "textarea",
+          "id": "companion_text",
+          "label": "MoYa connection"
+        },
+        {
+          "type": "text",
+          "id": "evidence_label",
+          "label": "Research link label"
+        },
+        {
+          "type": "url",
+          "id": "evidence_url",
+          "label": "Research link"
+        },
+        {
+          "type": "textarea",
+          "id": "evidence_note",
+          "label": "Research note"
+        },
+        {
+          "type": "select",
+          "id": "effect",
+          "label": "Particle effect",
+          "default": "conversation",
+          "options": [
+            {
+              "value": "conversation",
+              "label": "Daytime"
+            },
+            {
+              "value": "care",
+              "label": "Evening"
+            },
+            {
+              "value": "touch",
+              "label": "Night"
+            },
+            {
+              "value": "warmth",
+              "label": "Warmth"
+            },
+            {
+              "value": "none",
+              "label": "None"
+            }
+          ]
+        },
+        {
+          "type": "range",
+          "id": "particle_x",
+          "label": "Particle horizontal offset",
+          "default": 0,
+          "min": -50,
+          "max": 50,
+          "step": 1,
+          "unit": "%"
+        },
+        {
+          "type": "range",
+          "id": "particle_y",
+          "label": "Particle vertical offset",
+          "default": 0,
+          "min": -50,
+          "max": 50,
+          "step": 1,
+          "unit": "%"
+        },
+        {
+          "type": "range",
+          "id": "particle_scale",
+          "label": "Particle size",
+          "default": 100,
+          "min": 50,
+          "max": 150,
+          "step": 5,
+          "unit": "%"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Moya Science Storytelling",
+      "blocks": [
+        {
+          "type": "chapter",
+          "settings": {
+            "nav_label": "Daytime",
+            "moment": "Daytime",
+            "mood": "day",
+            "default_photo": "conversation",
+            "photo_heading": "A little space.\nJust to be heard.",
+            "read_label": "Discover why",
+            "heading": "Listening makes\nroom for connection.",
+            "companion_label": "With MoYa",
+            "effect": "conversation",
+            "particle_x": 0,
+            "particle_y": 0,
+            "particle_scale": 100,
+            "explanation": "<p>Feeling understood is part of what makes a conversation meaningful. In a study of first conversations, people who received active listening responses felt more understood than those who received advice or simple acknowledgements.</p>",
+            "companion_text": "Space for everyday thoughts, with conversation that follows your pace.",
+            "evidence_label": "Active listening · 2014 study",
+            "evidence_url": "https://doi.org/10.1080/10904018.2013.813234",
+            "evidence_note": "Research on human conversation; MoYa is not a replacement for human relationships.",
+            "topic_label": "Being heard"
+          }
+        },
+        {
+          "type": "chapter",
+          "settings": {
+            "nav_label": "Evening",
+            "moment": "Evening",
+            "mood": "dusk",
+            "default_photo": "care",
+            "photo_heading": "A moment to pause.\nA little room for you.",
+            "read_label": "Discover why",
+            "heading": "Care begins with\nhow we meet ourselves.",
+            "companion_label": "With MoYa",
+            "effect": "care",
+            "particle_x": 0,
+            "particle_y": 0,
+            "particle_scale": 100,
+            "explanation": "<p>Self-care includes the way we respond to our own difficult moments. Self-compassion means meeting those moments with kindness rather than harsh judgement. Research explores how practising this approach relates to stress and emotional wellbeing.</p>",
+            "companion_text": "A familiar companion for a quiet pause and a small moment of care.",
+            "evidence_label": "Self-compassion · 2023 review",
+            "evidence_url": "https://pubmed.ncbi.nlm.nih.gov/37362192/",
+            "evidence_note": "Research on self-compassion practices, not a clinical study of MoYa.",
+            "topic_label": "Self-care"
+          }
+        },
+        {
+          "type": "chapter",
+          "settings": {
+            "nav_label": "Night",
+            "moment": "Night",
+            "mood": "night",
+            "default_photo": "touch",
+            "photo_heading": "Some comfort\ndoesn’t need words.",
+            "read_label": "Discover why",
+            "heading": "Why touch\ncan feel reassuring.",
+            "companion_label": "With MoYa",
+            "effect": "touch",
+            "particle_x": 0,
+            "particle_y": 0,
+            "particle_scale": 100,
+            "explanation": "<p>A welcome embrace makes closeness something we can physically feel. Research on touch interventions suggests that touch can support wellbeing, although the experience depends on the person, the context, and the kind of contact.</p>",
+            "companion_text": "A soft presence to hold, bringing a familiar gesture of closeness into everyday life.",
+            "evidence_label": "Touch & wellbeing · 2024 review",
+            "evidence_url": "https://www.nature.com/articles/s41562-024-01841-8",
+            "evidence_note": "Research on touch, not a clinical study of MoYa.",
+            "topic_label": "Touch"
+          }
+        },
+        {
+          "type": "chapter",
+          "settings": {
+            "nav_label": "Warmth",
+            "moment": "Night",
+            "mood": "night",
+            "default_photo": "warmth",
+            "photo_heading": "A little warmth.\nA little closer.",
+            "read_label": "Feel the warmth",
+            "heading": "Warmth,\nwithin reach.",
+            "companion_label": "With MoYa",
+            "effect": "warmth",
+            "particle_x": 0,
+            "particle_y": 0,
+            "particle_scale": 100,
+            "explanation": "<p>Soft contact and gentle warmth come together in the same embrace.</p>",
+            "companion_text": "A warming feature adds another layer to the feeling of being held.",
+            "topic_label": "Warmth"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

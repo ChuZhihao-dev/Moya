@@ -585,6 +585,129 @@
         "tag_color": "#003521",
         "intro_animation": true
       }
+    },
+    "moya_science_storytelling": {
+      "type": "moya-science-storytelling",
+      "name": "Moya Science Storytelling",
+      "settings": {
+        "eyebrow": "Science behind MoYa",
+        "heading": "The science\nof feeling held.",
+        "intro_link": "Follow the thread",
+        "intro_nav": "Introduction",
+        "navigation_label": "Explore the science behind MoYa",
+        "layout": "journey",
+        "enable_motion": true,
+        "enable_lenis": true,
+        "enable_particles": true,
+        "show_route": true,
+        "scroll_distance": 100,
+        "reading_hold": 1.2,
+        "intro_delay": 0,
+        "scrub": 0.2,
+        "glass_blur": 16,
+        "day_color": "#f2f2f2",
+        "dusk_color": "#dcd6ce",
+        "night_color": "#242423",
+        "ink_color": "#385950",
+        "anchor_id": "moya-science"
+      },
+      "blocks": {
+        "chapter_1": {
+          "type": "chapter",
+          "settings": {
+            "nav_label": "Daytime",
+            "moment": "Daytime",
+            "mood": "day",
+            "default_photo": "conversation",
+            "photo_heading": "A little space.\nJust to be heard.",
+            "read_label": "Discover why",
+            "heading": "Listening makes\nroom for connection.",
+            "companion_label": "With MoYa",
+            "effect": "conversation",
+            "particle_x": 0,
+            "particle_y": 0,
+            "particle_scale": 100,
+            "explanation": "<p>Feeling understood is part of what makes a conversation meaningful. In a study of first conversations, people who received active listening responses felt more understood than those who received advice or simple acknowledgements.</p>",
+            "companion_text": "Space for everyday thoughts, with conversation that follows your pace.",
+            "evidence_label": "Active listening · 2014 study",
+            "evidence_url": "https://doi.org/10.1080/10904018.2013.813234",
+            "evidence_note": "Research on human conversation; MoYa is not a replacement for human relationships.",
+            "topic_label": "Being heard"
+          }
+        },
+        "chapter_2": {
+          "type": "chapter",
+          "settings": {
+            "nav_label": "Evening",
+            "moment": "Evening",
+            "mood": "dusk",
+            "default_photo": "care",
+            "photo_heading": "A moment to pause.\nA little room for you.",
+            "read_label": "Discover why",
+            "heading": "Care begins with\nhow we meet ourselves.",
+            "companion_label": "With MoYa",
+            "effect": "care",
+            "particle_x": 0,
+            "particle_y": 0,
+            "particle_scale": 100,
+            "explanation": "<p>Self-care includes the way we respond to our own difficult moments. Self-compassion means meeting those moments with kindness rather than harsh judgement. Research explores how practising this approach relates to stress and emotional wellbeing.</p>",
+            "companion_text": "A familiar companion for a quiet pause and a small moment of care.",
+            "evidence_label": "Self-compassion · 2023 review",
+            "evidence_url": "https://pubmed.ncbi.nlm.nih.gov/37362192/",
+            "evidence_note": "Research on self-compassion practices, not a clinical study of MoYa.",
+            "topic_label": "Self-care"
+          }
+        },
+        "chapter_3": {
+          "type": "chapter",
+          "settings": {
+            "nav_label": "Night",
+            "moment": "Night",
+            "mood": "night",
+            "default_photo": "touch",
+            "photo_heading": "Some comfort\ndoesn’t need words.",
+            "read_label": "Discover why",
+            "heading": "Why touch\ncan feel reassuring.",
+            "companion_label": "With MoYa",
+            "effect": "touch",
+            "particle_x": 0,
+            "particle_y": 0,
+            "particle_scale": 100,
+            "explanation": "<p>A welcome embrace makes closeness something we can physically feel. Research on touch interventions suggests that touch can support wellbeing, although the experience depends on the person, the context, and the kind of contact.</p>",
+            "companion_text": "A soft presence to hold, bringing a familiar gesture of closeness into everyday life.",
+            "evidence_label": "Touch & wellbeing · 2024 review",
+            "evidence_url": "https://www.nature.com/articles/s41562-024-01841-8",
+            "evidence_note": "Research on touch, not a clinical study of MoYa.",
+            "topic_label": "Touch"
+          }
+        },
+        "chapter_4": {
+          "type": "chapter",
+          "settings": {
+            "nav_label": "Warmth",
+            "moment": "Night",
+            "mood": "night",
+            "default_photo": "warmth",
+            "photo_heading": "A little warmth.\nA little closer.",
+            "read_label": "Feel the warmth",
+            "heading": "Warmth,\nwithin reach.",
+            "companion_label": "With MoYa",
+            "effect": "warmth",
+            "particle_x": 0,
+            "particle_y": 0,
+            "particle_scale": 100,
+            "explanation": "<p>Soft contact and gentle warmth come together in the same embrace.</p>",
+            "companion_text": "A warming feature adds another layer to the feeling of being held.",
+            "topic_label": "Warmth"
+          }
+        }
+      },
+      "block_order": [
+        "chapter_1",
+        "chapter_2",
+        "chapter_3",
+        "chapter_4"
+      ]
     }
   },
   "order": [
@@ -593,6 +716,7 @@
     "moya_talk",
     "moya_meet_CFRBe8",
     "moya_science_intro",
+    "moya_science_storytelling",
     "moya_innovation_research_mDzrmc",
     "moya_customer_voices_4NnbFN"
   ]
