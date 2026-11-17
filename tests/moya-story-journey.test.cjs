@@ -7,11 +7,11 @@ const { gsap } = require('gsap/dist/gsap');
 function moduleSource(path, names) {
   return vm.runInNewContext(`${readFileSync(path, 'utf8').replace(/export /g, '')}\n({${names.join(',')}})`, {});
 }
-const geometry = moduleSource('assets/moya-story-geometry.js', ['journeyTiming', 'photoSize', 'photoPose', 'planeTransform', 'createRoute', 'projectRoute']);
+const geometry = moduleSource('assets/moya-story-geometry.js', ['readingWeight', 'journeyTiming', 'photoSize', 'photoPose', 'planeTransform', 'createRoute', 'projectRoute']);
 const { createJourneyTimeline } = moduleSource('assets/moya-story-timeline.js', ['createJourneyTimeline']);
 
-function journey(count = 4, hold = 1.2) {
-  const timing = geometry.journeyTiming(count, hold);
+function journey(count = 4, hold = 1.2, weights = []) {
+  const timing = geometry.journeyTiming(count, hold, 0, weights);
   const state = { camera: -1 };
   const chapters = Array.from({ length: count }, () => ({ entrance: 0, exit: 0, detail: 0, caption: 1 }));
   const timeline = createJourneyTimeline(gsap, state, chapters, timing);
@@ -110,6 +110,34 @@ test('reverse scrolling restores the identical camera and chapter state', () => 
     assert.equal(JSON.stringify({ state, chapters }, (key, value) => key === '_gsap' ? undefined : value), snapshots[59 - index]);
   });
   timeline.kill();
+});
+
+test('complete explanations remain readable for their entire independent reading distance', () => {
+  const { timeline, timing, state, chapters } = journey(4, 1.2, [1, 1.6, 1.75, 1]);
+  timing.chapters.forEach((stop, index) => {
+    for (const fraction of [0.01, 0.5, 0.99]) {
+      timeline.time(stop.detail + stop.reading * fraction);
+      assert.equal(state.camera, index);
+      assert.equal(chapters[index].detail, 1);
+      assert.equal(chapters[index].entrance, 1);
+      assert.equal(chapters[index].exit, 0);
+    }
+    if (index < chapters.length - 1) {
+      timeline.time(stop.exit + 0.125);
+      assert.equal(state.camera, index, 'the photo holds while its card exits');
+      assert.ok(chapters[index].exit > 0 && chapters[index].exit < 1);
+    }
+  });
+  assert.ok(timing.chapters[1].reading > timing.chapters[0].reading);
+  assert.ok(timing.chapters[2].reading > timing.chapters[1].reading);
+  timeline.kill();
+});
+
+test('reading distance accounts for both spaced words and CJK copy without unbounded scroll', () => {
+  assert.equal(geometry.readingWeight('A small moment of warmth.'), 1);
+  assert.ok(Math.abs(geometry.readingWeight('word '.repeat(120)) - 1.6) < 1e-6);
+  assert.ok(Math.abs(geometry.readingWeight('陪伴'.repeat(120)) - 1.6) < 1e-6);
+  assert.equal(geometry.readingWeight('word '.repeat(1000)), 1.75);
 });
 
 test('separate section timelines do not share camera or reading state', () => {

@@ -1,4 +1,4 @@
-import { clamp, journeyTiming, project, photoSize, photoCenterY, photoPose, planeTransform, createRoute, projectRoute } from './moya-story-geometry.js';
+import { clamp, readingWeight, journeyTiming, project, photoSize, photoCenterY, photoPose, planeTransform, createRoute, projectRoute } from './moya-story-geometry.js';
 import { createJourneyTimeline } from './moya-story-timeline.js';
 import { createStoryParticles } from './moya-story-particles.js';
 import { loadStoryMotion, acquireStoryScroll, storyScrollTo } from './moya-story-runtime.js';
@@ -7,6 +7,8 @@ class MoyaScienceStorytelling extends HTMLElement {
   connectedCallback() {
     this.disconnectedCallback();
     this.positionToRestore = undefined;
+    this.hasAppliedInitialHash = false;
+    this.nearby = false;
     this.controller = new AbortController();
     const { signal } = this.controller;
     this.stage = this.querySelector('.moya-story__stage');
@@ -36,7 +38,7 @@ class MoyaScienceStorytelling extends HTMLElement {
       };
     });
     if (!this.stage || !this.items.length) return;
-    this.timing = journeyTiming(this.items.length, Number(this.dataset.readingHold) || 1.2, Number(this.dataset.introDelay) || 0);
+    this.timing = journeyTiming(this.items.length, Number(this.dataset.readingHold) || 1.2, Number(this.dataset.introDelay) || 0, this.items.map(({ body }) => readingWeight(body.textContent)));
     this.addEventListener('click', this.onClick, { signal });
     this.addEventListener('shopify:block:select', this.onBlockSelect, { signal });
     this.addEventListener('shopify:section:select', this.onSectionSelect, { signal });
@@ -47,6 +49,11 @@ class MoyaScienceStorytelling extends HTMLElement {
     document.addEventListener('shopify:section:load', this.scheduleRefresh, { signal });
     document.addEventListener('shopify:section:unload', this.scheduleRefresh, { signal });
     this.items.forEach(({ image }) => image.addEventListener('load', this.scheduleConfigure, { signal }));
+    this.nearObserver = new IntersectionObserver(([entry]) => {
+      this.nearby = entry.isIntersecting;
+      if (this.nearby) this.prepareNearbyPhotos();
+    }, { rootMargin: '500px 0px' });
+    this.nearObserver.observe(this);
     this.headerObserver = new ResizeObserver(this.scheduleConfigure);
     for (const header of document.querySelectorAll('.shopify-section--header, .shopify-section--announcement-bar, moya-product-nav')) this.headerObserver.observe(header);
     this.configure();
@@ -56,6 +63,7 @@ class MoyaScienceStorytelling extends HTMLElement {
   disconnectedCallback() {
     this.controller?.abort();
     this.headerObserver?.disconnect();
+    this.nearObserver?.disconnect();
     clearTimeout(this.configureTimer);
     clearTimeout(this.refreshTimer);
     this.version = (this.version || 0) + 1;
@@ -77,11 +85,11 @@ class MoyaScienceStorytelling extends HTMLElement {
   };
 
   async configure() {
+    if (this.media) {
+      this.refreshLayout();
+      return;
+    }
     const version = ++this.version;
-    let previous = this.trigger?.isActive ? this.timeline.time() : this.positionToRestore?.time ?? null;
-    this.media?.revert();
-    this.media = undefined;
-    this.clearEnhanced();
     if (this.dataset.motion === 'false' || this.dataset.layout === 'stacked' || this.reduced.matches || innerHeight < 650) {
       this.measureFallback();
       return;
@@ -102,25 +110,9 @@ class MoyaScienceStorytelling extends HTMLElement {
         if (!this.measureEnhanced()) {
           this.clearEnhanced();
           this.measureFallback();
-          return;
+          return () => this.clearEnhanced();
         }
-        this.buildTimeline();
-        previous ??= this.positionToRestore?.time ?? null;
-        if (previous !== null) {
-          const top = this.trigger.start + clamp(previous / this.timing.duration) * (this.trigger.end - this.trigger.start);
-          storyScrollTo(top, true);
-          this.trigger.update();
-          previous = null;
-          this.positionToRestore = undefined;
-        } else this.followHash();
-        if (this.dataset.lenis === 'true' && !window.Shopify?.designMode) {
-          const session = {};
-          this.scrollSession = session;
-          acquireStoryScroll(session, this.motion).then((release) => {
-            if (this.scrollSession === session && this.isConnected) this.releaseScroll = release;
-            else release();
-          }).catch((error) => console.warn('[Moya Science] Native scrolling remains active.', error));
-        }
+        this.startEnhanced();
         return () => this.clearEnhanced();
       }, this);
     } catch (error) {
@@ -131,24 +123,100 @@ class MoyaScienceStorytelling extends HTMLElement {
     }
   }
 
+  startEnhanced() {
+    this.buildTimeline();
+    if (this.positionToRestore) {
+      this.restoreTime(this.positionToRestore.time);
+      this.positionToRestore = undefined;
+    } else if (!this.hasAppliedInitialHash) {
+      this.hasAppliedInitialHash = true;
+      this.followHash();
+    }
+    this.prepareNearbyPhotos();
+    if (this.dataset.lenis === 'true' && !window.Shopify?.designMode) {
+      const session = {};
+      this.scrollSession = session;
+      acquireStoryScroll(session, this.motion).then((release) => {
+        if (this.scrollSession === session && this.isConnected) this.releaseScroll = release;
+        else release();
+      }).catch((error) => console.warn('[Moya Science] Native scrolling remains active.', error));
+    }
+  }
+
+  restoreTime(time) {
+    const top = this.trigger.start + clamp(time / this.timing.duration) * (this.trigger.end - this.trigger.start);
+    storyScrollTo(top, true);
+    this.trigger.update();
+  }
+
+  refreshLayout() {
+    if (this.reduced.matches || innerHeight < 650) {
+      if (this.trigger) this.clearEnhanced();
+      this.measureFallback();
+      return;
+    }
+    const time = this.trigger?.isActive ? this.positionToRestore?.time ?? this.timeline.time() : null;
+    if (!this.measureEnhanced()) {
+      this.clearEnhanced();
+      this.measureFallback();
+      return;
+    }
+    if (!this.trigger) {
+      this.startEnhanced();
+      return;
+    }
+    if (!this.layoutChanged) {
+      this.positionToRestore = undefined;
+      return;
+    }
+    this.motion.ScrollTrigger.refresh();
+    if (time !== null) this.restoreTime(time);
+    this.positionToRestore = undefined;
+    this.render();
+  }
+
+  prepareNearbyPhotos() {
+    if (!this.nearby) return;
+    const index = Math.max(0, this.active ?? 0);
+    for (const item of [this.items[index], this.trigger && this.items[index + 1]]) {
+      if (!item) continue;
+      const source = item.image.currentSrc || item.image.src;
+      if (item.preparedSource === source) continue;
+      item.preparedSource = source;
+      item.image.loading = 'eager';
+      item.image.decode?.().catch(() => {});
+    }
+  }
+
   measureEnhanced() {
     this.classList.add('is-enhanced', 'is-measuring');
     const width = this.stage.clientWidth, height = this.stage.clientHeight;
     const offset = parseFloat(getComputedStyle(this.stage).top) || 0;
     const available = height - this.chrome.offsetHeight - this.nav.offsetHeight - 24;
     const tooTall = height < 500 || this.intro.offsetHeight > available || this.items.some(({ copy }) => copy.offsetHeight > available);
+    const ratios = this.items.map(({ image }) => {
+      const declared = Number(image.getAttribute('width')) / Number(image.getAttribute('height')) || 2560 / 1707;
+      const actual = image.naturalWidth / image.naturalHeight || declared;
+      // Resized versions may round their height by one pixel. That is not a
+      // composition change and should not trigger another layout refresh.
+      const expectedHeight = image.naturalWidth / declared;
+      return Math.abs(image.naturalHeight - expectedHeight) <= 1 ? declared : actual;
+    });
     this.classList.remove('is-measuring');
     if (tooTall) return false;
+    const documentTop = Math.round(scrollY + this.getBoundingClientRect().top);
+    const signature = [width, height, offset, documentTop, this.mobile, ...ratios].join(':');
+    this.layoutChanged = signature !== this.layoutSignature;
+    if (!this.layoutChanged) return true;
+    this.layoutSignature = signature;
     this.size = { width, height, offset };
     this.style.setProperty('--story-runway', `${height * (1 + this.timing.duration * (Number(this.dataset.scrollDistance) || 100) / 100)}px`);
-    const ratio = this.items[0].image.naturalWidth / this.items[0].image.naturalHeight || 2560 / 1707;
-    const firstSize = photoSize(ratio, width, height, this.mobile);
+    const firstSize = photoSize(ratios[0], width, height, this.mobile);
     this.routeSegments = createRoute(this.items.length, width, photoCenterY(firstSize, height, this.mobile) + firstSize.height / 2 + 25, this.mobile);
     this.route?.setAttribute('viewBox', `0 0 ${width} ${height}`);
     this.routeCamera = undefined;
     this.items.forEach((item, index) => {
-      const imageRatio = item.image.naturalWidth / item.image.naturalHeight || Number(item.image.getAttribute('width')) / Number(item.image.getAttribute('height')) || 2560 / 1707;
-      item.size = photoSize(imageRatio, width, height, this.mobile);
+      item.size = photoSize(ratios[index], width, height, this.mobile);
       item.figure.style.width = `${item.size.width}px`;
       item.figure.style.height = `${item.size.height}px`;
       item.figure.style.zIndex = String(20 - index);
@@ -167,6 +235,9 @@ class MoyaScienceStorytelling extends HTMLElement {
       const target = index < 0 ? this.intro : detail ? this.items[index]?.copy : this.items[index]?.node;
       this.positionToRestore = undefined;
       if (target) storyScrollTo(scrollY + target.getBoundingClientRect().top - offset - 12, true);
+    } else if (!this.hasAppliedInitialHash) {
+      this.hasAppliedInitialHash = true;
+      this.followHash();
     }
   }
 
@@ -256,6 +327,7 @@ class MoyaScienceStorytelling extends HTMLElement {
     });
     if (this.active !== selected) {
       this.active = selected;
+      this.prepareNearbyPhotos();
       this.links.forEach((link, index) => {
         if (index === selected + 1) link.setAttribute('aria-current', 'step');
         else link.removeAttribute('aria-current');
@@ -272,6 +344,7 @@ class MoyaScienceStorytelling extends HTMLElement {
 
   clearEnhanced() {
     this.rememberPosition();
+    this.layoutSignature = undefined;
     this.trigger?.kill();
     this.timeline?.kill();
     this.trigger = this.timeline = undefined;

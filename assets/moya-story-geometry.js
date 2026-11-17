@@ -1,11 +1,26 @@
 /** Pure world-space geometry shared by the photographs and their thread. */
 export const clamp = (value, min = 0, max = 1) => Math.max(min, Math.min(max, value));
 
-export function journeyTiming(count, hold = 1.2, delay = 0) {
+export function readingWeight(text) {
+  const cjk = text.match(/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/gu) || [];
+  const words = text.replace(/[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/gu, ' ').match(/[\p{L}\p{N}]+/gu) || [];
+  return 1 + clamp((words.length + cjk.length / 2 - 60) / 100, 0, 0.75);
+}
+
+export function journeyTiming(count, hold = 1.2, delay = 0, weights = []) {
   const intro = 1.5 + delay;
   const travel = 0.85;
-  const step = hold + travel;
-  return { intro, hold, travel, step, duration: intro + Math.max(0, count - 1) * step + hold };
+  const chapters = [];
+  let start = intro;
+  for (let index = 0; index < count; index++) {
+    const detail = start + 1;
+    const reading = hold * clamp(weights[index] || 1, 1, 1.75);
+    const exit = detail + reading;
+    const travelStart = exit + 0.25;
+    chapters.push({ start, detail, reading, exit, travelStart });
+    start = travelStart + travel;
+  }
+  return { intro, hold, travel, chapters, duration: chapters.at(-1)?.exit ?? intro };
 }
 
 export function project(x, y, z, camera, width, height, mobile) {

@@ -64,6 +64,8 @@
           assign default_alt = block.settings.photo_heading | strip_html | strip_newlines
         endif
         assign photo_alt = block.settings.image_alt | default: block.settings.image.alt | default: default_alt
+        assign small_photo_asset = photo_asset | replace: '.webp', '-600.webp'
+        assign medium_photo_asset = photo_asset | replace: '.webp', '-1000.webp'
         assign chapter_number = forloop.index | prepend: '0' | slice: -2, 2
       -%}
       <article
@@ -82,11 +84,13 @@
           <picture>
             {% if block.settings.mobile_image != blank %}
               <source media='(max-width: 749px)' srcset='{{ block.settings.mobile_image | image_url: width: 500 }} 500w, {{ block.settings.mobile_image | image_url: width: 1000 }} 1000w' sizes='96vw' width='{{ block.settings.mobile_image.width }}' height='{{ block.settings.mobile_image.height }}'>
+            {% elsif block.settings.image == blank %}
+              <source media='(max-width: 749px)' srcset='{{ small_photo_asset | asset_url }} 600w, {{ medium_photo_asset | asset_url }} 1000w' sizes='96vw' width='1000' height='667'>
             {% endif %}
             {% if block.settings.image != blank %}
               {{ block.settings.image | image_url: width: 2400 | image_tag: loading: 'lazy', widths: '500,750,1100,1500,2000,2400', sizes: '(max-width: 749px) 96vw, 72vw', alt: photo_alt }}
             {% else %}
-              <img src='{{ photo_asset | asset_url }}' alt='{{ photo_alt | escape }}' width='2560' height='1707' loading='lazy' decoding='async'>
+              <img src='{{ photo_asset | asset_url }}' srcset='{{ small_photo_asset | asset_url }} 600w, {{ medium_photo_asset | asset_url }} 1000w, {{ photo_asset | asset_url }} 2560w' sizes='(max-width: 749px) 96vw, 72vw' alt='{{ photo_alt | escape }}' width='2560' height='1707' loading='lazy' decoding='async'>
             {% endif %}
           </picture>
           {% if section.settings.enable_particles and topic != 'none' %}<canvas class='moya-story__particles' aria-hidden='true'></canvas>{% endif %}
@@ -231,7 +235,8 @@
     {
       "type": "range",
       "id": "reading_hold",
-      "label": "Reading hold",
+      "label": "Full-copy reading hold",
+      "info": "Scroll distance reserved after the explanation fully opens. Longer copy receives more room.",
       "default": 1.2,
       "min": 1.2,
       "max": 3,

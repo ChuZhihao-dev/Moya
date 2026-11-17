@@ -12,13 +12,15 @@
 - Scroll journey / Stacked chapters：空间旅程或普通图文。
 - Enable scroll animation：关闭后所有文字仍然可读。
 - Enable page smooth scrolling：页面共用一个 Lenis，影响含本组件的整页；编辑器停用，触屏保持原生滚动。
-- Reading hold / Scroll distance / Opening hold：阅读距离与开场停留。
+- Full-copy reading hold / Scroll distance / Opening hold：完整正文展开后的阅读距离、整体滚动距离与开场停留。
+- 阅读停留独立于照片展示和卡片入场；按正文长度自动增加，最多为基础阅读距离的 1.75 倍，支持英文及中日韩文案。
 - Animation smoothing without Lenis：不启用 Lenis 时的 ScrollTrigger scrub。
 - Particle effect / offsets / size：按原图校准的四种效果，可关闭；更换图片后需重新校准。
 - Optional page anchor：外部导航锚点；多实例需使用不同值，首页使用 moya-science。
 
 沿用项目 Outfit 字体和源码直接加载约定，没有新增自定义源码压缩步骤。
-四张参考 WebP 本地托管，自定义图使用 Shopify 响应式图片。
+四张参考 WebP 本地托管，新增 600px / 1000px 响应式版本；手机使用这两个尺寸，桌面保留 2560px 原图。自定义图继续使用 Shopify 响应式图片。
+四张 1000px 图合计 131,860 bytes，对比原图合计 1,104,536 bytes，文件体积减少 88.1%；这不是整页网络传输或性能分数的测量结果。
 
 ## 实现
 
@@ -27,9 +29,12 @@
 - moya-science-storytelling.js：Custom Element 生命周期、测量、导航、编辑器事件。
 - moya-story-timeline.js：单个 GSAP 时间轴，命名照片站、阅读站、相机转场。
 - 每组照片停稳后保留 0.25 个时间轴单位，再让文字卡片淡入；卡片入场完成后展开正文，不提前跨入上一组。
+- 正文展开后完整保留阅读距离，随后卡片退出，再移动相机；最后一章保持完整正文直到板块离开视口。
 - moya-story-geometry.js：照片角点投影、世界路径；路径合并为三个深度组，停留时不重算。
 - moya-story-particles.js：照片坐标系 Canvas，按活跃状态暂停，约 30 FPS，DPR 上限 1.5。
 - moya-story-runtime.js：依赖懒加载、Lenis 引用计数、GSAP ticker 同步、Impact 抽屉锁定与清理。
+- 相同尺寸的图片加载、字体就绪及手机工具栏变化不会销毁时间轴或 Lenis；真实尺寸变化只更新几何并刷新位置。跨断点、减少动态效果或内容溢出时才切换增强/普通布局。
+- 板块接近视口时提前解码当前章与下一章图片；不会等待解码完成才允许滚动。
 
 依赖 GSAP / ScrollTrigger 3.15.1（现有 npm 安装）、Lenis 1.3.27（npm 官方包）。
 第三方压缩资源保留许可证头，Lenis MIT 许可证位于 assets/lenis-license.txt。
@@ -49,12 +54,15 @@ UMD 文件按经典 script 加载，避免 ES module 严格模式下的全局赋
 | DEV-13 媒体 | 通过 | 预览 HTML 中图片 lazy、尺寸齐全，Canvas 按活跃状态暂停 |
 | DEV-14 自定义源码压缩 | 不适用 | 按本项目明确约定直接加载自定义源码，第三方使用官方压缩文件 |
 | DEV-16/17/18、HOME-02/03/06 | 通过 | 本组件 H2/H3/H4、HTML 文本、alt、真实 a[href]；预览无 Liquid error，不代表全站 SEO 审查 |
-| 逻辑回归 | 通过 | npm test 共 22 项，覆盖照片先于文字卡片的顺序、投影、正反向及刷新时间轴、隔离、Lenis 释放和原有回归 |
+| 逻辑回归 | 通过 | npm test 共 30 项，新增完整阅读区间、中日韩文长度、增量布局刷新、上方内容高度变化、图片解码和原有回归 |
 | Theme Check 增量 | 通过 | 前后均 423 项（357 error / 66 warning），新增 0，既有问题未处理 |
-| 桌面与手机视觉 | 通过 | Chrome 开发预览，1920×1080、393×852，检查开场、透视、夜间卡片、手机完整说明、减少动态效果降级 |
+| 初版桌面与手机视觉 | 通过 | 首次 Chrome 开发预览，1920×1080、393×852，检查开场、透视、夜间卡片、手机完整说明、减少动态效果降级；不等于本轮新节奏视觉验收 |
+| 本轮本地渲染与资源 | 通过 | 9292 实际 HTML 包含新旧组件、600/1000px srcset，无 Liquid error；返回的图片与新时间轴资源与本地文件一致 |
+| 本轮浏览器交互 | 待验证 | 原生浏览器控制出现用户窗口变更与观察状态不一致，尚未完成新阅读节奏、手机实际选图和缩放操作的完整视觉复验 |
+| 本轮远端开发主题同步 | 待验证 | Shopify CLI 身份验证拦截上传；直接读取远端 geometry 仍为旧版本，公开预览停在商店密码页 |
 | 编辑器完整交互 | 待验证 | 已实现生命周期与选择事件，未逐项操作真实编辑器验证重复添加、拖动、删除和所有设置 |
 | DEV-15 正式性能 | 待验证 | 未生成真实业务环境 Lighthouse 报告，不承诺测得 60 FPS 或正式性能分数 |
 | 正式上线 | 待验证 | 仅开发主题预览，未发布 |
 
-开发地址 http://127.0.0.1:9293/#moya-science，预览主题 187271774508；开发服务停止后本地地址不可用。
+当前本地开发地址 http://127.0.0.1:9292/#moya-science，预览主题 187271774508；开发服务停止后本地地址不可用。本地预览不能替代远端同步确认。
 浏览器仍显示现有 React/ReactDOM 外链 404/CORS 和 Shopify 预览请求错误，本次保留原状。
